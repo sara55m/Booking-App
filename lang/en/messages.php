@@ -21,4 +21,10 @@ return [
     'cover_image'=>'Cover Image',
     'sort_order'=>'Sort Order',
     'add_image'=>'Add Image',
+    'amenity' => 'Amenity',
+    'amenities' => 'Amenities',
+    'icon' => 'Icon',
+    'amenity_details' => 'Amenity Details',
+    'created_at' => 'Created At',
+    'updated_at' => 'Updated At',
 ];

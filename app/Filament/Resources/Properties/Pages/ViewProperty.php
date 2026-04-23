@@ -3,18 +3,18 @@
 namespace App\Filament\Resources\Properties\Pages;
 
 use App\Filament\Resources\Properties\PropertyResource;
+use Filament\Actions\EditAction;
+use Filament\Resources\Pages\ViewRecord;
 use Filament\Actions\DeleteAction;
-use Filament\Resources\Pages\EditRecord;
-use Filament\Actions\ViewAction;
 
-class EditProperty extends EditRecord
+class ViewProperty extends ViewRecord
 {
     protected static string $resource = PropertyResource::class;
 
     protected function getHeaderActions(): array
     {
         return [
-            ViewAction::make(),
+            EditAction::make(),
             DeleteAction::make(),
         ];
     }

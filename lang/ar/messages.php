@@ -21,5 +21,10 @@ return [
     'cover_image'=>'صورة الغلاف',
     'sort_order'=>'ترتيب العرض',
     'add_image'=>'إضافة صورة',
-
+    'amenity' => 'وسيلة راحة',
+    'amenities' => 'وسائل الراحة',
+    'icon' => 'الأيقونة',
+    'amenity_details' => 'تفاصيل وسيلة الراحة',
+    'created_at' => 'تاريخ الإنشاء',
+    'updated_at' => 'تاريخ التحديث',
 ];

@@ -10,6 +10,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Actions\DeleteAction;
+use Filament\Actions\ViewAction;
 
 class PropertiesTable
 {
@@ -45,6 +46,7 @@ class PropertiesTable
                     ]),
             ])
             ->recordActions([
+                ViewAction::make(),
                 EditAction::make(),
                 DeleteAction::make(),
             ])
