@@ -45,4 +45,10 @@ return [
     'cancelled' => 'ملغي',
     'upcoming_bookings' => 'الحجوزات القادمة',
     'current_bookings' => 'الحجوزات الحالية',
+    'rooms' => 'الغرف',
+    'room_number' => 'رقم الغرفة',
+    'price_per_night' => 'السعر لكل ليلة',
+    'capacity' => 'السعة',
+    'min_price' => 'السعر الأدنى',
+    'max_price' => 'السعر الأعلى',
 ];

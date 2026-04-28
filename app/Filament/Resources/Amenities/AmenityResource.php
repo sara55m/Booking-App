@@ -20,6 +20,11 @@ class AmenityResource extends Resource
     protected static ?string $model = Amenity::class;
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-sparkles';
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('messages.amenities');
+    }
     protected static ?int $navigationSort = 2;
 
     public static function getModelLabel(): string
@@ -35,11 +40,6 @@ class AmenityResource extends Resource
     public static function getNavigationLabel(): string
     {
         return __('messages.amenities');
-    }
-
-    public static function getNavigationGroup(): ?string
-    {
-        return __('messages.dashboard');
     }
 
     public static function form(Schema $schema): Schema

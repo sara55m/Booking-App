@@ -12,7 +12,7 @@ class Room extends Model
         'description',
         'price-per-night',
         'capacity',
-        'quantity',
+        'number',
     ];
 
     public function property()

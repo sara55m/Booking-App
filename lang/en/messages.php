@@ -45,4 +45,10 @@ return [
     'cancelled' => 'Cancelled',
     'upcoming_bookings' => 'Upcoming Bookings',
     'current_bookings' => 'Current Bookings',
+    'rooms' => 'Rooms',
+    'room_number' => 'Room Number',
+    'price_per_night' => 'Price Per Night',
+    'capacity' => 'Capacity',
+    'min_price' => 'Min Price',
+    'max_price' => 'Max Price',
 ];

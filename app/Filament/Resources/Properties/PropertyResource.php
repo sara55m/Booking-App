@@ -20,7 +20,10 @@ class PropertyResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-home-modern';
 
-    protected static string | \UnitEnum | null $navigationGroup = 'Properties';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('messages.properties');
+    }
     protected static ?int $navigationSort = 1;
 
     public static function getModelLabel(): string
@@ -36,11 +39,6 @@ class PropertyResource extends Resource
     public static function getNavigationLabel(): string
     {
         return __('messages.properties');
-    }
-
-    public static function getNavigationGroup(): ?string
-    {
-        return __('messages.dashboard');
     }
 
     public static function form(Schema $schema): Schema
