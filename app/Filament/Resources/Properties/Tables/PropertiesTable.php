@@ -37,9 +37,12 @@ class PropertiesTable
                     ->boolean(),
             ])
             ->filters([
-                SelectFilter::make('city'),
-                SelectFilter::make('type'),
+                SelectFilter::make('city')
+                ->label(__('messages.city')),
+                SelectFilter::make('type')
+                ->label(__('messages.type')),
                 SelectFilter::make('is_active')
+                ->label(__('messages.is_active'))
                     ->options([
                         1 => 'Active',
                         0 => 'Inactive',

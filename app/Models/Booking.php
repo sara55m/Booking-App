@@ -44,6 +44,18 @@ class Booking extends Model
         return $this->hasOne(Payment::class);
     }
 
+    // Check if room is available for given dates
+    public static function isRoomAvailable($roomId, $checkIn, $checkOut)
+    {
+        return !self::where('room_id', $roomId)
+            ->where(function ($query) use ($checkIn, $checkOut) {
+                $query->where('check_in', '<', $checkOut)
+                    ->where('check_out', '>', $checkIn)
+                    ->where('status', '!=', 'cancelled');
+            })
+            ->exists();
+    }
+
 
     //attributes
 
@@ -58,7 +70,7 @@ class Booking extends Model
     /**
      * Total price including taxes and fees
      */
-    public function getTotalPriceAttribute()
+    public function getCalculatedTotalPriceAttribute()
     {
         return $this->room->price_per_night * $this->number_of_nights;
     }
