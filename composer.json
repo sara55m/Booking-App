@@ -10,7 +10,8 @@
         "bezhansalleh/filament-language-switch": "^4.3",
         "filament/filament": "^5.5",
         "laravel/framework": "^12.0",
-        "laravel/tinker": "^2.10.1"
+        "laravel/tinker": "^2.10.1",
+        "saade/filament-fullcalendar": "^4.0@beta"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

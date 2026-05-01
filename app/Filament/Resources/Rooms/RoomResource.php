@@ -12,6 +12,7 @@ use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
+use App\Filament\Resources\Rooms\Pages\ViewRoom;
 
 class RoomResource extends Resource
 {
@@ -61,6 +62,7 @@ class RoomResource extends Resource
         return [
             'index' => ListRooms::route('/'),
             'create' => CreateRoom::route('/create'),
+            'view' => ViewRoom::route('/{record}'),
             'edit' => EditRoom::route('/{record}/edit'),
         ];
     }
