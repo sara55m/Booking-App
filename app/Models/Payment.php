@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\BookingStatus;
 use Illuminate\Database\Eloquent\Model;
 use App\Enums\PaymentStatus;
 use App\Enums\PaymentMethod;
@@ -11,6 +12,7 @@ class Payment extends Model
     protected $fillable = [
         'booking_id',
         'amount',
+        'remaining',
         'status',
         'payment_method',
         'paid_at',
@@ -120,4 +122,29 @@ class Payment extends Model
             'status' => PaymentStatus::REFUNDED,
         ]);
     }
+
+    // Automatically update booking status when payment is created, updated or deleted
+    protected static function booted()
+    {
+        static::created(fn ($payment) => self::updateBookingStatus($payment));
+        static::updated(fn ($payment) => self::updateBookingStatus($payment));
+        static::deleted(fn ($payment) => self::updateBookingStatus($payment));
+    }
+
+    //update booking status
+    protected static function updateBookingStatus($payment)
+    {
+        $booking = $payment->booking()->with('payments')->first();
+
+        if (! $booking) return;
+
+        $totalPaid = $booking->payments->sum('amount');
+
+        if ($totalPaid >= $booking->total_price) {
+            $booking->update(['status' => BookingStatus::CONFIRMED]);
+        } else {
+            $booking->update(['status' => BookingStatus::PENDING]);
+        }
+    }
+
 }

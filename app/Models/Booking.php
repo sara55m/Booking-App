@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Enums\BookingStatus;
+use Carbon\Carbon;
+use App\Models\Room;
 
 class Booking extends Model
 {
@@ -39,40 +41,41 @@ class Booking extends Model
         return $this->belongsTo(Room::class, 'room_id');
     }
 
-    public function payment()
+    public function payments()
     {
-        return $this->hasOne(Payment::class);
+        return $this->hasMany(Payment::class);
     }
 
     // Check if room is available for given dates
-    public static function isRoomAvailable($roomId, $checkIn, $checkOut)
+    public static function isRoomAvailable($roomId,$checkIn,$checkOut,$recordId = null): bool
     {
         return !self::where('room_id', $roomId)
+            ->where('id', '!=', $recordId) // Exclude current booking when checking availability during update
+            ->where('status', '!=', 'cancelled')
             ->where(function ($query) use ($checkIn, $checkOut) {
                 $query->where('check_in', '<', $checkOut)
-                    ->where('check_out', '>', $checkIn)
-                    ->where('status', '!=', 'cancelled');
+                    ->where('check_out', '>', $checkIn);
             })
             ->exists();
     }
 
-
-    //attributes
-
     /**
      * Total number of nights
      */
-    public function getNumberOfNightsAttribute(): int
+    public function calculateNumberOfNights(): int
     {
-        return $this->check_in->diffInDays($this->check_out);
+        if (!$this->check_in || !$this->check_out) {
+            return 0;
+        }
+        return Carbon::parse($this->check_in)->diffInDays(Carbon::parse($this->check_out));
     }
 
     /**
      * Total price including taxes and fees
      */
-    public function getCalculatedTotalPriceAttribute()
+    public function calculateTotalPrice($pricePerNight):float
     {
-        return $this->room->price_per_night * $this->number_of_nights;
+        return $pricePerNight * $this->calculateNumberOfNights();
     }
 
     /**
@@ -108,5 +111,23 @@ class Booking extends Model
     {
         return $query->where('user_id', $userId);
     }
+
+    protected static function booted(){
+        static::saving(function ($booking) {
+            if(!$booking->room_id || !$booking->check_in || !$booking->check_out){
+                return;
+            }
+
+            $room = Room::find($booking->room_id);
+
+            if(!$room){
+                return;
+            }
+
+            $booking->total_price = $booking->calculateTotalPrice($room->{'price-per-night'});
+
+        });
+    }
+
 
 }

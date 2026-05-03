@@ -15,7 +15,6 @@ class CreateBooking extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $room = Room::find($data['room_id']);
         $roomId = $data['room_id'];
 
         if (!Booking::isRoomAvailable($roomId, $data['check_in'], $data['check_out'])) {
@@ -26,11 +25,6 @@ class CreateBooking extends CreateRecord
 
             $this->halt();
         }
-
-        $nights = Carbon::parse($data['check_in'])
-            ->diffInDays(Carbon::parse($data['check_out']));
-
-        $data['total_price'] = $room->{'price-per-night'} * $nights;
 
         return $data;
     }

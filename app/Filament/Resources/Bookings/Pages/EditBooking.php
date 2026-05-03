@@ -17,22 +17,32 @@ class EditBooking extends EditRecord
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
-        $room = Room::find($data['room_id']);
+        $record = $this->record;
+        $recordId = $record->id;
+
         $roomId = $data['room_id'];
 
-        if (!Booking::isRoomAvailable($roomId, $data['check_in'], $data['check_out'])) {
-            Notification::make()
-                ->title('Room is not available for selected dates.')
-                ->danger()
-                ->send();
+        $roomChanged = $data['room_id'] != $record->room_id;
+        $checkInChanged = $data['check_in'] != $record->check_in;
+        $checkOutChanged = $data['check_out'] != $record->check_out;
 
-            $this->halt();
+        // Only validate if something actually changed
+        if ($roomChanged || $checkInChanged || $checkOutChanged) {
+
+            if (!Booking::isRoomAvailable(
+                $roomId,
+                $data['check_in'],
+                $data['check_out'],
+                $recordId //exclude current booking
+            )) {
+                Notification::make()
+                    ->title('Room is not available for selected dates.')
+                    ->danger()
+                    ->send();
+
+                $this->halt();
+            }
         }
-
-        $nights = Carbon::parse($data['check_in'])
-            ->diffInDays(Carbon::parse($data['check_out']));
-
-        $data['total_price'] = $room->{'price-per-night'} * $nights;
 
         return $data;
     }

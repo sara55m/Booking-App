@@ -53,12 +53,12 @@ class BookingForm
                             ->components([
                                 DatePicker::make('check_in')
                                     ->label(__('messages.check_in'))
-                                    ->minDate(today())
+                                    ->minDate(fn ($context) => $context === 'create' ? now() : null)
                                     ->required(),
                                 DatePicker::make('check_out')
                                     ->label(__('messages.check_out'))
                                     ->required()
-                                    ->minDate(today())
+                                    ->minDate(fn($context) => $context === 'create' ? now() : null)
                                     ->afterOrEqual('check_in'),
 
                                 Select::make('status')
