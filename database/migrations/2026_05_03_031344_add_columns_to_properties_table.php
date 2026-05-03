@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('payments', function (Blueprint $table) {
-            $table->decimal('remaining', 10, 2)->after('amount')->default(0);
+        Schema::table('properties', function (Blueprint $table) {
+            $table->float('average_rating')->default(0);
+            $table->integer('reviews_count')->default(0);
         });
     }
 
@@ -21,8 +22,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('payments', function (Blueprint $table) {
-            $table->dropColumn('remaining');
+        Schema::table('properties', function (Blueprint $table) {
+            $table->dropColumn('average_rating');
+            $table->dropColumn('reviews_count');
         });
     }
 };

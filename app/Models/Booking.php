@@ -46,6 +46,11 @@ class Booking extends Model
         return $this->hasMany(Payment::class);
     }
 
+    public function review()
+    {
+        return $this->hasOne(Review::class);
+    }
+
     // Check if room is available for given dates
     public static function isRoomAvailable($roomId,$checkIn,$checkOut,$recordId = null): bool
     {

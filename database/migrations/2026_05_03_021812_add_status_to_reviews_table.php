@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('payments', function (Blueprint $table) {
-            $table->decimal('remaining', 10, 2)->after('amount')->default(0);
+        Schema::table('reviews', function (Blueprint $table) {
+            $table->string('status')->default('pending')->after('comment');
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('payments', function (Blueprint $table) {
-            $table->dropColumn('remaining');
+        Schema::table('reviews', function (Blueprint $table) {
+            $table->dropColumn('status');
         });
     }
 };

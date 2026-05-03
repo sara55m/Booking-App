@@ -14,11 +14,15 @@ class Property extends Model
         'type',
         'rating',
         'is_active',
+        'reviews_count',
+        'average_rating',
     ];
 
     protected $casts = [
         'rating' => 'decimal:2',
         'is_active' => 'boolean',
+        'reviews_count' => 'integer',
+        'average_rating' => 'decimal:2',
     ];
 
 
@@ -58,6 +62,12 @@ class Property extends Model
             ->where('is_cover', true)
             ->value('image');
     }
+    
+
+    public function getReviewsCountAttribute()
+    {
+        return $this->reviews()->where('status', 'approved')->count();
+    }
 
     /**
      * Average rating from reviews
@@ -65,7 +75,9 @@ class Property extends Model
     public function getAverageRatingAttribute(): float
     {
         return round(
-            $this->reviews()->avg('rating') ?? 0,
+            $this->reviews()
+            ->where('status','approved')
+            ->avg('rating') ?? 0,
             2
         );
     }

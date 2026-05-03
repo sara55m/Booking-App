@@ -9,8 +9,10 @@ class Review extends Model
     protected $fillable = [
         'user_id',
         'property_id',
+        'booking_id',
         'rating',
         'comment',
+        'status',
     ];
 
     public function user()
@@ -21,5 +23,24 @@ class Review extends Model
     public function property()
     {
         return $this->belongsTo(Property::class, 'property_id');
+    }
+
+    public function booking()
+    {
+        return $this->belongsTo(Booking::class, 'booking_id');
+    }
+
+    protected static function booted()
+    {
+        static::saved(function ($review) {
+            $property = $review->property;
+            if ($property) {
+                $reviewsCount = $property->reviews()->where('status', 'approved')->count();
+                $averageRating = $property->reviews()->where('status', 'approved')->avg('rating');
+                $property->reviews_count = $reviewsCount;
+                $property->average_rating = round($averageRating,2);
+                $property->save();
+            }
+        });
     }
 }

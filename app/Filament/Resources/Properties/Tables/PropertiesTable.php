@@ -35,6 +35,14 @@ class PropertiesTable
                 IconColumn::make('is_active')
                     ->label(__('messages.is_active'))
                     ->boolean(),
+                TextColumn::make('average_rating')
+                    ->label(__('messages.average_rating'))
+                    ->formatStateUsing(fn ($state) => number_format($state, 1) . ' ⭐')
+                    ->color(fn ($state) => match (true) {
+                        $state >= 4 => 'success',
+                        $state >= 2 => 'warning',
+                        default => 'danger',
+                    })
             ])
             ->filters([
                 SelectFilter::make('city')
