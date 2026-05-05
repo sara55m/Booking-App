@@ -8,6 +8,11 @@ use Saade\FilamentFullCalendar\Widgets\FullCalendarWidget;
 
 class RoomAvailabilityCalendar extends FullCalendarWidget
 {
+    public static function canView(): bool
+    {
+        return request()->routeIs('filament.admin.resources.rooms.*');
+    }
+    
     protected static ?string $heading = 'Room Availability';
 
     public ?int $roomId = null;
