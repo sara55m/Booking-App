@@ -8,6 +8,9 @@ use App\Models\User;
 
 Route::post('/register', [AuthController::class, 'register']);
 
+Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
+Route::post('/resend-otp', [AuthController::class, 'resendOtp']);
+
 /*Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();
 
@@ -17,7 +20,7 @@ Route::post('/register', [AuthController::class, 'register']);
 })->middleware(['signed'])->name('verification.verify');*/
 
 //email verification route
-Route::get('/email/verify/{id}/{hash}', function ($id, $hash, Request $request) {
+/*Route::get('/email/verify/{id}/{hash}', function ($id, $hash, Request $request) {
 
     if (! URL::hasValidSignature($request)) {
         return response()->json(['message' => 'Invalid or expired link'], 403);
@@ -39,12 +42,12 @@ Route::get('/email/verify/{id}/{hash}', function ($id, $hash, Request $request) 
         'message' => 'Email verified successfully'
     ]);
 
-})->middleware('signed');
+})->middleware('signed');*/
 
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', fn (Request $request) => $request->user());
-    Route::post('/email/resend', [AuthController::class, 'resend']);
+    //Route::post('/email/resend', [AuthController::class, 'resend']);
     Route::post('/logout', [AuthController::class, 'logout']);
 });
