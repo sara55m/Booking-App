@@ -6,7 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Hash;
+use App\Services\MailService;
 
 class AuthController extends Controller
 {
@@ -19,6 +20,9 @@ class AuthController extends Controller
             'phone'=>'nullable|string',
         ]);
 
+        //hash password
+        $data['password']=Hash::make($data['password']);
+
         $user=User::create($data);
 
         //generate otp
@@ -29,18 +33,15 @@ class AuthController extends Controller
             'otp_expires_at'=>now()->addMinutes(10),
         ]);
 
-         // send email
-        Mail::raw("Your OTP is: $otp", function ($message) use ($user) {
-            $message->to($user->email)
-                    ->subject('Your OTP Code');
-        });
+        // send otp via email
+        MailService::sendOtpEmail($user, $otp);
 
         //send email verification
-        //$user->sendEmailVerificationNotification();
+        $user->sendEmailVerificationNotification();
 
         return response()->json([
             'user'=>$user,
-            'message'=>'otp sent via mail'
+            'message'=>'otp and verification email sent'
         ]);
 
     }
@@ -74,23 +75,29 @@ class AuthController extends Controller
         ]);
 
         // create token
-        $token = $user->createToken('auth_token')->plainTextToken;
+        $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
+            'status' => 'success',
             'message' => 'Verified successfully',
-            'access_token' => $token,
-            'user' => $user,
+            'data'=>[
+                'user'=>[
+                    'id'=>$user->id,
+                    'name'=>$user->name,
+                    'email'=>$user->email,
+                ],
+            ]
         ]);
     }
 
     public function login(Request $request)
     {
-        $request->validate([
+        $credentials=$request->validate([
             'email'=>'required|email',
             'password'=>'required|string',
         ]);
 
-        if(!Auth::attempt($request->only('email','password'))){
+        if(!Auth::attempt($credentials)){
             return response()->json(['message'=>'Invalid credentials'],401);
         }
 
@@ -109,12 +116,21 @@ class AuthController extends Controller
         $token=$user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
-            'user'=>$user,
-            'access_token'=>$token,
+            'status'=>'success',
+            'message'=>'Logged in successfully',
+            'data'=>[
+                'user'=>[
+                    'id'=>$user->id,
+                    'name'=>$user->name,
+                    'email'=>$user->email,
+                ],
+                'access_token'=>$token,
+                'token_type'=>'Bearer',
+            ]
         ]);
     }
 
-    /*public function resend(Request $request)
+    public function resend(Request $request)
     {
         $user = $request->user();
 
@@ -125,7 +141,7 @@ class AuthController extends Controller
         $user->sendEmailVerificationNotification();
 
         return response()->json(['message' => 'Verification email sent']);
-    }*/
+    }
 
     public function resendOtp(Request $request)
     {
@@ -138,6 +154,14 @@ class AuthController extends Controller
         if ($user->hasVerifiedEmail()) {
             return response()->json(['message' => 'Already verified']);
         }
+
+        // prevent spamming otp requests
+        if ($user->otp_expires_at && now()->lt($user->otp_expires_at->subMinutes(9))) {
+            return response()->json([
+                'message' => 'Please wait before requesting another OTP'
+            ], 429);
+        }
+
         //generate new otp
         $otp = rand(100000, 999999);
 
@@ -146,12 +170,63 @@ class AuthController extends Controller
             'otp_expires_at' => now()->addMinutes(10),
         ]);
 
-        Mail::raw("Your OTP is: $otp", function ($message) use ($user) {
-            $message->to($user->email)
-                    ->subject('Your OTP Code');
-        });
+        //send otp via mail
+        MailService::sendOtpEmail($user, $otp);
 
         return response()->json(['message' => 'OTP resent']);
+    }
+
+    public function forgotPassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        //generate otp
+        $otp = rand(100000, 999999);
+
+        $user->update([
+            'otp' => $otp,
+            'otp_expires_at' => now()->addMinutes(10),
+        ]);
+
+        //send otp via mail
+        MailService::sendOtpEmail($user, $otp);
+
+        return response()->json(['message' => 'OTP sent to your email']);
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+            'otp' => 'required',
+            'new_password' => 'required|string|min:6|confirmed',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if ($user->otp !== $request->otp) {
+            return response()->json(['message' => 'Invalid OTP'], 400);
+        }
+
+        if (now()->gt($user->otp_expires_at)) {
+            return response()->json(['message' => 'OTP expired'], 400);
+        }
+
+        //update password
+        $user->update([
+            'password' => Hash::make($request->new_password),
+            'otp' => null,
+            'otp_expires_at' => null,
+        ]);
+
+        //delete old tokens
+        $user->tokens()->delete();
+
+        return response()->json(['message' => 'Password reset successfully']);
     }
 
     public function logout(Request $request)

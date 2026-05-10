@@ -6,21 +6,16 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
 use App\Models\User;
 
-Route::post('/register', [AuthController::class, 'register']);
-
-Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
-Route::post('/resend-otp', [AuthController::class, 'resendOtp']);
-
-/*Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
-    $request->fulfill();
-
-    return response()->json([
-        'message' => 'Email verified successfully'
-    ]);
-})->middleware(['signed'])->name('verification.verify');*/
-
+Route::middleware('throttle:3,1')->group(function(){
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
+    Route::post('/resend-otp', [AuthController::class, 'resendOtp']);
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
+    Route::post('/reset-password', [AuthController::class, 'resetPassword']);
+});
 //email verification route
-/*Route::get('/email/verify/{id}/{hash}', function ($id, $hash, Request $request) {
+Route::get('/email/verify/{id}/{hash}', function ($id, $hash, Request $request) {
 
     if (! URL::hasValidSignature($request)) {
         return response()->json(['message' => 'Invalid or expired link'], 403);
@@ -38,16 +33,20 @@ Route::post('/resend-otp', [AuthController::class, 'resendOtp']);
     //fill email_verified_at column with current timestamp
     $user->markEmailAsVerified();
 
+    $user->update([
+        'otp' => null,
+        'otp_expires_at' => null,
+    ]);
+
     return response()->json([
         'message' => 'Email verified successfully'
     ]);
 
-})->middleware('signed');*/
+})->middleware('signed')->name('verification.verify');
 
-Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', fn (Request $request) => $request->user());
-    //Route::post('/email/resend', [AuthController::class, 'resend']);
+    Route::post('/email/resend', [AuthController::class, 'resend'])->middleware('throttle:3,1');;
     Route::post('/logout', [AuthController::class, 'logout']);
 });
