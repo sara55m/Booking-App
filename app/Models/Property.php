@@ -46,23 +46,24 @@ class Property extends Model
         return $this->hasMany(Review::class);
     }
 
+    public function approvedReviews()
+    {
+        return $this->reviews()->where('status', 'approved');
+    }
+
     public function images()
     {
         return $this->hasMany(PropertyImage::class,'property_id');
     }
 
-    //attributes
-
-    /**
-     * Main cover image path
-     */
-    public function getCoverImageAttribute(): ?string
+    public function coverImage()
     {
-        return $this->images()
+        return $this->hasOne(PropertyImage::class)
             ->where('is_cover', true)
-            ->value('image');
+            ->orderBy('sort_order');
     }
-    
+
+    //attributes
 
     public function getReviewsCountAttribute()
     {
@@ -97,7 +98,7 @@ class Property extends Model
      */
     public function scopeCity($query, string $city)
     {
-        return $query->where('city', $city);
+        return $query->where('city','like', "%{$city}%");
     }
 
     /**
@@ -105,7 +106,7 @@ class Property extends Model
      */
     public function scopeType($query, string $type)
     {
-        return $query->where('type', $type);
+        return $query->where('type','like',"%{$type}%");
     }
 
 

@@ -99,4 +99,10 @@ return [
     'low_rating_reviews' => 'التقييمات المنخفضة',
     'no_properties' => 'لا توجد عقارات',
     'totally_paid' => 'إجمالى الدفعات المدفوعة بالكامل',
+
+    //api messages
+    'properties_retrieved_successfully' => 'تم استرجاع العقارات بنجاح',
+    'property_retrieved_successfully' => 'تم استرجاع العقار بنجاح',
+    'availability_retrieved_successfully' => 'تم استرجاع الغرف المتوفرة بنجاح',
+    'top_reviews_retrieved_successfully' => 'تم استرجاع التقييمات الأعلى بنجاح',
 ];

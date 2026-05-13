@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\AuthController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
 use App\Models\User;
+use App\Http\Controllers\Api\PropertyController;
 
 Route::middleware('throttle:3,1')->group(function(){
     Route::post('/register', [AuthController::class, 'register']);
@@ -49,4 +50,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', fn (Request $request) => $request->user());
     Route::post('/email/resend', [AuthController::class, 'resend'])->middleware('throttle:3,1');;
     Route::post('/logout', [AuthController::class, 'logout']);
+
+    //properties
+    Route::get('/properties', [PropertyController::class, 'index']);
+    Route::get('/properties/{property}', [PropertyController::class, 'show']);
+    Route::post('/properties/{property}/availability', [PropertyController::class, 'availability']);
+    Route::get('/properties/{property}/reviews', [PropertyController::class, 'topReviews']);
 });

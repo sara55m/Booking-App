@@ -99,4 +99,10 @@ return [
     'total_approved_reviews'=>'Total Approved Reviews',
     'low_rating_reviews'=>'Low Rating Reviews',
     'no_properties'=>'No Properties',
+
+    //api messages
+    'properties_retrieved_successfully' => 'Properties retrieved successfully',
+    'property_retrieved_successfully' => 'Property retrieved successfully',
+    'availability_retrieved_successfully' => 'Available Rooms retrieved successfully',
+    'top_reviews_retrieved_successfully' => 'Top Reviews retrieved successfully',
 ];
