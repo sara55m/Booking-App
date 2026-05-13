@@ -20,6 +20,13 @@ class RoomResource extends JsonResource
             'name'=>$this->name,
             'number'=>$this->number,
             'description'=>$this->description ?? null,
+            'amenities'=>$this->amenities->map(function($amenity){
+                return [
+                    'id'=>$amenity->id,
+                    'name'=>$amenity->name,
+                    'icon'=>$amenity->icon ? asset('storage/'.$amenity->icon) : null,
+                ];
+            }),
             'price_per_night'=>$this->{'price-per-night'}.' EGP',
             'capacity'=>$this->capacity,
         ];

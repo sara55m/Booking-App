@@ -28,7 +28,13 @@ class PropertyDetailsResource extends JsonResource
             'type'=>$this->type,
             'average_rating' => $this->average_rating,
             'reviews_count' => $this->reviews_count,
-            'amenities'=>$this->amenities->pluck('name'),
+            'amenities'=>$this->amenities->map(function($amenity){
+                return [
+                    'id'=>$amenity->id,
+                    'name'=>$amenity->name,
+                    'icon'=>$amenity->icon ? asset('storage/'.$amenity->icon) : null,
+                ];
+            }),
             'rooms'=>RoomResource::collection($this->rooms),
             'reviews'=>ReviewResource::collection($this->approvedReviews),
         ];

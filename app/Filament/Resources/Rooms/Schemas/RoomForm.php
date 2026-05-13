@@ -33,12 +33,17 @@ class RoomForm
                                         ->required(),
                             ]),
 
-                            Tab::make('Description')
-                            ->label(__('messages.description'))
+                            Tab::make('Room Details')
+                            ->label(__('messages.room_details'))
                             ->components([
                                 TextArea::make('description')
                                     ->label(__('messages.description'))
                                     ->required(),
+                                Select::make('amenities')
+                                ->relationship('amenities', 'name')
+                                ->preload()
+                                ->searchable()
+                                ->multiple(),
                                 TextInput::make('price-per-night')
                                     ->label(__('messages.price_per_night'))
                                     ->required()

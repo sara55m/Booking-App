@@ -59,7 +59,7 @@ class PropertyController extends Controller
             });
         })->when($request->guests_number, function ($query) use ($request) {
             $query->where('capacity', '>=', $request->guests_number);
-        })->get();
+        })->with('amenities')->get();
 
         return response()->json([
             'status_code'=>200,

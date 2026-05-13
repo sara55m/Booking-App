@@ -30,6 +30,7 @@ return [
     'users' => 'Users',
     'user' => 'User',
     'room' => 'Room',
+    'room_details' => 'Room Details',
     'check_in' => 'Check In',
     'check_out' => 'Check Out',
     'status' => 'Status',
