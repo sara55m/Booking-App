@@ -72,6 +72,7 @@ return [
     'reviews' => 'التقييمات',
     'comment' => 'التعليق',
     'rejected' => 'مرفوض',
+    'tags' => 'العلامات',
     'review_details' => 'تفاصيل التقييم',
     'review_content' => 'محتوى التقييم',
     'approve' => 'موافقة',

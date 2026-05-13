@@ -23,6 +23,7 @@ class ReviewResource extends JsonResource
                 'email'=>$this->user->email,
                 'phone'=>$this->user->phone,
             ],
+            'tags'=>$this->tags->pluck('name'),
             'rating'=>$this->rating,
             'comment'=>$this->comment ?? null,
         ];

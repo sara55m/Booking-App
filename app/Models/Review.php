@@ -30,6 +30,11 @@ class Review extends Model
         return $this->belongsTo(Booking::class, 'booking_id');
     }
 
+    public function tags()
+    {
+        return $this->belongsToMany(ReviewTag::class, 'review_review_tags', 'review_id', 'review_tag_id')->withTimestamps();
+    }
+
     protected static function booted()
     {
         static::saved(function ($review) {

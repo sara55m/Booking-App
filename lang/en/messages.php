@@ -72,6 +72,7 @@ return [
     'review' => 'Review',
     'comment' => 'Comment',
     'rejected'=>'Rejected',
+    'tags' => 'Tags',
     'review_details' => 'Review Details',
     'review_content' => 'Review Content',
     'approve' => 'Approve',

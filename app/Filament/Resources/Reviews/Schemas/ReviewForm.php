@@ -47,6 +47,12 @@ class ReviewForm
                             ]),
                             Tab::make(__('messages.review_content'))
                             ->schema([
+                                Select::make('tags')
+                                    ->relationship('tags', 'name')
+                                    ->label(__('messages.tags'))
+                                    ->multiple()
+                                    ->preload()
+                                    ->searchable(),
                                 TextInput::make('rating')
                                     ->label(__('messages.rating'))
                                     ->required()

@@ -35,7 +35,7 @@ class PropertyController extends Controller
 
     public function show(Property $property)
     {
-        $property->load(['coverImage','images','amenities','rooms','approvedReviews.user']);
+        $property->load(['coverImage','images','amenities','rooms','approvedReviews.user','approvedReviews.tags']);
 
         return response()->json([
             'status_code'=>200,
@@ -71,7 +71,7 @@ class PropertyController extends Controller
     public function topReviews(Property $property)
     {
         $reviews = $property->approvedReviews()
-        ->with('user')
+        ->with('user','tags')
         ->orderBy('rating', 'desc')
         ->latest()->take(5)->get();
 
