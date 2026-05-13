@@ -20,6 +20,17 @@ class Room extends Model
         return $this->belongsTo(Property::class, 'property_id');
     }
 
+    public function images()
+    {
+        return $this->hasMany(RoomImage::class);
+    }
+
+    public function coverImage()
+    {
+        return $this->hasOne(RoomImage::class)
+        ->where('is_cover', true);
+    }
+
     public function bookings()
     {
         return $this->hasMany(Booking::class);

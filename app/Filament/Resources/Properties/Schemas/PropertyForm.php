@@ -66,11 +66,13 @@ class PropertyForm
                                     ->label(__('messages.image'))
                                     ->image()
                                     ->acceptedFileTypes([
+                                        'image/jpg',
                                         'image/jpeg',
                                         'image/png',
                                         'image/webp',
                                     ])
                                     ->maxSize(2048) // KB = 2MB
+                                    ->disk('public')
                                     ->directory('properties')
                                     ->required(),
 

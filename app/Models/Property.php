@@ -59,8 +59,7 @@ class Property extends Model
     public function coverImage()
     {
         return $this->hasOne(PropertyImage::class)
-            ->where('is_cover', true)
-            ->orderBy('sort_order');
+            ->where('is_cover', true);
     }
 
     //attributes

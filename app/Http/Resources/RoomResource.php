@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\RoomImageResource;
 
 class RoomResource extends JsonResource
 {
@@ -18,6 +19,8 @@ class RoomResource extends JsonResource
             'id'=>$this->id,
             'property_id'=>$this->property_id,
             'name'=>$this->name,
+            'cover_image' => $this->coverImage ? asset('storage/'.$this->coverImage->image) : null,
+            'images'=>RoomImageResource::collection($this->images),
             'number'=>$this->number,
             'description'=>$this->description ?? null,
             'amenities'=>$this->amenities->map(function($amenity){

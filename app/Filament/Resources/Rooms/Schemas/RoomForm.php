@@ -8,6 +8,9 @@ use Filament\Forms\Components\TextArea;
 use Filament\Forms\Components\Select;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Toggle;
 
 
 class RoomForm
@@ -52,6 +55,58 @@ class RoomForm
                                     ->label(__('messages.capacity'))
                                     ->required()
                                     ->numeric(),
+                            ]),
+                            Tab::make('Images')
+                            ->label(__('messages.images'))
+                            ->schema([
+                                Repeater::make('images')
+                                ->label(__('messages.images'))
+                                ->relationship()
+                                ->schema([
+                                    FileUpload::make('image')
+                                        ->label(__('messages.image'))
+                                        ->image()
+                                        ->acceptedFileTypes([
+                                            'image/jpg',
+                                            'image/jpeg',
+                                            'image/png',
+                                            'image/webp',
+                                        ])
+                                        ->maxSize(2048) // KB = 2MB
+                                        ->disk('public')
+                                        ->directory('rooms')
+                                        ->required(),
+
+                                    Toggle::make('is_cover')
+                                        ->label(__('messages.cover_image')),
+
+                                    TextInput::make('sort_order')
+                                        ->label(__('messages.sort_order'))
+                                        ->numeric()
+                                        ->default(0),
+                                ])
+                                ->collapsible()
+                                ->cloneable()
+                                ->reorderable()
+                                ->minItems(2)
+                                ->rules([
+                                    function () {
+                                        return function (string $attribute, $value, $fail) {
+                                            $coverCount = collect($value ?? [])
+                                                ->where('is_cover', true)
+                                                ->count();
+
+                                            if ($coverCount < 1) {
+                                                $fail(__('messages.select_one_cover_image'));
+                                            }
+
+                                            if ($coverCount > 1) {
+                                                $fail(__('messages.only_one_cover_image_allowed'));
+                                            }
+                                        };
+                                    },
+                                ])
+                                ->addActionLabel(__('messages.add_image')),
                             ]),
 
                     ])->columns(2)->columnSpanFull(),

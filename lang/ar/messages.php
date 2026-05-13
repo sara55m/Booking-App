@@ -31,6 +31,8 @@ return [
     'user' => 'المستخدم',
     'room' => 'الغرفة',
     'room_details' => 'تفاصيل الغرفة',
+    'only_one_cover_image_allowed' => 'يسمح بصورة غلاف واحدة فقط',
+    'select_cover_image' => 'اختر صورة الغلاف',
     'check_in' => 'تاريخ الوصول',
     'check_out' => 'تاريخ المغادرة',
     'status' => 'الحالة',

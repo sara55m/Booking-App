@@ -31,6 +31,8 @@ return [
     'user' => 'User',
     'room' => 'Room',
     'room_details' => 'Room Details',
+    'only_one_cover_image_allowed' => 'Only one cover image allowed',
+    'select_cover_image' => 'Select Cover Image',
     'check_in' => 'Check In',
     'check_out' => 'Check Out',
     'status' => 'Status',
