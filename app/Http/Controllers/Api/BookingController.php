@@ -90,4 +90,35 @@ class BookingController extends Controller
                 'message' => __('messages.booking_created_successfully'),
                 'data' => new BookingResource($booking)]);
     }
+
+    public function cancel(Booking $booking)
+    {
+        // Check if the booking belongs to the authenticated user
+        if ($booking->user_id !== auth()->id()) {
+            return response()->json(['message' => __('messages.unauthorized_action')], 404);
+        }
+
+        // Check if the booking can be cancelled (e.g., only if it's pending or confirmed)
+        if (!in_array($booking->status, [BookingStatus::PENDING, BookingStatus::CONFIRMED])) {
+            return response()->json(['message' => __('messages.booking_cannot_be_cancelled')], 422);
+        }
+
+        //check the booking did not start yet
+        if($booking->check_in->isPast()){
+            return response()->json(['message' => __('messages.booking_cannot_be_cancelled_as_it_has_started')], 422);
+        }
+
+        // Update the booking status to cancelled
+        $booking->update([
+            'status' => BookingStatus::CANCELLED,
+        ]);
+
+        return response()->json(
+            [
+                'status_code' => 200,
+                'message' => __('messages.booking_cancelled_successfully'),
+                'data' => new BookingResource($booking)]);
+    }
 }
+
+

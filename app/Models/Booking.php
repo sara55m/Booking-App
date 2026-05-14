@@ -114,6 +114,15 @@ class Booking extends Model
         return $query->whereDate('check_in', '>=', today());
     }
 
+    // Cancellable bookings (pending or confirmed)
+    public function scopeCancelable(Builder $query)
+    {
+        return $query->whereIn('status', [
+            'pending',
+            'confirmed',
+        ]);
+    }
+
     /**
      * Bookings for specific user
      */

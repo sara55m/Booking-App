@@ -118,4 +118,7 @@ return [
     'room_not_available_in_these_dates' => 'Room is not available in these dates',
     'booking_created_successfully' => 'Booking created successfully',
     'bookings_retrieved_successfully' => 'Bookings retrieved successfully',
+    'unauthorized_action' => 'Unauthorized action',
+    'booking_cannot_be_cancelled_as_it_has_started' => 'This booking cannot be cancelled as it has already started',
+    'booking_cancelled_successfully' => 'Booking cancelled successfully',
 ];

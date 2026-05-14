@@ -118,4 +118,7 @@ return [
     'room_not_available_in_these_dates' => 'الغرفة غير متوفرة في هذه التواريخ',
     'booking_created_successfully' => 'تم إنشاء الحجز بنجاح.',
     'bookings_retrieved_successfully' => 'تم استرجاع الحجوزات بنجاح',
+    'booking_cannot_be_cancelled_as_it_has_started' => 'لا يمكن إلغاء هذا الحجز لأنه قد بدأ بالفعل',
+    'unauthorized_action' => 'إجراء غير مصرح به',
+    'booking_cancelled_successfully' => 'تم إلغاء الحجز بنجاح',
 ];
