@@ -10,6 +10,7 @@ use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
 use App\Models\Room;
 use Filament\Schemas\Components\Utilities\Get;
+use Filament\Forms\Components\TextInput;
 
 class BookingForm
 {
@@ -46,7 +47,11 @@ class BookingForm
                                     )
                                     ->searchable()
                                     ->required()
-                                    ->disabled(fn (Get $get) => blank($get('property_id')))
+                                    ->disabled(fn (Get $get) => blank($get('property_id'))),
+
+                                TextInput::make('guests_count')
+                                ->label(__('messages.guests_count'))
+                                ->numeric()
                             ]),
                         Tab::make('Dates & Status')
                             ->label(__('messages.dates_status'))

@@ -1,6 +1,7 @@
 <?php
 
 return [
+    //filament dashboard
     'dashboard' => 'لوحة التحكم',
     'properties' => 'العقارات',
     'property'=>'العقار',
@@ -52,6 +53,7 @@ return [
     'room_number' => 'رقم الغرفة',
     'price_per_night' => 'السعر لكل ليلة',
     'capacity' => 'السعة',
+    'guests_count' => 'عدد الضيوف',
     'min_price' => 'السعر الأدنى',
     'max_price' => 'السعر الأعلى',
     'payment_status' => 'حالة الدفع',
@@ -105,8 +107,14 @@ return [
     'totally_paid' => 'إجمالى الدفعات المدفوعة بالكامل',
 
     //api messages
+    //properties
     'properties_retrieved_successfully' => 'تم استرجاع العقارات بنجاح',
     'property_retrieved_successfully' => 'تم استرجاع العقار بنجاح',
     'availability_retrieved_successfully' => 'تم استرجاع الغرف المتوفرة بنجاح',
     'top_reviews_retrieved_successfully' => 'تم استرجاع التقييمات الأعلى بنجاح',
+
+    //bookings
+    'number_of_guests_exceeds_capacity' => 'عدد الضيوف يتجاوز سعة الغرفة',
+    'room_not_available_in_these_dates' => 'الغرفة غير متوفرة في هذه التواريخ',
+    'booking_created_successfully' => 'تم إنشاء الحجز بنجاح.',
 ];

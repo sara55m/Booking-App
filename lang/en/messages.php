@@ -1,6 +1,7 @@
 <?php
 
 return [
+    //filament dashboard
     'dashboard' => 'Dashboard',
     'properties' => 'Properties',
     'property'=>'Property',
@@ -52,6 +53,7 @@ return [
     'room_number' => 'Room Number',
     'price_per_night' => 'Price Per Night',
     'capacity' => 'Capacity',
+    'guests_count' => 'Guests Count',
     'min_price' => 'Min Price',
     'max_price' => 'Max Price',
     'payment_status' => 'Payment Status',
@@ -105,8 +107,14 @@ return [
     'no_properties'=>'No Properties',
 
     //api messages
+    //properties
     'properties_retrieved_successfully' => 'Properties retrieved successfully',
     'property_retrieved_successfully' => 'Property retrieved successfully',
     'availability_retrieved_successfully' => 'Available Rooms retrieved successfully',
     'top_reviews_retrieved_successfully' => 'Top Reviews retrieved successfully',
+
+    //bookings
+    'number_of_guests_exceeds_capacity' => 'Number of guests exceeds room capacity',
+    'room_not_available_in_these_dates' => 'Room is not available in these dates',
+    'booking_created_successfully' => 'Booking created successfully',
 ];

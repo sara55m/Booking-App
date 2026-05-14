@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
 use App\Models\User;
 use App\Http\Controllers\Api\PropertyController;
+use App\Http\Controllers\Api\BookingController;
 
 Route::middleware('throttle:3,1')->group(function(){
     Route::post('/register', [AuthController::class, 'register']);
@@ -56,4 +57,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/properties/{property}', [PropertyController::class, 'show']);
     Route::post('/properties/{property}/availability', [PropertyController::class, 'availability']);
     Route::get('/properties/{property}/reviews', [PropertyController::class, 'topReviews']);
+
+    //bookings
+    Route::post('/bookings', [BookingController::class, 'create']);
 });

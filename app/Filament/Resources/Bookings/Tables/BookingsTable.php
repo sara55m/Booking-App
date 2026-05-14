@@ -27,7 +27,7 @@ class BookingsTable
                 TextColumn::make('room.name')
                     ->label(__('messages.room'))
                     ->sortable(),
-                TextColumn::make('number_of_nights')
+                TextColumn::make('nights_count')
                     ->label(__('messages.number_of_nights'))
                     ->sortable(),
                 TextColumn::make('total_price')

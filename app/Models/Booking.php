@@ -15,6 +15,8 @@ class Booking extends Model
         'room_id',
         'check_in',
         'check_out',
+        'guests_count',
+        'nights_count',
         'total_price',
         'status',
     ];
@@ -23,6 +25,8 @@ class Booking extends Model
         'check_in' => 'date',
         'check_out' => 'date',
         'total_price' => 'decimal:2',
+        'guests_count' => 'integer',
+        'nights_count' => 'integer',
         'status' => BookingStatus::class,
     ];
 
