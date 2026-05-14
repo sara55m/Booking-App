@@ -19,6 +19,7 @@ class RoomResource extends JsonResource
             'id'=>$this->id,
             'property_id'=>$this->property_id,
             'name'=>$this->name,
+            'number'=>$this->number,
             'cover_image' => $this->coverImage ? asset('storage/'.$this->coverImage->image) : null,
             'images'=>RoomImageResource::collection($this->images),
             'number'=>$this->number,

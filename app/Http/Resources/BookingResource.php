@@ -17,14 +17,21 @@ class BookingResource extends JsonResource
         return [
             'id' => $this->id,
             'user_id' => $this->user_id,
-            'property_id' => $this->property_id,
-            'room_id' => $this->room_id,
+            'property' =>[
+                    'id' => $this->property->id,
+                    'name' => $this->property->name],
+            'room' => [
+                    'id' => $this->room->id,
+                    'name' => $this->room->name,
+                    'number' => $this->room->number
+            ],
             'check_in' => $this->check_in->format('Y-m-d'),
             'check_out' => $this->check_out->format('Y-m-d'),
             'guests_count' => $this->guests_count,
             'nights_count' => $this->nights_count,
             'total_price' => $this->total_price.' EGP',
             'status' => $this->status,
+            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
         ];
     }
 }

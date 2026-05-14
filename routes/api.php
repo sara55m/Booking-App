@@ -59,5 +59,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/properties/{property}/reviews', [PropertyController::class, 'topReviews']);
 
     //bookings
+    Route::get('/bookings', [BookingController::class, 'index']);
     Route::post('/bookings', [BookingController::class, 'create']);
 });

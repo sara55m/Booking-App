@@ -117,4 +117,5 @@ return [
     'number_of_guests_exceeds_capacity' => 'Number of guests exceeds room capacity',
     'room_not_available_in_these_dates' => 'Room is not available in these dates',
     'booking_created_successfully' => 'Booking created successfully',
+    'bookings_retrieved_successfully' => 'Bookings retrieved successfully',
 ];

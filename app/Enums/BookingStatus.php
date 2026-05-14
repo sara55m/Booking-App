@@ -9,4 +9,9 @@ enum BookingStatus: string
     case CHECKED_IN = 'checked_in';
     case CHECKED_OUT = 'checked_out';
     case CANCELLED = 'cancelled';
+
+    public static function values(): array
+    {
+        return array_column(self::cases(), 'value');
+    }
 }

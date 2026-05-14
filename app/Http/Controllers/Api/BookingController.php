@@ -8,9 +8,47 @@ use App\Enums\BookingStatus;
 use App\Http\Requests\Bookings\StoreRequest;
 use App\Models\Room;
 use App\Http\Resources\BookingResource;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class BookingController extends Controller
 {
+
+    public function index(Request $request)
+    {
+        $request->validate([
+            'status' => [
+                'nullable',
+                Rule::in(BookingStatus::values()),
+            ]
+        ]);
+        $bookings=Booking::query()
+        ->forUser(auth()->id())
+        ->when($request->status,function($query) use ($request){
+            $query->status($request->status);
+        })
+        ->with(['property','room'])
+        ->latest()
+        ->paginate(10);
+
+        return response()->json(
+            [
+                'status_code' => 200,
+                'message' => __('messages.bookings_retrieved_successfully'),
+                'data' => BookingResource::collection($bookings),
+                'pagination' => [
+
+                    'current_page' => $bookings->currentPage(),
+
+                    'last_page' => $bookings->lastPage(),
+
+                    'per_page' => $bookings->perPage(),
+
+                    'total' => $bookings->total(),
+                ]
+            ]);
+    }
+
     public function create(StoreRequest $request)
     {
         $data=$request->validated();

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Enums\BookingStatus;
 use Carbon\Carbon;
 use App\Models\Room;
+use Illuminate\Database\Eloquent\Builder;
 
 class Booking extends Model
 {
@@ -100,7 +101,7 @@ class Booking extends Model
     /**
      * Filter by booking status
      */
-    public function scopeStatus($query, string $status)
+    public function scopeStatus(Builder $query, string $status)
     {
         return $query->where('status', $status);
     }
@@ -108,7 +109,7 @@ class Booking extends Model
     /**
      * Upcoming bookings
      */
-    public function scopeUpcoming($query)
+    public function scopeUpcoming(Builder $query)
     {
         return $query->whereDate('check_in', '>=', today());
     }
@@ -116,7 +117,7 @@ class Booking extends Model
     /**
      * Bookings for specific user
      */
-    public function scopeForUser($query, int $userId)
+    public function scopeForUser(Builder $query, int $userId)
     {
         return $query->where('user_id', $userId);
     }

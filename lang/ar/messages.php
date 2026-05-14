@@ -117,4 +117,5 @@ return [
     'number_of_guests_exceeds_capacity' => 'عدد الضيوف يتجاوز سعة الغرفة',
     'room_not_available_in_these_dates' => 'الغرفة غير متوفرة في هذه التواريخ',
     'booking_created_successfully' => 'تم إنشاء الحجز بنجاح.',
+    'bookings_retrieved_successfully' => 'تم استرجاع الحجوزات بنجاح',
 ];
