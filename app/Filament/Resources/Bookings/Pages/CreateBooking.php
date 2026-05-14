@@ -19,7 +19,7 @@ class CreateBooking extends CreateRecord
 
         if (!Booking::isRoomAvailable($roomId, $data['check_in'], $data['check_out'])) {
             Notification::make()
-                ->title('Room is not available for selected dates.')
+                ->title(__('messages.room_not_available_in_these_dates'))
                 ->danger()
                 ->send();
 

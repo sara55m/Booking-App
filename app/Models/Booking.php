@@ -131,6 +131,35 @@ class Booking extends Model
         return $query->where('user_id', $userId);
     }
 
+    //transition between statuses
+    public function canTransitionTo(BookingStatus $newStatus): bool
+    {
+        return match ($this->status) {
+
+            BookingStatus::PENDING => in_array($newStatus, [
+                BookingStatus::CONFIRMED,
+                BookingStatus::CANCELLED,
+            ]),
+
+            BookingStatus::CONFIRMED => in_array($newStatus, [
+                BookingStatus::CHECKED_IN,
+                BookingStatus::CANCELLED,
+            ]),
+
+            BookingStatus::CHECKED_IN => in_array($newStatus, [
+                BookingStatus::CHECKED_OUT,
+            ]),
+
+            BookingStatus::CHECKED_OUT => in_array($newStatus, [
+                BookingStatus::COMPLETED,
+            ]),
+
+            BookingStatus::COMPLETED => false,
+
+            BookingStatus::CANCELLED => false,
+        };
+    }
+
     protected static function booted(){
         static::saving(function ($booking) {
             if(!$booking->room_id || !$booking->check_in || !$booking->check_out){

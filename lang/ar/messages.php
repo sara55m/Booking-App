@@ -46,6 +46,7 @@ return [
     'confirmed' => 'مؤكد',
     'checked_in' => 'تم الوصول',
     'checked_out' => 'تم المغادرة',
+    'completed' => 'مكتمل',
     'cancelled' => 'ملغي',
     'upcoming_bookings' => 'الحجوزات القادمة',
     'current_bookings' => 'الحجوزات الحالية',
@@ -121,4 +122,5 @@ return [
     'booking_cannot_be_cancelled_as_it_has_started' => 'لا يمكن إلغاء هذا الحجز لأنه قد بدأ بالفعل',
     'unauthorized_action' => 'إجراء غير مصرح به',
     'booking_cancelled_successfully' => 'تم إلغاء الحجز بنجاح',
+    'invalid_status_transition' => 'لا يمكن تغيير الحالة من :from إلى :to',
 ];

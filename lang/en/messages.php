@@ -46,6 +46,7 @@ return [
     'confirmed' => 'Confirmed',
     'checked_in' => 'Checked In',
     'checked_out' => 'Checked Out',
+    'completed' => 'Completed',
     'cancelled' => 'Cancelled',
     'upcoming_bookings' => 'Upcoming Bookings',
     'current_bookings' => 'Current Bookings',
@@ -121,4 +122,5 @@ return [
     'unauthorized_action' => 'Unauthorized action',
     'booking_cannot_be_cancelled_as_it_has_started' => 'This booking cannot be cancelled as it has already started',
     'booking_cancelled_successfully' => 'Booking cancelled successfully',
+    'invalid_status_transition' => 'Invalid status transition from :from to :to',
 ];

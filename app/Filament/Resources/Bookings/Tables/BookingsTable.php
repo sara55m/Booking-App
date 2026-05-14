@@ -64,6 +64,7 @@ class BookingsTable
                     'confirmed' => __('messages.confirmed'),
                     'checked_in' => __('messages.checked_in'),
                     'checked_out' => __('messages.checked_out'),
+                    'completed' => __('messages.completed'),
                     'cancelled' => __('messages.cancelled'),
                 ]),
 

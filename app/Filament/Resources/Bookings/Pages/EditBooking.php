@@ -36,12 +36,25 @@ class EditBooking extends EditRecord
                 $recordId //exclude current booking
             )) {
                 Notification::make()
-                    ->title('Room is not available for selected dates.')
+                    ->title(__('messages.room_not_available_in_these_dates'))
                     ->danger()
                     ->send();
 
                 $this->halt();
             }
+        }
+        //check the new status is valid
+        $newStatus = $data['status'];
+        if(!$record->canTransitionTo($newStatus)) {
+            Notification::make()
+                ->title(__('messages.invalid_status_transition', [
+                    'from' => $record->status->value,
+                    'to' => $newStatus,
+                ]))
+                ->danger()
+                ->send();
+
+            $this->halt();
         }
 
         return $data;
