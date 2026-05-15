@@ -10,6 +10,7 @@ use App\Models\Room;
 use App\Http\Resources\BookingResource;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
 
 class BookingController extends Controller
 {
@@ -49,20 +50,21 @@ class BookingController extends Controller
             ]);
     }
 
-    public function create(StoreRequest $request)
+    public function store(StoreRequest $request)
     {
         $data=$request->validated();
-
-        //get room
-        $room=Room::findOrFail($data['room_id']);
+        //use database transactions and locking to prevent double bookings
+        return DB::transaction(function () use ($data) {
+            //get room
+        $room=Room::where('id',$data['room_id'])->lockForUpdate()->firstOrFail();
 
         //check capacity
         if($data['guests_count'] > $room->capacity) {
-            return response()->json(['message' => __('messages.number_of_guests_exceeds_capacity')], 400);
+            return response()->json(['message' => __('messages.number_of_guests_exceeds_capacity')], 422);
         }
         // Check if room is available for the given dates
         if(!Booking::isRoomAvailable($room->id, $data['check_in'], $data['check_out'])) {
-            return response()->json(['message' => __('messages.room_not_available_in_these_dates')], 400);
+            return response()->json(['message' => __('messages.room_not_available_in_these_dates')], 422);
         }
 
         $booking=new Booking();
@@ -89,6 +91,7 @@ class BookingController extends Controller
                 'status_code' => 201,
                 'message' => __('messages.booking_created_successfully'),
                 'data' => new BookingResource($booking)]);
+        });
     }
 
     public function cancel(Booking $booking)
