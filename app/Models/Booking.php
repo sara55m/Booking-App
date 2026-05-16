@@ -7,6 +7,7 @@ use App\Enums\BookingStatus;
 use Carbon\Carbon;
 use App\Models\Room;
 use Illuminate\Database\Eloquent\Builder;
+use App\Enums\BookingPaymentStatus;
 
 class Booking extends Model
 {
@@ -20,6 +21,7 @@ class Booking extends Model
         'nights_count',
         'total_price',
         'status',
+        'payment_status',
     ];
 
     protected $casts = [
@@ -29,6 +31,7 @@ class Booking extends Model
         'guests_count' => 'integer',
         'nights_count' => 'integer',
         'status' => BookingStatus::class,
+        'payment_status' => BookingPaymentStatus::class,
     ];
 
     public function user()

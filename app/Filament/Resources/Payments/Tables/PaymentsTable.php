@@ -38,8 +38,6 @@ class PaymentsTable
                         'success' => PaymentStatus::PAID->value,
                         'danger' => PaymentStatus::FAILED->value,
                         'info' => PaymentStatus::REFUNDED->value,
-                        'primary' => PaymentStatus::CANCELLED->value,
-                        'partial' => PaymentStatus::PARTIAL->value,
                     ])
                     ->searchable(),
                 TextColumn::make('payment_method')

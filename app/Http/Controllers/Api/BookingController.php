@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\BookingPaymentStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Enums\BookingStatus;
@@ -11,6 +12,7 @@ use App\Http\Resources\BookingResource;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class BookingController extends Controller
 {
@@ -47,13 +49,14 @@ class BookingController extends Controller
 
                     'total' => $bookings->total(),
                 ]
-            ]);
+            ],200);
     }
 
     public function store(StoreRequest $request)
     {
         $data=$request->validated();
-        //use database transactions and locking to prevent double bookings
+        try{
+            //use database transactions and locking to prevent double bookings
         return DB::transaction(function () use ($data) {
             //get room
         $room=Room::where('id',$data['room_id'])->lockForUpdate()->firstOrFail();
@@ -84,14 +87,34 @@ class BookingController extends Controller
         $booking->nights_count=$numberOfNights;
         $booking->total_price=$totalPrice;
         $booking->status=BookingStatus::PENDING;
+        $booking->payment_status=BookingPaymentStatus::UNPAID;
         $booking->save();
 
         return response()->json(
             [
                 'status_code' => 201,
                 'message' => __('messages.booking_created_successfully'),
-                'data' => new BookingResource($booking)]);
+                'data' => new BookingResource($booking)],201);
         });
+        }catch (\Exception $e) {
+
+            Log::error('Booking creation failed', [
+
+                'error' => $e->getMessage(),
+
+                'user_id' => auth()->id(),
+
+                'room_id' => $data['room_id'] ?? null,
+            ]);
+
+            return response()->json([
+
+                'message' =>
+                    __('messages.something_went_wrong'),
+
+            ], 500);
+        }
+
     }
 
     public function cancel(Booking $booking)
@@ -120,7 +143,7 @@ class BookingController extends Controller
             [
                 'status_code' => 200,
                 'message' => __('messages.booking_cancelled_successfully'),
-                'data' => new BookingResource($booking)]);
+                'data' => new BookingResource($booking)],200);
     }
 }
 

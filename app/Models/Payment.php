@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\BookingPaymentStatus;
 use App\Enums\BookingStatus;
 use Illuminate\Database\Eloquent\Model;
 use App\Enums\PaymentStatus;
@@ -17,6 +18,9 @@ class Payment extends Model
         'payment_method',
         'paid_at',
         'transaction_id',
+        'currency',
+        'stripe_session_id',
+        'stripe_payment_intent_id',
     ];
 
     protected $casts = [
@@ -131,7 +135,7 @@ class Payment extends Model
         static::deleted(fn ($payment) => self::updateBookingStatus($payment));
     }
 
-    //update booking status
+    //update booking status and booking payment status
     protected static function updateBookingStatus($payment)
     {
         $booking = $payment->booking()->with('payments')->first();
@@ -141,9 +145,9 @@ class Payment extends Model
         $totalPaid = $booking->payments->sum('amount');
 
         if ($totalPaid >= $booking->total_price) {
-            $booking->update(['status' => BookingStatus::CONFIRMED]);
+            $booking->update(['payment_status'=>BookingPaymentStatus::PAID,'status' => BookingStatus::CONFIRMED]);
         } else {
-            $booking->update(['status' => BookingStatus::PENDING]);
+            $booking->update(['payment_status'=>BookingPaymentStatus::PARTIAL,'status' => BookingStatus::CONFIRMED]);
         }
     }
 

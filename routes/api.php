@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\URL;
 use App\Models\User;
 use App\Http\Controllers\Api\PropertyController;
 use App\Http\Controllers\Api\BookingController;
+use App\Http\Controllers\Api\PaymentController;
 
 Route::middleware('throttle:3,1')->group(function(){
     Route::post('/register', [AuthController::class, 'register']);
@@ -62,4 +63,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/bookings', [BookingController::class, 'index']);
     Route::post('/bookings', [BookingController::class, 'store']);
     Route::post('/bookings/{booking}/cancel', [BookingController::class, 'cancel']);
+    //payment
+    Route::post('/bookings/{booking}/checkout', [PaymentController::class, 'checkout']);
 });
+
+//webhook route for stripe
+Route::post(
+    '/stripe/webhook',
+    [PaymentController::class, 'webhook']
+);
