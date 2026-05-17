@@ -137,4 +137,6 @@ return [
     'payment_already_processed' => 'تمت معالجة عملية الدفع مسبقاً',
     'payment_not_found' => 'عملية الدفع غير موجودة',
     'webhook_handled_successfully' => 'تمت معالجة الـ Webhook بنجاح',
+    'booking_cannot_be_cancelled'=>'لا يمكن الغاء الحجز',
+    'refund_failed'=>'فشل رد المبلغ',
 ];

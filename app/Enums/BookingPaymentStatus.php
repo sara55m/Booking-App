@@ -7,4 +7,5 @@ enum BookingPaymentStatus : string
     case PARTIAL = 'partial';
     case PAID = 'paid';
     case UNPAID = 'unpaid';
+    case REFUNDED='refunded';
 }

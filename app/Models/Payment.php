@@ -21,11 +21,15 @@ class Payment extends Model
         'currency',
         'stripe_session_id',
         'stripe_payment_intent_id',
+        'refunded_amount',
+        'refunded_at'
     ];
 
     protected $casts = [
         'amount' => 'decimal:2',
+        'refunded_amount'=>'decimal:2',
         'paid_at' => 'datetime',
+        'refunded_at'=>'datetime',
         'status' => PaymentStatus::class,
         'payment_method' => PaymentMethod::class,
     ];

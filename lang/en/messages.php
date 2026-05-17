@@ -137,4 +137,6 @@ return [
     'payment_already_processed'=>'Payment Already Processed',
     'payment_not_found'=>'Payment is not found',
     'webhook_handled_successfully'=>'Webhook Handled Successfully',
+    'booking_cannot_be_cancelled'=>'Booking cannot be cancelled',
+    'refund_failed'=>'Refund Failed',
 ];

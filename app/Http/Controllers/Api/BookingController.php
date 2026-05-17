@@ -6,6 +6,7 @@ use App\Enums\BookingPaymentStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Enums\BookingStatus;
+use App\Enums\PaymentStatus;
 use App\Http\Requests\Bookings\StoreRequest;
 use App\Models\Room;
 use App\Http\Resources\BookingResource;
@@ -13,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Stripe\Stripe;
 
 class BookingController extends Controller
 {
@@ -134,17 +136,63 @@ class BookingController extends Controller
             return response()->json(['message' => __('messages.booking_cannot_be_cancelled_as_it_has_started')], 422);
         }
 
-        // Update the booking status to cancelled
-        $booking->update([
-            'status' => BookingStatus::CANCELLED,
-        ]);
+        //handle refund
+        Stripe::setApiKey(config('services.stripe.secret'));
+        
+        DB::beginTransaction();
 
-        return response()->json(
-            [
-                'status_code' => 200,
-                'message' => __('messages.booking_cancelled_successfully'),
-                'data' => new BookingResource($booking)],200);
+        try{
+            //get all paid payments for the booking
+            $payments=$booking->payments()->where('status',PaymentStatus::PAID)->get();
+
+            //refund each payment amount using stripe refund
+            foreach($payments as $payment)
+            {
+                \Stripe\Refund::create([
+                    'payment_intent' =>
+                    $payment->stripe_payment_intent_id,
+                ]);
+
+                //update payment status and refund data
+                $payment->update([
+                    'status'=>PaymentStatus::REFUNDED,
+                    'refunded_amount' =>$payment->amount,
+                    'refunded_at' => now(),
+                ]);
+            }
+
+            // Update the booking status to cancelled and booking payment status to refunded
+            $booking->update([
+                'status' => BookingStatus::CANCELLED,
+                'payment_status'=>BookingPaymentStatus::REFUNDED,
+            ]);
+
+            DB::commit();
+            return response()->json(
+                [
+                    'status_code' => 200,
+                    'message' => __('messages.booking_cancelled_successfully'),
+                    'data' => new BookingResource($booking)],200);
+        }catch (\Exception $e) {
+
+            DB::rollBack();
+    
+            Log::error('Refund failed', [
+    
+                'booking_id' => $booking->id,
+    
+                'error' => $e->getMessage(),
+            ]);
+    
+            return response()->json([
+    
+                'message' =>
+                    __('messages.refund_failed'),
+    
+            ], 500);
+        }
     }
+    
 }
 
 
