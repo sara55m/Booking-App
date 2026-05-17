@@ -22,6 +22,9 @@ class Booking extends Model
         'total_price',
         'status',
         'payment_status',
+        'offer_id',
+        'original_price',
+        'discount_amount'
     ];
 
     protected $casts = [
@@ -32,6 +35,8 @@ class Booking extends Model
         'nights_count' => 'integer',
         'status' => BookingStatus::class,
         'payment_status' => BookingPaymentStatus::class,
+        'original_price'=>'decimal:2',
+        'discount_amount'=>'decimal:2',
     ];
 
     public function user()
@@ -57,6 +62,11 @@ class Booking extends Model
     public function review()
     {
         return $this->hasOne(Review::class);
+    }
+
+    public function offers()
+    {
+        return $this->hasMany(Offer::class);
     }
 
     // Check if room is available for given dates

@@ -51,6 +51,11 @@ class Property extends Model
         return $this->reviews()->where('status', 'approved');
     }
 
+    public function offers()
+    {
+        return $this->hasMany(Offer::class);
+    }
+
     public function images()
     {
         return $this->hasMany(PropertyImage::class,'property_id');
