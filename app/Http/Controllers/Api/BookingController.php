@@ -15,6 +15,8 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Stripe\Stripe;
+use App\Services\OfferService;
+use App\Models\Offer;
 
 class BookingController extends Controller
 {
@@ -54,22 +56,27 @@ class BookingController extends Controller
             ],200);
     }
 
-    public function store(StoreRequest $request)
+    public function store(StoreRequest $request,OfferService $offerService)
     {
         $data=$request->validated();
         try{
             //use database transactions and locking to prevent double bookings
-        return DB::transaction(function () use ($data) {
+        return DB::transaction(function () use ($data,$offerService) {
             //get room
         $room=Room::where('id',$data['room_id'])->lockForUpdate()->firstOrFail();
 
+        //check the room belongs to the booking property
+        if($data['property_id'] != $room->property_id) {
+            return response()->json(['status_code'=>422,'message' => __('messages.room_does_not_belong_to_property')], 422);
+        }
+
         //check capacity
         if($data['guests_count'] > $room->capacity) {
-            return response()->json(['message' => __('messages.number_of_guests_exceeds_capacity')], 422);
+            return response()->json(['status_code'=>422,'message' => __('messages.number_of_guests_exceeds_capacity')], 422);
         }
         // Check if room is available for the given dates
         if(!Booking::isRoomAvailable($room->id, $data['check_in'], $data['check_out'])) {
-            return response()->json(['message' => __('messages.room_not_available_in_these_dates')], 422);
+            return response()->json(['status_code'=>422,'message' => __('messages.room_not_available_in_these_dates')], 422);
         }
 
         $booking=new Booking();
@@ -79,19 +86,61 @@ class BookingController extends Controller
         //calculate number of nights
         $numberOfNights=$booking->calculateNumberOfNights();
         //calculate total price
-        $totalPrice=$booking->calculateTotalPrice($room->{'price-per-night'});
+        $originalPrice=$booking->calculateTotalPrice($room->{'price-per-night'});
 
+        $totalPrice=$originalPrice;
+        $discountAmount=0;
+        $offer=null;
+        //validate offer
+        if(!empty($data['offer_id'])){
+            $offer=Offer::findOrFail($data['offer_id']);
+            $validation=$offerService->validateOffer($offer,$data['property_id'],$originalPrice,$numberOfNights);
+            //if validation is false
+            if (!$validation['valid']) {
+
+                return response()->json([
+                    'status_code'=>422,
+                    'message' => $validation['message']
+                ], 422);
+            }
+            $discountAmount=$offerService->calculateDiscount($offer,$originalPrice);
+            //apply the discount amount
+            //prevent negative total
+            $totalPrice = max(
+                0,
+                $originalPrice - $discountAmount
+            );
+        }
+       
         //save booking
-        $booking->user_id=auth()->id();
-        $booking->property_id=$data['property_id'];
-        $booking->room_id=$data['room_id'];
-        $booking->guests_count=$data['guests_count'];
-        $booking->nights_count=$numberOfNights;
-        $booking->total_price=$totalPrice;
-        $booking->status=BookingStatus::PENDING;
-        $booking->payment_status=BookingPaymentStatus::UNPAID;
-        $booking->save();
+        $booking->fill([
 
+            'user_id' => auth()->id(),
+        
+            'property_id' => $data['property_id'],
+        
+            'room_id' => $data['room_id'],
+        
+            'guests_count' => $data['guests_count'],
+        
+            'nights_count' => $numberOfNights,
+        
+            'status' => BookingStatus::PENDING,
+        
+            'payment_status' =>
+                BookingPaymentStatus::UNPAID,
+        
+            'offer_id' => $offer?->id,
+        
+            'original_price' => $originalPrice,
+        
+            'discount_amount' => $discountAmount,
+        
+            // IMPORTANT
+            'total_price' => $totalPrice,
+        ]);
+        $booking->save();
+        
         return response()->json(
             [
                 'status_code' => 201,
@@ -103,6 +152,8 @@ class BookingController extends Controller
             Log::error('Booking creation failed', [
 
                 'error' => $e->getMessage(),
+
+                'trace' => $e->getTraceAsString(),
 
                 'user_id' => auth()->id(),
 

@@ -29,6 +29,14 @@ class BookingResource extends JsonResource
             'check_out' => $this->check_out->format('Y-m-d'),
             'guests_count' => $this->guests_count,
             'nights_count' => $this->nights_count,
+            'offer'=>$this->offer ? [
+                'id'=>$this->offer?->id,
+                'title'=>$this->offer->title,
+                'discount_value'=>$this->offer->discount_value,
+                'discount_type'=>$this->offer->discount_type
+            ] : null,
+            'original_price'=>$this->original_price.' EGP',
+            'discount_amount'=>$this->discount_amount,
             'total_price' => $this->total_price.' EGP',
             'status' => $this->status,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),

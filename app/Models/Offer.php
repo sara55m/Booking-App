@@ -21,9 +21,9 @@ class Offer extends Model
         return $this->belongsTo(Property::class);
     }
 
-    public function booking()
+    public function bookings()
     {
-        return $this->belongsTo(Booking::class);
+        return $this->hasMany(Booking::class);
     }
 
     

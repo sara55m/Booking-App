@@ -136,6 +136,7 @@ return [
     'top_reviews_retrieved_successfully' => 'تم استرجاع التقييمات الأعلى بنجاح',
 
     //bookings
+    'room_does_not_belong_to_property'=>'الغرفة لا تنتمى للعقار',
     'number_of_guests_exceeds_capacity' => 'عدد الضيوف يتجاوز سعة الغرفة',
     'room_not_available_in_these_dates' => 'الغرفة غير متوفرة في هذه التواريخ',
     'booking_created_successfully' => 'تم إنشاء الحجز بنجاح.',
@@ -160,4 +161,12 @@ return [
     'webhook_handled_successfully' => 'تمت معالجة الـ Webhook بنجاح',
     'booking_cannot_be_cancelled'=>'لا يمكن الغاء الحجز',
     'refund_failed'=>'فشل رد المبلغ',
+    //offers
+    'offer_is_not_active' => 'العرض غير نشط',
+    'offer_not_started_yet' => 'العرض لم يبدأ بعد',
+    'offer_has_expired' => 'انتهت صلاحية العرض',
+    'booking_amount_does_not_meet_offer_requirement' => 'قيمة الحجز لا تحقق شروط العرض',
+    'minimum_nights_not_met' => 'الحد الأدنى لعدد الليالي غير متحقق',
+    'offer_not_valid_for_this_property' => 'العرض غير صالح لهذا العقار',
+    'offer_is_valid' => 'العرض صالح',
 ];

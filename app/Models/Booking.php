@@ -64,9 +64,9 @@ class Booking extends Model
         return $this->hasOne(Review::class);
     }
 
-    public function offers()
+    public function offer()
     {
-        return $this->hasMany(Offer::class);
+        return $this->belongsTo(Offer::class);
     }
 
     // Check if room is available for given dates
@@ -172,23 +172,5 @@ class Booking extends Model
             BookingStatus::CANCELLED => false,
         };
     }
-
-    protected static function booted(){
-        static::saving(function ($booking) {
-            if(!$booking->room_id || !$booking->check_in || !$booking->check_out){
-                return;
-            }
-
-            $room = Room::find($booking->room_id);
-
-            if(!$room){
-                return;
-            }
-
-            $booking->total_price = $booking->calculateTotalPrice($room->{'price-per-night'});
-
-        });
-    }
-
 
 }

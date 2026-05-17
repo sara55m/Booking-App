@@ -136,6 +136,7 @@ return [
     'top_reviews_retrieved_successfully' => 'Top Reviews retrieved successfully',
 
     //bookings
+    'room_does_not_belong_to_property'=>'Room does not belong to the property',
     'number_of_guests_exceeds_capacity' => 'Number of guests exceeds room capacity',
     'room_not_available_in_these_dates' => 'Room is not available in these dates',
     'booking_created_successfully' => 'Booking created successfully',
@@ -160,4 +161,12 @@ return [
     'webhook_handled_successfully'=>'Webhook Handled Successfully',
     'booking_cannot_be_cancelled'=>'Booking cannot be cancelled',
     'refund_failed'=>'Refund Failed',
+    //offers
+    'offer_is_not_active' => 'Offer is not active',
+    'offer_not_started_yet' => 'Offer has not started yet',
+    'offer_has_expired' => 'Offer has expired',
+    'booking_amount_does_not_meet_offer_requirement' => 'Booking amount does not meet offer requirements',
+    'minimum_nights_not_met' => 'Minimum nights requirement not met',
+    'offer_not_valid_for_this_property' => 'Offer is not valid for this property',
+    'offer_is_valid' => 'Offer is valid',
 ];
