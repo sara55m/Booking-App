@@ -40,13 +40,38 @@ class OfferForm
                                 ->label(__('messages.title'))
                                 ->maxLength(255),
 
+                            Toggle::make('requires_coupon_code')
+                                ->live()
+                                ->default(false)
+                                ->label(__('messages.requires_coupon_code')),
+
                             TextInput::make('code')
                                 ->unique(ignoreRecord: true)
-                                ->nullable()
+                                ->visible(fn ($get) =>
+                                    $get('requires_coupon_code'))
+                                ->required(fn ($get) =>
+                                    $get('requires_coupon_code'))
                                 ->maxLength(255)
                                 ->label(__('messages.code')),
                         ])
                         ->columns(2),
+
+                        Tab::make(__("messages.usage_info"))
+                        ->schema([
+                            TextInput::make('usage_limit')
+                                ->numeric()
+                                ->integer()
+                                ->minValue(1)
+                                ->nullable()
+                                ->label(__('messages.usage_limit')),
+
+                            TextInput::make('per_user_limit')
+                                ->numeric()
+                                ->integer()
+                                ->minValue(1)
+                                ->nullable()
+                                ->label(__('messages.per_user_limit')),
+                        ])->columns(2),
 
                     /*
                     |--------------------------------------------------------------------------

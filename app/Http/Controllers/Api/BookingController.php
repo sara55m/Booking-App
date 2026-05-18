@@ -62,7 +62,7 @@ class BookingController extends Controller
         try{
             //use database transactions and locking to prevent double bookings
         return DB::transaction(function () use ($data,$offerService) {
-            //get room
+            //get room and lock room to prevent double bookings
         $room=Room::where('id',$data['room_id'])->lockForUpdate()->firstOrFail();
 
         //check the room belongs to the booking property
@@ -92,12 +92,17 @@ class BookingController extends Controller
         $discountAmount=0;
         $offer=null;
         //validate offer
-        if(!empty($data['offer_id'])){
-            $offer=Offer::findOrFail($data['offer_id']);
-            $validation=$offerService->validateOffer($offer,$data['property_id'],$originalPrice,$numberOfNights);
+        if (!empty(trim($data['code'] ?? ''))){
+            $offer=Offer::where('code',$data['code'])->lockForUpdate()->first(); //lock offer to prevent double usage
+            if (!$offer) {
+                return response()->json([
+                    'status_code' => 422,
+                    'message' => __('messages.invalid_coupon_code'),
+                ], 422);
+            }
+            $validation=$offerService->validateOffer(auth()->id(),$offer,$data['property_id'],$originalPrice,$numberOfNights);
             //if validation is false
             if (!$validation['valid']) {
-
                 return response()->json([
                     'status_code'=>422,
                     'message' => $validation['message']
@@ -109,7 +114,7 @@ class BookingController extends Controller
             $totalPrice = max(
                 0,
                 $originalPrice - $discountAmount
-            );
+            );   
         }
        
         //save booking
@@ -122,6 +127,10 @@ class BookingController extends Controller
             'room_id' => $data['room_id'],
         
             'guests_count' => $data['guests_count'],
+
+            'check_in' => $data['check_in'],
+
+            'check_out' => $data['check_out'],
         
             'nights_count' => $numberOfNights,
         
@@ -140,6 +149,16 @@ class BookingController extends Controller
             'total_price' => $totalPrice,
         ]);
         $booking->save();
+
+        //load relations
+        $booking->load([
+            'room',
+            'property',
+            'offer',
+        ]);
+
+        //increment offer used count
+        $offer->increment('used_count');
         
         return response()->json(
             [

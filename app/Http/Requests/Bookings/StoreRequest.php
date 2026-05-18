@@ -28,7 +28,7 @@ class StoreRequest extends FormRequest
             'check_in' => 'required|date|after_or_equal:today',
             'check_out' => 'required|date|after:check_in',
             'guests_count' => 'required|integer|min:1',
-            'offer_id'=>'nullable|exists:offers,id'
+            'code'=>'nullable|string|exists:offers,code'
         ];
     }
    

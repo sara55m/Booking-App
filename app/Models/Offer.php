@@ -6,7 +6,23 @@ use Illuminate\Database\Eloquent\Model;
 
 class Offer extends Model
 {
-    protected $fillable=['property_id','title','code','discount_type','discount_value','minimum_booking_amount','minimum_nights','is_active','starts_at','ends_at'];
+    protected $fillable=
+    [
+        'property_id',
+        'title',
+        'code',
+        'discount_type',
+        'discount_value',
+        'minimum_booking_amount',
+        'minimum_nights',
+        'is_active',
+        'starts_at',
+        'ends_at',
+        'usage_limit',
+        'per_user_limit',
+        'used_count',
+        'requires_coupon_code'
+    ];
 
     protected $casts=[
         'is_active'=>'boolean',
@@ -14,6 +30,10 @@ class Offer extends Model
         'ends_at'=>'datetime',
         'minimum_booking_amount'=>'decimal:2',
         'discount_value'=>'decimal:2',
+        'usage_limit'=>'integer',
+        'per_user_limit'=>'integer',
+        'used_count'=>'integer',
+        'requires_coupon_code'=>'boolean',
     ];
 
     public function property()

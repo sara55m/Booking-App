@@ -4,10 +4,31 @@ namespace App\Services;
 
 use App\Models\Offer;
 
+
 class OfferService
 {
 
-    public function validateOffer(Offer $offer,$propertyId,$totalPrice,$nights) : array{
+    public function validateOffer($userId,Offer $offer,$propertyId,$totalPrice,$nights) : array{
+
+        //check usage limit
+        if($offer->usage_limit && $offer->used_count >= $offer->usage_limit){
+            return [
+                'valid' => false,
+                'message' =>
+                    __('messages.offer_usage_limit_reached'),
+            ];
+        }
+
+        //check per user limit
+        //get the number of bookings with this offer and the same user
+        $userUsageCount=$offer->bookings()->where('user_id',$userId)->count();
+        if($offer->per_user_limit && $userUsageCount >= $offer->per_user_limit){
+            return [
+                'valid' => false,
+                'message' =>
+                    __('messages.user_offer_limit_reached'),
+            ];
+        }
 
         //check property
         if($offer->property_id && $offer->property_id!=$propertyId){

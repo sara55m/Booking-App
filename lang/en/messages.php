@@ -127,6 +127,14 @@ return [
     'inactive'=>'Inactive',
     'expired'=>'Expired',
     'upcoming'=>'Upcoming',
+    'usage_info'=>'Usage Information',
+    'usage_limit'=>'Usage Limit',
+    'per_user_limit'=>'Per User Limit',
+    'used_count'=>'Used Count',
+    'requires_coupon_code'=>'Requires Coupon Code',
+    'offer_usage_limit_reached'=>'Offer Usage Limit Reached',
+    'user_offer_limit_reached'=>'User offer usage limit reached',
+    'invalid_coupon_code'=>'Invalid Coupon Code',
 
     //api messages
     //properties

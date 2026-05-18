@@ -33,7 +33,8 @@ class BookingResource extends JsonResource
                 'id'=>$this->offer?->id,
                 'title'=>$this->offer->title,
                 'discount_value'=>$this->offer->discount_value,
-                'discount_type'=>$this->offer->discount_type
+                'discount_type'=>$this->offer->discount_type,
+                'code'=>$this->offer->code ?? null
             ] : null,
             'original_price'=>$this->original_price.' EGP',
             'discount_amount'=>$this->discount_amount,

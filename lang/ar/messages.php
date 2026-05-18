@@ -127,6 +127,14 @@ return [
     'expired' => 'منتهي',
     'upcoming' => 'قادم',
     'inactive' => 'غير نشط',
+    'usage_info' => 'معلومات الاستخدام',
+    'usage_limit' => 'حد الاستخدام',
+    'per_user_limit' => 'حد الاستخدام لكل مستخدم',
+    'used_count' => 'عدد مرات الاستخدام',
+    'requires_coupon_code' => 'يتطلب كود كوبون',
+    'offer_usage_limit_reached' => 'تم الوصول إلى الحد الأقصى لاستخدام العرض',
+    'user_offer_limit_reached' => 'تم الوصول إلى الحد الأقصى لاستخدام العرض لهذا المستخدم',
+    'invalid_coupon_code'=>'كود الخصم غير صالح',
 
     //api messages
     //properties
