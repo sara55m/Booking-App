@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Log;
 use Stripe\Stripe;
 use App\Services\OfferService;
 use App\Models\Offer;
+use App\Notifications\BookingPaymentReminderNotification;
 
 class BookingController extends Controller
 {
@@ -114,37 +115,39 @@ class BookingController extends Controller
             $totalPrice = max(
                 0,
                 $originalPrice - $discountAmount
-            );   
+            );
         }
-       
+
         //save booking
         $booking->fill([
 
             'user_id' => auth()->id(),
-        
+
             'property_id' => $data['property_id'],
-        
+
             'room_id' => $data['room_id'],
-        
+
             'guests_count' => $data['guests_count'],
 
             'check_in' => $data['check_in'],
 
             'check_out' => $data['check_out'],
-        
+
             'nights_count' => $numberOfNights,
-        
+
             'status' => BookingStatus::PENDING,
-        
+
+            'expires_at'=>now()->addMinutes(15),
+
             'payment_status' =>
                 BookingPaymentStatus::UNPAID,
-        
+
             'offer_id' => $offer?->id,
-        
+
             'original_price' => $originalPrice,
-        
+
             'discount_amount' => $discountAmount,
-        
+
             // IMPORTANT
             'total_price' => $totalPrice,
         ]);
@@ -158,8 +161,15 @@ class BookingController extends Controller
         ]);
 
         //increment offer used count
-        $offer->increment('used_count');
-        
+        if($offer){
+            $offer->increment('used_count');
+        }
+
+        //send reminder mail for payment before expiration
+        $booking->user->notify(
+            new BookingPaymentReminderNotification($booking)
+        );
+
         return response()->json(
             [
                 'status_code' => 201,
@@ -208,7 +218,7 @@ class BookingController extends Controller
 
         //handle refund
         Stripe::setApiKey(config('services.stripe.secret'));
-        
+
         DB::beginTransaction();
 
         try{
@@ -246,23 +256,23 @@ class BookingController extends Controller
         }catch (\Exception $e) {
 
             DB::rollBack();
-    
+
             Log::error('Refund failed', [
-    
+
                 'booking_id' => $booking->id,
-    
+
                 'error' => $e->getMessage(),
             ]);
-    
+
             return response()->json([
-    
+
                 'message' =>
                     __('messages.refund_failed'),
-    
+
             ], 500);
         }
     }
-    
+
 }
 
 

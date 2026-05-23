@@ -20,6 +20,7 @@ class Booking extends Model
         'guests_count',
         'nights_count',
         'total_price',
+        'expires_at',
         'status',
         'payment_status',
         'offer_id',

@@ -265,6 +265,8 @@ class PaymentController extends Controller
                             'status' =>
                                 BookingStatus::CONFIRMED,
 
+                            'expires_at' => null,
+
                             'payment_status' =>
                                 BookingPaymentStatus::PAID,
                         ]);
@@ -275,6 +277,7 @@ class PaymentController extends Controller
 
                             'payment_status' =>
                                 BookingPaymentStatus::PARTIAL,
+                            'expires_at' => null,
                             'status'=>
                                 BookingStatus::CONFIRMED,
                         ]);
