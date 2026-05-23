@@ -39,6 +39,7 @@ class BookingResource extends JsonResource
             'original_price'=>$this->original_price.' EGP',
             'discount_amount'=>$this->discount_amount,
             'total_price' => $this->total_price.' EGP',
+            'expires_at'=>$this->expires_at,
             'status' => $this->status,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
         ];
