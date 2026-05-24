@@ -12,7 +12,7 @@ use Illuminate\Queue\SerializesModels;
 use App\Models\Booking;
 use App\Models\Payment;
 
-class BookingPaymentConfirmed
+class BookingPaymentConfirmed implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -32,7 +32,26 @@ class BookingPaymentConfirmed
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('channel-name'),
+            new PrivateChannel('bookings'),
+        ];
+    }
+
+    public function broadcastAs(): string
+    {
+        return 'payment.confirmed';
+    }
+
+    public function broadcastWith(): array
+    {
+        return [
+            'booking' => [
+                'id' => $this->booking->id,
+                'status' => $this->booking->status,
+                'payment_status'=>$this->booking->payment_status
+            ],
+            'payment' => [
+                'status' => $this->payment->status,
+            ],
         ];
     }
 }

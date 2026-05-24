@@ -15,3 +15,7 @@ Route::get('/payment-success', function () {
 Route::get('/payment-cancelled', function () {
     return 'Payment cancelled';
 });
+
+Route::get('/test-pusher', function () {
+    return view('test');
+});
