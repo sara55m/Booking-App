@@ -36,7 +36,7 @@ class BookingExpiredNotification extends Notification
     {
         return (new MailMessage)
             ->subject('Booking Expired')
-            ->greeting('Hello!')
+            ->greeting('Hello!'.$notifiable->name)
             ->line('Your booking has expired because payment was not completed in time.')
             ->line('The reserved room is now available for other users.')
             ->line('Thank you.');

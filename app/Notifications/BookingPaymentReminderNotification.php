@@ -38,7 +38,7 @@ class BookingPaymentReminderNotification extends Notification implements ShouldQ
     {
         return (new MailMessage)
             ->subject('Complete Your Booking Payment')
-            ->greeting('Hello!')
+            ->greeting('Hello!'.$notifiable->name)
             ->line('Your booking is currently pending.')
             ->line('Please complete payment before the reservation expires.')
             ->line('Expiration time: 15 minutes')

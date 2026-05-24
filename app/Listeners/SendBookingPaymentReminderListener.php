@@ -6,7 +6,6 @@ use App\Events\BookingCreated;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use App\Notifications\BookingPaymentReminderNotification;
-use App\Models\Booking;
 
 class SendBookingPaymentReminderListener implements ShouldQueue
 {

@@ -14,6 +14,7 @@ use App\Enums\BookingPaymentStatus;
 use App\Enums\PaymentMethod;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Events\BookingPaymentConfirmed;
 
 class PaymentController extends Controller
 {
@@ -71,9 +72,10 @@ class PaymentController extends Controller
             'payment_method' => PaymentMethod::CARD,
         ]);
 
+
         //create checkout session
         $session=Session::create([
-            'payment_method_types' =>[PaymentMethod::CARD],
+            'payment_method_types' =>[PaymentMethod::CARD->value],
             'line_items' => [[
                 'price_data' => [
                     'currency' => 'egp',
@@ -98,6 +100,7 @@ class PaymentController extends Controller
             ]);
 
             DB::commit();
+
 
             return response()->json([
                 'status_code'=>200,
@@ -197,7 +200,7 @@ class PaymentController extends Controller
                         ], 400);
                     }
 
-                    $payment = Payment::with('booking')
+                    $payment = Payment::with('booking.user','booking.property')
                         ->find($paymentId);
 
                     if (!$payment) {
@@ -284,6 +287,9 @@ class PaymentController extends Controller
                     }
 
                     DB::commit();
+
+                    //fire booking payment confirmation events
+                    event(new BookingPaymentConfirmed($booking,$payment));
 
                     break;
 
