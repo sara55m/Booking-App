@@ -38,6 +38,7 @@ class Booking extends Model
         'payment_status' => BookingPaymentStatus::class,
         'original_price'=>'decimal:2',
         'discount_amount'=>'decimal:2',
+        'expires_at'=>'datetime',
     ];
 
     public function user()

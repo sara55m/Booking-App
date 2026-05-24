@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Log;
 use Stripe\Stripe;
 use App\Services\OfferService;
 use App\Models\Offer;
-use App\Notifications\BookingPaymentReminderNotification;
+use App\Events\BookingCreated;
 
 class BookingController extends Controller
 {
@@ -165,10 +165,8 @@ class BookingController extends Controller
             $offer->increment('used_count');
         }
 
-        //send reminder mail for payment before expiration
-        $booking->user->notify(
-            new BookingPaymentReminderNotification($booking)
-        );
+        //fire booking creation event
+        event(new BookingCreated($booking));
 
         return response()->json(
             [
