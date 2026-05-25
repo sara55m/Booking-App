@@ -50,6 +50,7 @@ class BookingPaymentConfirmed implements ShouldBroadcast
                 'payment_status'=>$this->booking->payment_status
             ],
             'payment' => [
+                'id'=>$this->payment->id,
                 'status' => $this->payment->status,
             ],
         ];

@@ -5,14 +5,14 @@ namespace App\Listeners;
 use App\Events\BookingPaymentConfirmed;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
-use App\Notifications\BookingConfirmedNotification;
+use App\Services\InvoiceService;
 
-class SendBookingConfirmedMailListener implements ShouldQueue
+class GenerateInvoiceListener
 {
     /**
      * Create the event listener.
      */
-    public function __construct()
+    public function __construct(protected InvoiceService $invoiceService)
     {
         //
     }
@@ -22,13 +22,10 @@ class SendBookingConfirmedMailListener implements ShouldQueue
      */
     public function handle(BookingPaymentConfirmed $event): void
     {
-        $booking = $event->booking->fresh([
-            'user',
-            'property',
-        ]);
-
-        $booking->user->notify(
-            new BookingConfirmedNotification($booking)
+        $this->invoiceService->generate(
+            $event->booking,
+            $event->payment
         );
+
     }
 }

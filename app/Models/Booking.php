@@ -25,7 +25,9 @@ class Booking extends Model
         'payment_status',
         'offer_id',
         'original_price',
-        'discount_amount'
+        'discount_amount',
+        'invoice_number',
+        'invoice_path'
     ];
 
     protected $casts = [

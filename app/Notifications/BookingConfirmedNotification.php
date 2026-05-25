@@ -8,7 +8,6 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use App\Models\Booking;
 
-
 class BookingConfirmedNotification extends Notification implements ShouldQueue
 {
     use Queueable;
@@ -36,6 +35,12 @@ class BookingConfirmedNotification extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): MailMessage
     {
+        $this->booking->refresh();
+
+        $path = storage_path(
+            'app/public/' . $this->booking->invoice_path
+        );
+
         return (new MailMessage)
             ->subject('Booking Confirmed')
             ->greeting('Hello '.$notifiable->name)
@@ -52,11 +57,23 @@ class BookingConfirmedNotification extends Notification implements ShouldQueue
 
             ->line('Payment Status: '.$this->booking->payment_status->value)
 
-            ->line('Check-in: '.$this->booking->check_in->format('d F Y \a\t h:i:s a'))
+            ->line(
+                'Check-in: ' .
+                $this->booking->check_in
+                    ->format('d F Y \a\t h:i:s a')
+            )
 
-            ->line('Check-out: '.$this->booking->check_out->format('d F Y \a\t h:i:s a'))
+            ->line(
+                'Check-out: ' .
+                $this->booking->check_out
+                    ->format('d F Y \a\t h:i:s a')
+            )
 
-            ->line('Thank you for booking with us.');
+            ->line('Thank you for booking with us.')
+            ->attach($path,[
+                'as' => 'invoice.pdf',
+                'mime' => 'application/pdf',
+            ]);
     }
 
     /**
