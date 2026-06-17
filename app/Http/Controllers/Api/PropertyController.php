@@ -9,27 +9,33 @@ use App\Http\Resources\PropertyResource;
 use App\Http\Resources\PropertyDetailsResource;
 use App\Http\Resources\RoomResource;
 use App\Http\Resources\ReviewResource;
-
+use Carbon\Carbon;
 class PropertyController extends Controller
 {
     public function index(Request $request)
     {
-       //use query scopes for filtering by city and type
-       $properties = Property::query()
-       ->when($request->city, function ($query) use ($request) {
-           $query->city($request->city);
-       })
-       ->when($request->type, function ($query) use ($request) {
-           $query->type($request->type);
-       })
-       ->with('coverImage')
-       ->where('is_active', true)
-       ->latest()->paginate(10);
+
+        $nights_count = $request->check_in && $request->check_out
+        ? Carbon::parse($request->check_in)->diffInDays($request->check_out)
+        : 1;
+
+        //use query scopes for filtering by city and type
+        $properties = Property::query()
+        ->when($request->city, function ($query) use ($request) {
+            $query->city($request->city);
+        })
+        ->when($request->type, function ($query) use ($request) {
+            $query->type($request->type);
+        })
+        ->withActiveOffer()
+        ->with('coverImage')
+        ->where('is_active', true)
+        ->latest()->paginate(10);
 
         return response()->json([
             'status_code'=>200,
             'message'=>__('messages.properties_retrieved_successfully'),
-            'data'=>PropertyResource::collection($properties)
+            'data'=>PropertyResource::collection($properties)->additional(['nights_count'=>$nights_count])
         ]);
     }
 
