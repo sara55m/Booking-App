@@ -135,6 +135,9 @@ return [
     'offer_usage_limit_reached' => 'تم الوصول إلى الحد الأقصى لاستخدام العرض',
     'user_offer_limit_reached' => 'تم الوصول إلى الحد الأقصى لاستخدام العرض لهذا المستخدم',
     'invalid_coupon_code'=>'كود الخصم غير صالح',
+    'favorited_by_count' => 'عدد المستخدمين الذين أضافوا هذا العقار إلى المفضلة',
+    'most_favorited_properties' => 'العقارات الأكثر إضافة إلى المفضلة',
+
 
     //api messages
     //properties

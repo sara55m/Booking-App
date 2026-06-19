@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Widgets\BookingsChart;
+use App\Filament\Widgets\MostFavoritedProperties;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -47,6 +48,7 @@ class AdminPanelProvider extends PanelProvider
                 ReviewsStats::class,
                 TopProperties::class,
                 BookingsChart::class,
+                MostFavoritedProperties::class,
             ])
             ->middleware([
                 EncryptCookies::class,

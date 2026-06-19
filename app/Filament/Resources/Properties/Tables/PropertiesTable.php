@@ -42,7 +42,12 @@ class PropertiesTable
                         $state >= 4 => 'success',
                         $state >= 2 => 'warning',
                         default => 'danger',
-                    })
+                    }),
+
+                TextColumn::make('favorited_by_count')
+                    ->label(__('messages.favorited_by_count'))
+                    ->counts('favoritedBy')
+                    ->sortable(),
             ])
             ->filters([
                 SelectFilter::make('city')

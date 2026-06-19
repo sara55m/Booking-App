@@ -9,26 +9,38 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Models\Property;
 use Filament\Tables\Columns\TextColumn;
 
-class TopProperties extends TableWidget
+class MostFavoritedProperties extends TableWidget
 {
     protected static ?string $heading = null;
 
     public function mount(): void
     {
-        static::$heading = __('messages.top_rated_properties');
+        static::$heading = __('messages.most_favorited_properties');
     }
-
     protected int | string | array $columnSpan = 'full';
-    protected static ?int $sort = 6;
+    protected static ?int $sort = 7;
     public function table(Table $table): Table
     {
         return $table
-            ->query(fn (): Builder => Property::query()->orderBy('average_rating', 'desc')->limit(5))
+            ->query(fn (): Builder =>
+            Property::query()
+            ->withCount('favoritedBy')
+            ->orderByDesc('favorited_by_count')
+            ->limit(5))
             ->columns([
-                TextColumn::make('name')->label(__('messages.name'))->searchable()->sortable(),
-                TextColumn::make('average_rating')->label(__('messages.average_rating'))->suffix(' ⭐'),
-                TextColumn::make('reviews_count')->label(__('messages.reviews_count'))->badge()->color('success')->sortable(),
+                TextColumn::make('name')
+                ->label(__('messages.name'))
+                ->searchable(),
 
+                TextColumn::make('city')
+                ->label(__('messages.city'))
+                ->searchable(),
+
+            TextColumn::make('favorited_by_count')
+                ->label(__('messages.favorited_by_count'))
+                ->badge()
+                ->color('success')
+                ->sortable(),
             ])
             ->filters([
                 //

@@ -135,6 +135,8 @@ return [
     'offer_usage_limit_reached'=>'Offer Usage Limit Reached',
     'user_offer_limit_reached'=>'User offer usage limit reached',
     'invalid_coupon_code'=>'Invalid Coupon Code',
+    'favorited_by_count'=>'Favorited By Count',
+    'most_favorited_properties'=>'Most Favorited Properties',
 
     //api messages
     //properties
