@@ -177,4 +177,9 @@ return [
     'minimum_nights_not_met' => 'الحد الأدنى لعدد الليالي غير متحقق',
     'offer_not_valid_for_this_property' => 'العرض غير صالح لهذا العقار',
     'offer_is_valid' => 'العرض صالح',
+    'offer_applied_successfully' => 'تم تطبيق العرض بنجاح',
+    'property_added_to_favorites_successfully'=>'تم إضافة العقار إلى المفضلة بنجاح',
+    'property_already_in_favorites'=>'العقار موجود بالفعل في المفضلة',
+    'property_not_in_favorites'=>'العقار غير موجود في المفضلة',
+    'property_removed_from_favorites_successfully'=>'تم إزالة العقار من المفضلة بنجاح',
 ];

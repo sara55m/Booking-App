@@ -177,4 +177,9 @@ return [
     'minimum_nights_not_met' => 'Minimum nights requirement not met',
     'offer_not_valid_for_this_property' => 'Offer is not valid for this property',
     'offer_is_valid' => 'Offer is valid',
+    'offer_applied_successfully' => 'Offer applied successfully',
+    'property_added_to_favorites_successfully'=>'Property added to favorites successfully',
+    'property_already_in_favorites'=>'Property already in favorites',
+    'property_not_in_favorites'=>'Property not in favorites',
+    'property_removed_from_favorites_successfully'=>'Property removed from favorites successfully',
 ];

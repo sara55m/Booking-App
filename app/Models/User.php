@@ -10,6 +10,7 @@ use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Property;
 
 class User extends Authenticatable implements FilamentUser,MustVerifyEmail
 {
@@ -64,6 +65,11 @@ class User extends Authenticatable implements FilamentUser,MustVerifyEmail
     public function reviews()
     {
         return $this->hasMany(Review::class);
+    }
+
+    public function favoriteProperties()
+    {
+        return $this->belongsToMany(Property::class, 'favorites','user_id','property_id')->withTimestamps();
     }
 
     public function canAccessPanel(Panel $panel): bool

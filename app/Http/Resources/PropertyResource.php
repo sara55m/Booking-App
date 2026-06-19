@@ -58,6 +58,11 @@ class PropertyResource extends JsonResource
             'final_price'    => round($finalPrice, 2) . ' EGP',
             'nights'         => $nights,
             'offer'          => $offerBadge,
+            'is_favorite' => auth()->check()
+            ? auth()->user()
+                ->favoriteProperties
+                ->contains($this->id)
+            : false,
         ];
     }
 }

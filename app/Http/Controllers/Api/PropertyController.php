@@ -88,5 +88,45 @@ class PropertyController extends Controller
         ]);
     }
 
+    public function addToFavorites(Property $property){
+
+        $user = auth()->user();
+
+        if($user->favoriteProperties()->whereKey($property->id)->exists()){
+            return response()->json([
+                'status_code'=>409,
+                'message'=>__('messages.property_already_in_favorites'),
+            ],409);
+        }
+
+        $user->favoriteProperties()->attach([$property->id]);
+
+        return response()->json([
+            'status_code'=>200,
+            'message'=>__('messages.property_added_to_favorites_successfully'),
+        ]);
+
+    }
+
+    public function removeFromFavorites(Property $property){
+
+        $user = auth()->user();
+
+        if(! $user->favoriteProperties()->whereKey($property->id)->exists() ){
+            return response()->json([
+                'status_code'=>404,
+                'message'=>__('messages.property_not_in_favorites'),
+            ],404);
+        }
+
+        $user->favoriteProperties()->detach($property->id);
+
+        return response()->json([
+            'status_code'=>200,
+            'message'=>__('messages.property_removed_from_favorites_successfully'),
+        ]);
+
+    }
+
 
 }
