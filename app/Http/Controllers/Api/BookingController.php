@@ -18,6 +18,7 @@ use Stripe\Stripe;
 use App\Services\OfferService;
 use App\Models\Offer;
 use App\Events\BookingCreated;
+use App\Events\BookingCancelled;
 
 class BookingController extends Controller
 {
@@ -246,6 +247,10 @@ class BookingController extends Controller
             ]);
 
             DB::commit();
+
+            //fire booking cancellation event
+            event(new BookingCancelled($booking));
+            
             return response()->json(
                 [
                     'status_code' => 200,
