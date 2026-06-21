@@ -185,4 +185,5 @@ return [
     'property_already_in_favorites'=>'العقار موجود بالفعل في المفضلة',
     'property_not_in_favorites'=>'العقار غير موجود في المفضلة',
     'property_removed_from_favorites_successfully'=>'تم إزالة العقار من المفضلة بنجاح',
+    'booking_retrieved_successfully' => 'تم استرجاع الحجز بنجاح',
 ];

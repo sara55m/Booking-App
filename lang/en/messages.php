@@ -184,4 +184,5 @@ return [
     'property_already_in_favorites'=>'Property already in favorites',
     'property_not_in_favorites'=>'Property not in favorites',
     'property_removed_from_favorites_successfully'=>'Property removed from favorites successfully',
+    'booking_retrieved_successfully'=>'Booking retrieved successfully',
 ];

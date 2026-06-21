@@ -19,6 +19,7 @@ use App\Services\OfferService;
 use App\Models\Offer;
 use App\Events\BookingCreated;
 use App\Events\BookingCancelled;
+use Illuminate\Support\Facades\Gate;
 
 class BookingController extends Controller
 {
@@ -36,7 +37,7 @@ class BookingController extends Controller
         ->when($request->status,function($query) use ($request){
             $query->status($request->status);
         })
-        ->with(['property','room'])
+        ->with(['property','room','offer'])
         ->latest()
         ->paginate(10);
 
@@ -198,12 +199,23 @@ class BookingController extends Controller
 
     }
 
+    public function show(Booking $booking)
+    {
+        Gate::authorize('view',$booking);
+
+        $booking->load(['property','room','offer']);
+
+        return response()->json(
+            [
+                'status_code' => 200,
+                'message' => __('messages.booking_retrieved_successfully'),
+                'data' => new BookingResource($booking)],200);
+    }
+
     public function cancel(Booking $booking)
     {
         // Check if the booking belongs to the authenticated user
-        if ($booking->user_id !== auth()->id()) {
-            return response()->json(['message' => __('messages.unauthorized_action')], 404);
-        }
+        Gate::authorize('cancel', $booking);
 
         // Check if the booking can be cancelled (e.g., only if it's pending or confirmed)
         if (!in_array($booking->status, [BookingStatus::PENDING, BookingStatus::CONFIRMED])) {
@@ -250,7 +262,7 @@ class BookingController extends Controller
 
             //fire booking cancellation event
             event(new BookingCancelled($booking));
-            
+
             return response()->json(
                 [
                     'status_code' => 200,
