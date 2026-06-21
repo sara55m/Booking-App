@@ -185,4 +185,11 @@ return [
     'property_not_in_favorites'=>'Property not in favorites',
     'property_removed_from_favorites_successfully'=>'Property removed from favorites successfully',
     'booking_retrieved_successfully'=>'Booking retrieved successfully',
+    'review_added_successfully'=>'Review added successfully',
+    'you_can_only_review_completed_bookings'=>'You can only review completed bookings',
+    'you_have_already_reviewed_this_booking'=>'You have already reviewed this booking',
+    'review_retrieved_successfully'=>'Review retrieved successfully',
+    'reviews_retrieved_successfully'=>'Reviews retrieved successfully',
+    'review_updated_successfully'=>'Review updated successfully',
+    'review_deleted_successfully'=>'Review deleted successfully',
 ];

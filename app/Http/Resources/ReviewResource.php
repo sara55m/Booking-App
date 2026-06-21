@@ -17,13 +17,17 @@ class ReviewResource extends JsonResource
         return [
             'id'=>$this->id,
             'property_id'=>$this->property_id,
+            'booking_id'=>$this->booking_id,
             'user'=>[
                 'id'=>$this->user->id,
                 'name'=>$this->user->name,
-                'email'=>$this->user->email,
-                'phone'=>$this->user->phone,
             ],
-            'tags'=>$this->tags->pluck('name'),
+            'tags' => $this->tags->map(function ($tag) {
+                return [
+                    'id' => $tag->id,
+                    'name' => $tag->name,
+                ];
+            })->values(),
             'rating'=>$this->rating,
             'comment'=>$this->comment ?? null,
         ];

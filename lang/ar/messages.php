@@ -186,4 +186,11 @@ return [
     'property_not_in_favorites'=>'العقار غير موجود في المفضلة',
     'property_removed_from_favorites_successfully'=>'تم إزالة العقار من المفضلة بنجاح',
     'booking_retrieved_successfully' => 'تم استرجاع الحجز بنجاح',
+    'you_can_only_review_completed_bookings' => 'يمكنك فقط تقييم الحجوزات المكتملة',
+    'you_have_already_reviewed_this_booking' => 'لقد قمت بالفعل بتقييم هذا الحجز',
+    'review_added_successfully' => 'تم إضافة التقييم بنجاح',
+    'review_retrieved_successfully' => 'تم استرجاع التقييم بنجاح',
+    'reviews_retrieved_successfully' => 'تم استرجاع التقييمات بنجاح',
+    'review_updated_successfully' => 'تم تحديث التقييم بنجاح',
+    'review_deleted_successfully' => 'تم حذف التقييم بنجاح',
 ];

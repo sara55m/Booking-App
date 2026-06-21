@@ -2,10 +2,12 @@
 
 namespace App\Policies;
 
-use App\Models\Booking;
+use App\Models\Review;
 use App\Models\User;
+use Illuminate\Auth\Access\Response;
+use App\Models\Booking;
 
-class BookingPolicy
+class ReviewPolicy
 {
 
     //admins can do everything
@@ -17,7 +19,6 @@ class BookingPolicy
 
         return null;
     }
-    
     /**
      * Determine whether the user can view any models.
      */
@@ -29,40 +30,39 @@ class BookingPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Booking $booking): bool
+    public function view(User $user, Review $review): bool
     {
-
-        return $booking->user_id ===$user->id;
+        return $review->user_id === $user->id;
     }
 
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user): bool
-    {
-        return false;
-    }
-
-    /**
-     * Determine whether the user can update the model.
-     */
-    public function update(User $user, Booking $booking): bool
-    {
-        return false;
-    }
-
-    /**
-     * Determine whether the user can delete the model.
-     */
-    public function cancel(User $user, Booking $booking): bool
+    public function create(User $user,Booking $booking): bool
     {
         return $booking->user_id === $user->id;
     }
 
     /**
+     * Determine whether the user can update the model.
+     */
+    public function update(User $user, Review $review): bool
+    {
+        return $review->user_id === $user->id;
+    }
+
+    /**
+     * Determine whether the user can delete the model.
+     */
+    public function delete(User $user, Review $review): bool
+    {
+        return $review->user_id === $user->id;
+    }
+
+    /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Booking $booking): bool
+    public function restore(User $user, Review $review): bool
     {
         return false;
     }
@@ -70,7 +70,7 @@ class BookingPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Booking $booking): bool
+    public function forceDelete(User $user, Review $review): bool
     {
         return false;
     }

@@ -72,24 +72,17 @@ class Property extends Model
             ->where('is_cover', true);
     }
 
-    //attributes
-
-    public function getReviewsCountAttribute()
-    {
-        return $this->reviews()->where('status', 'approved')->count();
-    }
-
     /**
-     * Average rating from reviews
+     * Average rating from reviews and reviews count
      */
-    public function getAverageRatingAttribute(): float
+    public function recalculateRating(): void
     {
-        return round(
-            $this->reviews()
-            ->where('status','approved')
-            ->avg('rating') ?? 0,
-            2
-        );
+        $approvedReviews = $this->approvedReviews()->get();
+
+        $this->update([
+            'reviews_count'=>$this->reviews_count = $approvedReviews->count(),
+            'average_rating'=>$this->average_rating = round($approvedReviews->avg('rating') ?? 0,2),
+        ]);
     }
 
     //query scopes-->in search and filter
