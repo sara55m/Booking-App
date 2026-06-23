@@ -52,4 +52,25 @@ class HomeController extends Controller
             'data'=>PropertyResource::collection($properties)
         ]);
     }
+
+    public function topRatedProperties(){
+        $properties=Cache::tags(['home'])->remember('home:top-rated-properties',now()->addHours(6),function(){
+            return Property::query()
+            ->where('is_active', true)
+            ->withActiveOffer()
+            ->with('coverImage','city')
+            ->where('reviews_count', '>=', 5)
+            ->orderByDesc('average_rating')
+            ->orderByDesc('reviews_count')
+            ->latest('id')
+            ->limit(8)
+            ->get();
+        });
+
+        return response()->json([
+            'status_code'=>200,
+            'message'=>__('messages.top_rated_properties_retrieved_successfully'),
+            'data'=>PropertyResource::collection($properties)
+        ]);
+    }
 }

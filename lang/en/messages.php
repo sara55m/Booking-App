@@ -198,4 +198,5 @@ return [
     'review_deleted_successfully'=>'Review deleted successfully',
     'cities_retrieved_successfully'=>'Cities retrieved successfully',
     'featured_properties_retrieved_successfully'=>'Featured properties retrieved successfully',
+    'top_rated_properties_retrieved_successfully'=>'Top rated properties retrieved successfully',
 ];

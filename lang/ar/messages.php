@@ -199,4 +199,5 @@ return [
     'review_deleted_successfully' => 'تم حذف التقييم بنجاح',
     'cities_retrieved_successfully' => 'تم استرجاع المدن بنجاح',
     'featured_properties_retrieved_successfully' => 'تم استرجاع العقارات المميزة بنجاح',
+    'top_rated_properties_retrieved_successfully' => 'تم استرجاع العقارات الأعلى تقييمًا بنجاح',
 ];
