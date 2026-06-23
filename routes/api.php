@@ -5,10 +5,12 @@ use App\Http\Controllers\Api\AuthController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
 use App\Models\User;
+use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\PropertyController;
 use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ReviewController;
+
 
 Route::middleware('throttle:3,1')->group(function(){
     Route::post('/register', [AuthController::class, 'register']);
@@ -53,6 +55,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', fn (Request $request) => $request->user());
     Route::post('/email/resend', [AuthController::class, 'resend'])->middleware('throttle:3,1');;
     Route::post('/logout', [AuthController::class, 'logout']);
+
+    //homepage
+    Route::get('/home/popular-cities', [HomeController::class, 'popularCities']);
 
     //properties
     Route::get('/properties', [PropertyController::class, 'index']);

@@ -52,6 +52,7 @@ class PropertyResource extends JsonResource
             'rating' => $this->rating,
             'address' => $this->address,
             'average_rating' => $this->average_rating,
+            'city' => $this->city?->name,
             'reviews_count' => $this->reviews_count,
 
             'original_price' => $offerBadge ? round($originalPrice, 2) . ' EGP' : null,

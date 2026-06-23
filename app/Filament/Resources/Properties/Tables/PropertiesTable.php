@@ -21,7 +21,7 @@ class PropertiesTable
                 TextColumn::make('name')
                     ->label(__('messages.name'))
                     ->searchable(),
-                TextColumn::make('city')
+                TextColumn::make('city.name')
                     ->label(__('messages.city'))
                     ->searchable(),
                 TextColumn::make('type')
@@ -51,7 +51,8 @@ class PropertiesTable
             ])
             ->filters([
                 SelectFilter::make('city')
-                ->label(__('messages.city')),
+                ->label(__('messages.city'))
+                ->relationship('city', 'name'),
                 SelectFilter::make('type')
                 ->label(__('messages.type')),
                 SelectFilter::make('is_active')

@@ -38,7 +38,8 @@ class PropertyForm
                         Tab::make('Location')
                             ->label(__('messages.location'))
                             ->schema([
-                                TextInput::make('city')
+                                Select::make('city')
+                                    ->relationship('city', 'name')
                                     ->label(__('messages.city'))
                                     ->required(),
                                 Textarea::make('address')

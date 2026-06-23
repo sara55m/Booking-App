@@ -137,6 +137,9 @@ return [
     'invalid_coupon_code'=>'Invalid Coupon Code',
     'favorited_by_count'=>'Favorited By Count',
     'most_favorited_properties'=>'Most Favorited Properties',
+    //cities
+    'cities' => 'Cities',
+    'slug' => 'Slug',
 
     //api messages
     //properties
@@ -192,4 +195,5 @@ return [
     'reviews_retrieved_successfully'=>'Reviews retrieved successfully',
     'review_updated_successfully'=>'Review updated successfully',
     'review_deleted_successfully'=>'Review deleted successfully',
+    'cities_retrieved_successfully'=>'Cities retrieved successfully',
 ];

@@ -37,7 +37,7 @@ class PropertyController extends Controller
                     $query->type($request->type);
                 })
                 ->withActiveOffer()
-                ->with('coverImage')
+                ->with('coverImage','city')
                 ->where('is_active', true)
                 ->latest()->paginate(10);
         });
@@ -54,7 +54,7 @@ class PropertyController extends Controller
     {
         //cache the property details for 30 minutes to reduce database queries
         $property=Cache::remember("property:{$property->id}",now()->addMinutes(30),function() use ($property){
-            return Property::with(['coverImage','images','amenities','rooms','approvedReviews.user','approvedReviews.tags'])->findOrFail($property->id);
+            return Property::with(['coverImage','images','amenities','rooms','approvedReviews.user','approvedReviews.tags','city'])->findOrFail($property->id);
         });
 
         return response()->json([

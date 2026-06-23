@@ -8,7 +8,7 @@ class Property extends Model
 {
     protected $fillable = [
         'name',
-        'city',
+        'city_id',
         'address',
         'description',
         'type',
@@ -24,6 +24,11 @@ class Property extends Model
         'reviews_count' => 'integer',
         'average_rating' => 'decimal:2',
     ];
+
+    public function city()
+    {
+        return $this->belongsTo(City::class);
+    }
 
 
     public function bookings()
@@ -100,7 +105,9 @@ class Property extends Model
      */
     public function scopeCity($query, string $city)
     {
-        return $query->where('city','like', "%{$city}%");
+        return $query->whereHas('city',function ($q) use ($city){
+            $q->where('name','like',"%{$city}%");
+        });
     }
 
     /**

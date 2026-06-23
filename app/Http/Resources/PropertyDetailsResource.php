@@ -23,6 +23,7 @@ class PropertyDetailsResource extends JsonResource
             'images'=>PropertyImageResource::collection($this->images),
             'name' => $this->name,
             'rating' => $this->rating,
+            'city' => $this->city?->name,
             'address' => $this->address,
             'description'=>$this->description,
             'type'=>$this->type,

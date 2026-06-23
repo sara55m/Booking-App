@@ -137,6 +137,9 @@ return [
     'invalid_coupon_code'=>'كود الخصم غير صالح',
     'favorited_by_count' => 'عدد المستخدمين الذين أضافوا هذا العقار إلى المفضلة',
     'most_favorited_properties' => 'العقارات الأكثر إضافة إلى المفضلة',
+    //cities
+    'cities' => 'المدن',
+    'slug' => 'الاسم المختصر',
 
 
     //api messages
@@ -193,4 +196,5 @@ return [
     'reviews_retrieved_successfully' => 'تم استرجاع التقييمات بنجاح',
     'review_updated_successfully' => 'تم تحديث التقييم بنجاح',
     'review_deleted_successfully' => 'تم حذف التقييم بنجاح',
+    'cities_retrieved_successfully' => 'تم استرجاع المدن بنجاح',
 ];

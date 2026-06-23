@@ -7,12 +7,20 @@ use Illuminate\Support\Facades\Cache;
 
 class PropertyObserver
 {
+
+    private function clearCache(Property $property): void
+    {
+        Cache::forget("property:{$property->id}");
+        Cache::tags(['properties'])->flush();
+        Cache::forget("home:popular-cities");
+    }
     /**
      * Handle the Property "created" event.
      */
     public function created(Property $property): void
     {
         Cache::tags(['properties'])->flush();
+        Cache::forget('home:popular-cities');
     }
 
     /**
@@ -20,9 +28,7 @@ class PropertyObserver
      */
     public function updated(Property $property): void
     {
-        Cache::forget("property:{$property->id}");
-
-        Cache::tags(['properties'])->flush();
+        $this->clearCache($property);
     }
 
     /**
@@ -30,9 +36,7 @@ class PropertyObserver
      */
     public function deleted(Property $property): void
     {
-        Cache::forget("property:{$property->id}");
-
-        Cache::tags(['properties'])->flush();
+        $this->clearCache($property);
     }
 
     /**

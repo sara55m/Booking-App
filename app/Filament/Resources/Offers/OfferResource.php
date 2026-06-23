@@ -24,7 +24,7 @@ class OfferResource extends Resource
     {
         return __('messages.offers');
     }
-    protected static ?int $navigationSort = 7;
+    protected static ?int $navigationSort = 8;
 
     public static function getModelLabel(): string
     {

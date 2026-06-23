@@ -5,7 +5,11 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use BezhanSalleh\LanguageSwitch\LanguageSwitch;
 use App\Models\Review;
+use App\Observers\PropertyObserver;
 use App\Observers\ReviewObserver;
+use App\Models\Property;
+use App\Models\City;
+use App\Observers\CityObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -28,5 +32,7 @@ class AppServiceProvider extends ServiceProvider
 
         //define review observer
         Review::observe(ReviewObserver::class);
+        Property::observe(PropertyObserver::class);
+        City::observe(CityObserver::class);
     }
 }
