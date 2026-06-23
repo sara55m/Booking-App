@@ -108,10 +108,18 @@ class PropertyForm
                             ])
                             ->addActionLabel(__('messages.add_image')),
                         ]),
-                    ])->columns(2)->columnSpanFull(),
+                        Tab::make('status')
+                            ->label(__('messages.status'))
+                            ->schema([
+                                Toggle::make('is_featured')
+                                    ->label(__('messages.featured'))
+                                    ->default(false),
 
-                Toggle::make('is_active')
-                    ->default(true),
+                                Toggle::make('is_active')
+                                    ->label(__('messages.active'))
+                                    ->default(true),
+                            ]),
+                    ])->columns(2)->columnSpanFull(),
             ]);
     }
 }

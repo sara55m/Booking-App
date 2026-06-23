@@ -16,6 +16,7 @@ class Property extends Model
         'is_active',
         'reviews_count',
         'average_rating',
+        'is_featured',
     ];
 
     protected $casts = [
@@ -23,6 +24,7 @@ class Property extends Model
         'is_active' => 'boolean',
         'reviews_count' => 'integer',
         'average_rating' => 'decimal:2',
+        'is_featured' => 'boolean',
     ];
 
     public function city()

@@ -12,15 +12,14 @@ class PropertyObserver
     {
         Cache::forget("property:{$property->id}");
         Cache::tags(['properties'])->flush();
-        Cache::forget("home:popular-cities");
+        Cache::tags("home")->flush();
     }
     /**
      * Handle the Property "created" event.
      */
     public function created(Property $property): void
     {
-        Cache::tags(['properties'])->flush();
-        Cache::forget('home:popular-cities');
+        $this->clearCache($property);
     }
 
     /**

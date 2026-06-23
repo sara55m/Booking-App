@@ -140,6 +140,7 @@ return [
     //cities
     'cities' => 'المدن',
     'slug' => 'الاسم المختصر',
+    'featured' => 'مميز',
 
 
     //api messages
@@ -197,4 +198,5 @@ return [
     'review_updated_successfully' => 'تم تحديث التقييم بنجاح',
     'review_deleted_successfully' => 'تم حذف التقييم بنجاح',
     'cities_retrieved_successfully' => 'تم استرجاع المدن بنجاح',
+    'featured_properties_retrieved_successfully' => 'تم استرجاع العقارات المميزة بنجاح',
 ];
