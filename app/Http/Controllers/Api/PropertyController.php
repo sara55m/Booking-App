@@ -10,27 +10,38 @@ use App\Http\Resources\PropertyDetailsResource;
 use App\Http\Resources\RoomResource;
 use App\Http\Resources\ReviewResource;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 class PropertyController extends Controller
 {
     public function index(Request $request)
     {
-
         $nights_count = $request->check_in && $request->check_out
         ? Carbon::parse($request->check_in)->diffInDays($request->check_out)
         : 1;
 
-        //use query scopes for filtering by city and type
-        $properties = Property::query()
-        ->when($request->city, function ($query) use ($request) {
-            $query->city($request->city);
-        })
-        ->when($request->type, function ($query) use ($request) {
-            $query->type($request->type);
-        })
-        ->withActiveOffer()
-        ->with('coverImage')
-        ->where('is_active', true)
-        ->latest()->paginate(10);
+        //make cache key based on request parameters
+        $key = sprintf(
+            'properties:%s:%s:page:%d',
+            $request->city ?? 'all',
+            $request->type ?? 'all',
+            $request->page ?? 1
+        );
+
+        $properties=Cache::tags(['properties'])
+        ->remember($key, now()->addMinutes(15), function () use ($request) {
+            return Property::query()
+                ->when($request->city, function ($query) use ($request) {
+                    $query->city($request->city);
+                })
+                ->when($request->type, function ($query) use ($request) {
+                    $query->type($request->type);
+                })
+                ->withActiveOffer()
+                ->with('coverImage')
+                ->where('is_active', true)
+                ->latest()->paginate(10);
+        });
+
 
         return response()->json([
             'status_code'=>200,
@@ -41,7 +52,10 @@ class PropertyController extends Controller
 
     public function show(Property $property)
     {
-        $property->load(['coverImage','images','amenities','rooms','approvedReviews.user','approvedReviews.tags']);
+        //cache the property details for 30 minutes to reduce database queries
+        $property=Cache::remember("property:{$property->id}",now()->addMinutes(30),function() use ($property){
+            return Property::with(['coverImage','images','amenities','rooms','approvedReviews.user','approvedReviews.tags'])->findOrFail($property->id);
+        });
 
         return response()->json([
             'status_code'=>200,

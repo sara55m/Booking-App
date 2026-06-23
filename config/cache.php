@@ -74,6 +74,7 @@ return [
         'redis' => [
             'driver' => 'redis',
             'connection' => env('REDIS_CACHE_CONNECTION', 'cache'),
+            'client'=>(env('REDIS_CLIENT')=='phpredis')?'phpredis':'predis',
             'lock_connection' => env('REDIS_CACHE_LOCK_CONNECTION', 'default'),
         ],
 

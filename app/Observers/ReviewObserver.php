@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Models\Review;
+use Illuminate\Support\Facades\Cache;
 
 class ReviewObserver
 {
@@ -10,6 +11,9 @@ class ReviewObserver
     private function recalculate(Review $review)
     {
         $review->property->recalculateRating();
+
+        //clear cache for property details
+        Cache::forget("property:{$review->property_id}");
     }
     /**
      * Handle the Review "created" event.
