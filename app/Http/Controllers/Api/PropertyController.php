@@ -38,6 +38,7 @@ class PropertyController extends Controller
                 })
                 ->withActiveOffer()
                 ->with('coverImage','city')
+                ->withMin('rooms', 'price-per-night')
                 ->where('is_active', true)
                 ->latest()->paginate(10);
         });

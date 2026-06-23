@@ -10,6 +10,8 @@ use App\Observers\ReviewObserver;
 use App\Models\Property;
 use App\Models\City;
 use App\Observers\CityObserver;
+use App\Models\Offer;
+use App\Observers\OfferObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -34,5 +36,6 @@ class AppServiceProvider extends ServiceProvider
         Review::observe(ReviewObserver::class);
         Property::observe(PropertyObserver::class);
         City::observe(CityObserver::class);
+        Offer::observe(OfferObserver::class);
     }
 }

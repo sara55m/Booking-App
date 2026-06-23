@@ -200,4 +200,5 @@ return [
     'cities_retrieved_successfully' => 'تم استرجاع المدن بنجاح',
     'featured_properties_retrieved_successfully' => 'تم استرجاع العقارات المميزة بنجاح',
     'top_rated_properties_retrieved_successfully' => 'تم استرجاع العقارات الأعلى تقييمًا بنجاح',
+    'deals_and_offers_retrieved_successfully' => 'تم استرجاع العروض والصفقات بنجاح',
 ];

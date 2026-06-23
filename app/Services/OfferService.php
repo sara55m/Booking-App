@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Offer;
+use App\Models\Property;
 
 
 class OfferService
@@ -54,7 +55,7 @@ class OfferService
                 'message' => __('messages.offer_not_started_yet'),
             ];
         }
-        
+
         if($offer->ends_at && $offer->ends_at->isPast()){
             return [
                 'valid' => false,
@@ -80,7 +81,7 @@ class OfferService
             ];
         }
 
-        //when offer is valid 
+        //when offer is valid
         return [
             'valid' => true,
             'message' => __('messages.offer_is_valid'),
@@ -101,4 +102,49 @@ class OfferService
 
         return 0;
     }
+
+    public function calculatePrice(Property $property,int $nights=1) : array{
+
+        $offer = $property->offers->first();
+
+        $pricePerNight = $property->rooms_min_pricepernight;
+
+        $originalPrice = $pricePerNight * $nights;
+
+        if(!$offer){
+            return [
+                'originalPrice' => $originalPrice,
+                'finalPrice' => $originalPrice,
+                'offer' => null
+            ];
+        }
+
+            $validation = $this->validateOffer(
+                userId:      auth()->id(),
+                offer:       $offer,
+                propertyId:  $property->id,
+                totalPrice:  $originalPrice,
+                nights:      $nights,
+            );
+
+            if(! $validation['valid']){
+                return [
+                    'originalPrice' => $originalPrice,
+                    'finalPrice' => $originalPrice,
+                    'offer' => null
+                ];
+            }
+
+            $discount = $this->calculateDiscount($offer,$originalPrice);
+            $finalPrice = max(0, $originalPrice - $discount);
+
+            return [
+                'originalPrice' => $originalPrice,
+                'finalPrice' => $finalPrice,
+                'discount' => $discount,
+                'offer' => $offer,
+            ];
+
+    }
+
 }

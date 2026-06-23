@@ -60,6 +60,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/home/popular-cities', [HomeController::class, 'popularCities']);
     Route::get('/home/featured-properties', [HomeController::class, 'featuredProperties']);
     Route::get('/home/top-rated-properties', [HomeController::class, 'topRatedProperties']);
+    Route::get('/home/deals-and-offers', [HomeController::class, 'dealsAndOffers']);
 
     //properties
     Route::get('/properties', [PropertyController::class, 'index']);

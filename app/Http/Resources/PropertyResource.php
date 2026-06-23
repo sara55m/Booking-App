@@ -15,35 +15,7 @@ class PropertyResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $nights = $this->nights_count ?? 1;
-        $offer = $this->offers->first();
-        $price_per_night = $this->rooms()->min('price-per-night');
-        $originalPrice = $price_per_night * $nights;
-        $finalPrice = $originalPrice;
-        $offerBadge = null;
-
-        if($offer){
-            $offerService = app(OfferService::class);
-
-            $validation = $offerService->validateOffer(
-                userId:      auth()->id(),
-                offer:       $offer,
-                propertyId:  $this->id,
-                totalPrice:  $originalPrice,
-                nights:      $nights,
-            );
-
-            if($validation['valid']){
-                $discount = $offerService->calculateDiscount($offer,$originalPrice);
-                $finalPrice = max(0, $originalPrice - $discount);
-                $offerBadge = [
-                    'badge_label' => $offer->title,
-                    'is_expiring' => $offer->ends_at !== null && $offer->ends_at->diffInDays(now()) <= 7,
-                ];
-            }
-
-
-        }
+        $pricing=app(OfferService::class)->calculatePrice($this->resource, $request->nights ?? 1);
 
         return [
             'id' => $this->id,
@@ -55,10 +27,10 @@ class PropertyResource extends JsonResource
             'city' => $this->city?->name,
             'reviews_count' => $this->reviews_count,
 
-            'original_price' => $offerBadge ? round($originalPrice, 2) . ' EGP' : null,
-            'final_price'    => round($finalPrice, 2) . ' EGP',
-            'nights'         => $nights,
-            'offer'          => $offerBadge,
+            'original_price' => $pricing['originalPrice'] ? round($pricing['originalPrice'], 2) . ' EGP' : null,
+            'final_price'    => $pricing['finalPrice'] ? round($pricing['finalPrice'], 2) . ' EGP' : null,
+            'nights'         => $request->nights ?? 1,
+            'offer'          => $pricing['offer'] ? OfferResource::make($pricing['offer']) : null,
             'is_favorite' => auth()->check()
             ? auth()->user()
                 ->favoriteProperties

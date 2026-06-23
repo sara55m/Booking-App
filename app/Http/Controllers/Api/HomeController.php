@@ -73,4 +73,28 @@ class HomeController extends Controller
             'data'=>PropertyResource::collection($properties)
         ]);
     }
+
+    public function dealsAndOffers(){
+
+        $properties=Cache::tags(['home'])->remember('home:deals-and-offers',now()->addHours(6),function(){
+            return Property::query()
+            ->where('is_active', true)
+            ->withMin('rooms','price-per-night')
+            ->whereHas('offers', function ($query) {
+                $query->active();
+            })
+            ->withActiveOffer()
+            ->with(['coverImage','city'])
+            ->orderByDesc('average_rating')
+            ->orderByDesc('reviews_count')
+            ->limit(8)
+            ->get();
+        });
+
+        return response()->json([
+            'status_code'=>200,
+            'message'=>__('messages.deals_and_offers_retrieved_successfully'),
+            'data'=>PropertyResource::collection($properties)
+        ]);
+    }
 }

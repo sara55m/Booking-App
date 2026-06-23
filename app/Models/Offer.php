@@ -46,6 +46,19 @@ class Offer extends Model
         return $this->hasMany(Booking::class);
     }
 
-    
+    public function scopeActive($query, $nights=1)
+    {
+        return $query
+        ->where('is_active', 1)
+        ->where('requires_coupon_code', 0)
+        ->where(fn($q) => $q->whereNull('minimum_nights')->orWhere('minimum_nights', '<=', $nights))
+        ->where(fn($q) => $q->whereNull('starts_at')->orWhere('starts_at', '<=', now()))
+        ->where(fn($q) => $q->whereNull('ends_at')->orWhere('ends_at', '>=', now()))
+        ->where(fn($q) => $q->whereNull('usage_limit')->orWhereColumn('used_count', '<', 'usage_limit'))
+        ->select('*')
+        ->limit(1);
+    }
+
+
 
 }

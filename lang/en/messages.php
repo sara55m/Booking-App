@@ -199,4 +199,5 @@ return [
     'cities_retrieved_successfully'=>'Cities retrieved successfully',
     'featured_properties_retrieved_successfully'=>'Featured properties retrieved successfully',
     'top_rated_properties_retrieved_successfully'=>'Top rated properties retrieved successfully',
+    'deals_and_offers_retrieved_successfully'=>'Deals and offers retrieved successfully',
 ];
