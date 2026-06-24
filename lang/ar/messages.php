@@ -141,6 +141,13 @@ return [
     'cities' => 'المدن',
     'slug' => 'الاسم المختصر',
     'featured' => 'مميز',
+    //property types
+    'property_types' => 'أنواع العقارات',
+    'property_type' => 'نوع العقار',
+    'image_and_sort_order' => 'الصورة وترتيب العرض',
+    'properties_count' => 'عدد العقارات',
+    'has_properties' => 'يحتوي على عقارات',
+    'unused' => 'غير مستخدم',
 
 
     //api messages
@@ -201,4 +208,5 @@ return [
     'featured_properties_retrieved_successfully' => 'تم استرجاع العقارات المميزة بنجاح',
     'top_rated_properties_retrieved_successfully' => 'تم استرجاع العقارات الأعلى تقييمًا بنجاح',
     'deals_and_offers_retrieved_successfully' => 'تم استرجاع العروض والصفقات بنجاح',
+    'property_types_retrieved_successfully' => 'تم استرجاع أنواع العقارات بنجاح',
 ];

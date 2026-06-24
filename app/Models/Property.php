@@ -11,7 +11,7 @@ class Property extends Model
         'city_id',
         'address',
         'description',
-        'type',
+        'property_type_id',
         'rating',
         'is_active',
         'reviews_count',
@@ -32,6 +32,10 @@ class Property extends Model
         return $this->belongsTo(City::class);
     }
 
+    public function propertyType()
+    {
+        return $this->belongsTo(PropertyType::class, 'property_type_id');
+    }
 
     public function bookings()
     {
@@ -117,7 +121,9 @@ class Property extends Model
      */
     public function scopeType($query, string $type)
     {
-        return $query->where('type','like',"%{$type}%");
+        return $query->whereHas('propertyType', function($q) use ($type) {
+            $q->where('type','like',"%{$type}%");
+        });
     }
 
     public function scopeWithActiveOffer($query, $nights=1)

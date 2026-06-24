@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\CityResource;
 use App\Models\Property;
 use App\Http\Resources\PropertyResource;
+use App\Models\PropertyType;
+use App\Http\Resources\PropertyTypeResource;
 
 class HomeController extends Controller
 {
@@ -30,6 +32,27 @@ class HomeController extends Controller
             'status_code'=>200,
             'message'=>__('messages.cities_retrieved_successfully'),
             'data'=>CityResource::collection($cities)
+        ]);
+    }
+
+    public function propertyTypes(){
+
+        $propertyTypes=Cache::tags(['home'])->remember('home:property-types',now()->addHours(6),function(){
+            return PropertyType::query()
+            ->where('is_active', true)
+            ->withCount([
+                'properties' => fn ($query) => $query->where('is_active', true),
+            ])
+            ->having('properties_count', '>', 0)
+            ->orderByDesc('properties_count')
+            ->limit(8)
+            ->get();
+        });
+
+        return response()->json([
+            'status_code'=>200,
+            'message'=>__('messages.property_types_retrieved_successfully'),
+            'data'=>PropertyTypeResource::collection($propertyTypes)
         ]);
     }
 

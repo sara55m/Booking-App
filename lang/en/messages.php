@@ -141,6 +141,13 @@ return [
     'cities' => 'Cities',
     'slug' => 'Slug',
     'featured' => 'Featured',
+    //property types
+    'property_types' => 'Property Types',
+    'property_type' => 'Property Type',
+    'image_and_sort_order' => 'Image & Sort Order',
+    'properties_count' => 'Properties Count',
+    'has_properties'=>'Has Properties',
+    'unused'=>'Unused',
 
     //api messages
     //properties
@@ -200,4 +207,5 @@ return [
     'featured_properties_retrieved_successfully'=>'Featured properties retrieved successfully',
     'top_rated_properties_retrieved_successfully'=>'Top rated properties retrieved successfully',
     'deals_and_offers_retrieved_successfully'=>'Deals and offers retrieved successfully',
+    'property_types_retrieved_successfully'=>'Property types retrieved successfully',
 ];

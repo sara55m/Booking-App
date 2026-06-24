@@ -24,7 +24,7 @@ class PropertiesTable
                 TextColumn::make('city.name')
                     ->label(__('messages.city'))
                     ->searchable(),
-                TextColumn::make('type')
+                TextColumn::make('propertyType.name')
                     ->label(__('messages.type'))
                     ->searchable()
                     ->badge()
@@ -53,7 +53,8 @@ class PropertiesTable
                 SelectFilter::make('city')
                 ->label(__('messages.city'))
                 ->relationship('city', 'name'),
-                SelectFilter::make('type')
+                SelectFilter::make('PropertyType')
+                ->relationship('PropertyType', 'name')
                 ->label(__('messages.type')),
                 SelectFilter::make('is_active')
                 ->label(__('messages.is_active'))

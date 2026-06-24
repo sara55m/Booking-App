@@ -26,7 +26,7 @@ class PropertyDetailsResource extends JsonResource
             'city' => $this->city?->name,
             'address' => $this->address,
             'description'=>$this->description,
-            'type'=>$this->type,
+            'type'=>$this->propertyType?->name,
             'average_rating' => $this->average_rating,
             'reviews_count' => $this->reviews_count,
             'amenities'=>$this->amenities->map(function($amenity){

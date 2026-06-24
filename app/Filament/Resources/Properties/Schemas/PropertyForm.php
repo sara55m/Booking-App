@@ -30,9 +30,10 @@ class PropertyForm
                                 Textarea::make('description')
                                 ->label(__('messages.description'))
                                 ->rows(3),
-                                Select::make('type')
+                                Select::make('property_type_id')
+                                ->relationship('PropertyType', 'name')
                                 ->label(__('messages.type'))
-                                ->options(PropertyType::class)
+                                ->preload()
                                 ->required(),
                             ]),
                         Tab::make('Location')
@@ -41,6 +42,7 @@ class PropertyForm
                                 Select::make('city')
                                     ->relationship('city', 'name')
                                     ->label(__('messages.city'))
+                                    ->preload()
                                     ->required(),
                                 Textarea::make('address')
                                     ->label(__('messages.address'))
