@@ -28,6 +28,7 @@ class User extends Authenticatable implements FilamentUser,MustVerifyEmail
         'password',
         'role',
         'phone',
+        'image',
         'otp',
         'otp_expires_at',
         'email_verified_at',

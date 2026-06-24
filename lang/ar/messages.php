@@ -209,4 +209,11 @@ return [
     'top_rated_properties_retrieved_successfully' => 'تم استرجاع العقارات الأعلى تقييمًا بنجاح',
     'deals_and_offers_retrieved_successfully' => 'تم استرجاع العروض والصفقات بنجاح',
     'property_types_retrieved_successfully' => 'تم استرجاع أنواع العقارات بنجاح',
+    'user_profile_retrieved_successfully' => 'تم استرجاع ملف المستخدم الشخصي بنجاح',
+    'user_profile_updated_successfully' => 'تم تحديث ملف المستخدم الشخصي بنجاح',
+    'current_password_is_incorrect' => 'كلمة المرور الحالية غير صحيحة',
+    'password_updated_successfully' => 'تم تحديث كلمة المرور بنجاح',
+    'profile_image_not_found'=>'لا توجد صورة للمستخدم',
+    'user_profile_image_deleted_successfully'=>'تم حذف صورة المستخدم بنجاح',
+    'account_deleted_successfully'=>'تم حذف الحساب بنجاح',
 ];

@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\PropertyController;
 use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ReviewController;
+use App\Http\Controllers\Api\ProfileController;
 
 
 Route::middleware('throttle:3,1')->group(function(){
@@ -55,6 +56,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', fn (Request $request) => $request->user());
     Route::post('/email/resend', [AuthController::class, 'resend'])->middleware('throttle:3,1');;
     Route::post('/logout', [AuthController::class, 'logout']);
+
+    //profile
+    Route::get('/profile', [ProfileController::class, 'show']);
+    Route::put('/profile', [ProfileController::class, 'update']);
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword']);
+    Route::delete('/profile/image', [ProfileController::class, 'deleteImage']);
+    Route::delete('/profile',[ProfileController::class, 'destroy']);
 
     //homepage
     Route::get('/home/popular-cities', [HomeController::class, 'popularCities']);

@@ -208,4 +208,11 @@ return [
     'top_rated_properties_retrieved_successfully'=>'Top rated properties retrieved successfully',
     'deals_and_offers_retrieved_successfully'=>'Deals and offers retrieved successfully',
     'property_types_retrieved_successfully'=>'Property types retrieved successfully',
+    'user_profile_retrieved_successfully'=>'User profile retrieved successfully',
+    'user_profile_updated_successfully'=>'User profile updated successfully',
+    'current_password_is_incorrect'=>'Current password is incorrect',
+    'password_updated_successfully'=>'Password updated successfully',
+    'profile_image_not_found'=>'Profile Image Not Found',
+    'user_profile_image_deleted_successfully'=>'User Profile Image Deleted Successfully',
+    'account_deleted_successfully'=>'Account Deleted Successfully',
 ];
