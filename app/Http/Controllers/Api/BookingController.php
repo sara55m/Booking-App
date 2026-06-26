@@ -30,12 +30,18 @@ class BookingController extends Controller
             'status' => [
                 'nullable',
                 Rule::in(BookingStatus::values()),
-            ]
+            ],
+            'search'=>['nullable','string','max:255']
         ]);
         $bookings=Booking::query()
         ->forUser(auth()->id())
-        ->when($request->status,function($query) use ($request){
+        ->when($request->filled('status'), function ($query) use ($request) {
             $query->status($request->status);
+        })
+        ->when($request->filled('search'), function ($query) use ($request) {
+            $query->whereHas('property', function ($query) use ($request) {
+                $query->where('name', 'like', '%' . $request->search . '%');
+            });
         })
         ->with(['property','room','offer'])
         ->latest()
@@ -44,7 +50,9 @@ class BookingController extends Controller
         return response()->json(
             [
                 'status_code' => 200,
-                'message' => __('messages.bookings_retrieved_successfully'),
+                'message'=>$bookings->isEmpty()
+                ? __('messages.no_bookings_made_yet')
+                : __('messages.bookings_retrieved_successfully'),
                 'data' => BookingResource::collection($bookings),
                 'pagination' => [
 

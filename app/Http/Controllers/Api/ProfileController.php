@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Requests\Profile\DeleteRequest;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\Profile\UpdatePasswordRequest;
+use App\Http\Resources\ReviewResource;
 
 class ProfileController extends Controller
 {
@@ -139,5 +140,46 @@ class ProfileController extends Controller
             'status' => 'success',
             'message' => __('messages.account_deleted_successfully'),
         ]);
+    }
+
+    public function reviews(Request $request)
+    {
+        $request->validate([
+            'search' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $user=$request->user();
+
+        $reviews = $user->approvedReviews()->with('tags','booking','property')
+        ->when($request->filled('search'), function ($query) use ($request) {
+            $query->where(function ($query) use ($request) {
+                $query->whereHas('tags', function ($query) use ($request) {
+                    $query->where('name', 'like', '%' . $request->search . '%');
+                })
+                ->orWhereHas('property', function ($query) use ($request) {
+                    $query->where('name', 'like', '%' . $request->search . '%');
+                });
+            });
+        })
+        ->latest()->paginate(10);
+        return response()->json(
+            [
+                'status_code' => 200,
+                'message' => $reviews->isEmpty()
+                ? __('messages.no_reviews_yet')
+                :__('messages.reviews_retrieved_successfully'),
+                'data' => ReviewResource::collection($reviews),
+                'pagination' => [
+
+                    'current_page' => $reviews->currentPage(),
+
+                    'last_page' => $reviews->lastPage(),
+
+                    'per_page' => $reviews->perPage(),
+
+                    'total' => $reviews->total(),
+                ],
+            ],200);
+            
     }
 }

@@ -63,6 +63,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/profile/password', [ProfileController::class, 'updatePassword']);
     Route::delete('/profile/image', [ProfileController::class, 'deleteImage']);
     Route::delete('/profile',[ProfileController::class, 'destroy']);
+    //user reviews
+    Route::get('profile/reviews',[ProfileController::class, 'reviews']);
 
     //homepage
     Route::get('/home/popular-cities', [HomeController::class, 'popularCities']);

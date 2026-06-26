@@ -216,4 +216,7 @@ return [
     'profile_image_not_found'=>'لا توجد صورة للمستخدم',
     'user_profile_image_deleted_successfully'=>'تم حذف صورة المستخدم بنجاح',
     'account_deleted_successfully'=>'تم حذف الحساب بنجاح',
+    'no_bookings_made_yet' => 'لم تقم بأي حجوزات حتى الآن.',
+    'user_bookings_retrieved_successfully' => 'تم استرجاع حجوزات المستخدم بنجاح.',
+    'no_reviews_yet'=>'لا توجد تققيمات حتى الان',
 ];

@@ -68,6 +68,11 @@ class User extends Authenticatable implements FilamentUser,MustVerifyEmail
         return $this->hasMany(Review::class);
     }
 
+    public function approvedReviews()
+    {
+        return $this->reviews()->where('status', 'approved');
+    }
+
     public function favoriteProperties()
     {
         return $this->belongsToMany(Property::class, 'favorites','user_id','property_id')->withTimestamps();
