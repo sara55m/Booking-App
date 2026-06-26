@@ -65,6 +65,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/profile',[ProfileController::class, 'destroy']);
     //user reviews
     Route::get('profile/reviews',[ProfileController::class, 'reviews']);
+    //favorite properties
+    Route::get('profile/favorites',[ProfileController::class, 'favorites']);
 
     //homepage
     Route::get('/home/popular-cities', [HomeController::class, 'popularCities']);

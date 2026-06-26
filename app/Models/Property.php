@@ -122,7 +122,7 @@ class Property extends Model
     public function scopeType($query, string $type)
     {
         return $query->whereHas('propertyType', function($q) use ($type) {
-            $q->where('type','like',"%{$type}%");
+            $q->where('name','like',"%{$type}%");
         });
     }
 

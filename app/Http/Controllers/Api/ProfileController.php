@@ -12,6 +12,8 @@ use App\Http\Requests\Profile\DeleteRequest;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\Profile\UpdatePasswordRequest;
 use App\Http\Resources\ReviewResource;
+use App\Http\Resources\PropertyResource;
+
 
 class ProfileController extends Controller
 {
@@ -181,5 +183,50 @@ class ProfileController extends Controller
                 ],
             ],200);
             
+    }
+
+    public function favorites(Request $request){
+        $request->validate([
+            'city' => ['nullable', 'string', 'max:255'],
+            'type' => ['nullable','exists:property_types,name'],
+            'search' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $user=$request->user();
+
+        $favorites=$user->favoriteProperties()
+        ->where('is_active', true)
+        ->when($request->filled('city'), function ($query) use ($request) {
+            $query->city($request->city);
+        })
+        ->when($request->filled('type'), function ($query) use ($request) {
+            $query->type($request->type);
+        })
+        ->when($request->filled('search'), function ($query) use ($request) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        })
+        ->withActiveOffer()
+        ->with('coverImage','city')
+        ->withMin('rooms', 'price-per-night')
+        ->latest()->paginate(10);
+
+        return response()->json(
+            [
+                'status_code' => 200,
+                'message' => $favorites->isEmpty()
+                ? __('messages.no_favorite_properties_added_yet')
+                :__('messages.favorites_retrieved_successfully'),
+                'data' => PropertyResource::collection($favorites),
+                'pagination' => [
+
+                    'current_page' => $favorites->currentPage(),
+
+                    'last_page' => $favorites->lastPage(),
+
+                    'per_page' => $favorites->perPage(),
+
+                    'total' => $favorites->total(),
+                ],
+            ],200);
     }
 }

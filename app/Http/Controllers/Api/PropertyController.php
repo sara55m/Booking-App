@@ -30,6 +30,7 @@ class PropertyController extends Controller
         $properties=Cache::tags(['properties'])
         ->remember($key, now()->addMinutes(15), function () use ($request) {
             return Property::query()
+                ->where('is_active', true)
                 ->when($request->city, function ($query) use ($request) {
                     $query->city($request->city);
                 })
@@ -39,7 +40,6 @@ class PropertyController extends Controller
                 ->withActiveOffer()
                 ->with('coverImage','city')
                 ->withMin('rooms', 'price-per-night')
-                ->where('is_active', true)
                 ->latest()->paginate(10);
         });
 

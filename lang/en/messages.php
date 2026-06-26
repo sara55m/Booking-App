@@ -217,5 +217,7 @@ return [
     'account_deleted_successfully'=>'Account Deleted Successfully',
     'no_bookings_made_yet' => 'No bookings made yet.',
     'user_bookings_retrieved_successfully' => 'User bookings retrieved successfully.',
-    'no_reviews_yet'=>'No Reviews Yet'
+    'no_reviews_yet'=>'No Reviews Yet',
+    'no_favorite_properties_added_yet'=>'No Favorite Properties Added Yet',
+    'favorites_retrieved_successfully'=>'Favorite Properties Retrieved Successfully',
 ];

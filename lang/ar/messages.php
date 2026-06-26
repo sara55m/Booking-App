@@ -219,4 +219,6 @@ return [
     'no_bookings_made_yet' => 'لم تقم بأي حجوزات حتى الآن.',
     'user_bookings_retrieved_successfully' => 'تم استرجاع حجوزات المستخدم بنجاح.',
     'no_reviews_yet'=>'لا توجد تققيمات حتى الان',
+    'no_favorite_properties_added_yet'=>'لم تقم بإضافة عقارات مفضلة حتى الأن',
+    'favorites_retrieved_successfully'=>'تم استرجاع العقارات المفضلة بنجاح',
 ];
