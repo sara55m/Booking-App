@@ -71,7 +71,7 @@ class ReviewController extends Controller
     {
         Gate::authorize('view', $review);
 
-        $review->load('user','tags');
+        $review->load('user','tags','property','booking');
         return response()->json(
             [
                 'status_code' => 200,
