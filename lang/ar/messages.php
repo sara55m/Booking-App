@@ -221,4 +221,10 @@ return [
     'no_reviews_yet'=>'لا توجد تققيمات حتى الان',
     'no_favorite_properties_added_yet'=>'لم تقم بإضافة عقارات مفضلة حتى الأن',
     'favorites_retrieved_successfully'=>'تم استرجاع العقارات المفضلة بنجاح',
+    'no_payment_methods_found'=>'لا يوجد طرق دفع محفوظة',
+    'payment_methods_retrieved_successfully'=>'تم استرجاع طرق الدفع بنجاح',
+    'default_payment_method_updated_successfully'=>'طريقة الدفع الافتراضية تم تحديثها بنجاح',
+    'payment_method_deleted_successfully'=>'تم حذف طريقة الدفع بنجاح',
+    'no_transactions_yet'=>'لا توجد معاملات حتى الأن',
+    'transactions_retrieved_successfully'=>'تم استرجاع المعاملات بنجاح',
 ];

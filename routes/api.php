@@ -67,6 +67,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('profile/reviews',[ProfileController::class, 'reviews']);
     //favorite properties
     Route::get('profile/favorites',[ProfileController::class, 'favorites']);
+    //saved user payment methods
+    Route::get('profile/payment-methods',[ProfileController::class, 'paymentMethods']);
+    Route::patch('profile/payment-methods/{paymentMethod}/default',[ProfileController::class, 'setDefaultPaymentMethod']);
+    Route::delete(
+        '/profile/payment-methods/{paymentMethod}',
+        [ProfileController::class, 'deletePaymentMethod']
+    );
+    //user transactions(payments)
+    Route::get('profile/transactions',[ProfileController::class, 'transactions']);
+
 
     //homepage
     Route::get('/home/popular-cities', [HomeController::class, 'popularCities']);

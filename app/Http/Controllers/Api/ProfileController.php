@@ -13,7 +13,15 @@ use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\Profile\UpdatePasswordRequest;
 use App\Http\Resources\ReviewResource;
 use App\Http\Resources\PropertyResource;
-
+use App\Models\Payment;
+use App\Models\PaymentMethod;
+use App\Http\Resources\PaymentMethodResource;
+use Stripe\PaymentMethod as StripePaymentMethod;
+use Stripe\Stripe;
+use Illuminate\Validation\Rule;
+use App\Enums\PaymentStatus;
+use App\Http\Resources\TransactionResource;
+use Illuminate\Support\Facades\Log;
 
 class ProfileController extends Controller
 {
@@ -228,5 +236,231 @@ class ProfileController extends Controller
                     'total' => $favorites->total(),
                 ],
             ],200);
+    }
+
+    public function paymentMethods(Request $request){
+        $user =$request->user();
+
+        $paymentMethods=$user->paymentMethods()->latest()->paginate(10);
+
+        return response()->json([
+            'status_code' => 200,
+            'message' => $paymentMethods->isEmpty()
+                ? __('messages.no_payment_methods_found')
+                : __('messages.payment_methods_retrieved_successfully'),
+    
+            'data' => PaymentMethodResource::collection($paymentMethods),
+    
+            'pagination' => [
+                'current_page' => $paymentMethods->currentPage(),
+                'last_page' => $paymentMethods->lastPage(),
+                'per_page' => $paymentMethods->perPage(),
+                'total' => $paymentMethods->total(),
+            ],
+        ]);
+    }
+
+    public function setDefaultPaymentMethod(PaymentMethod $paymentMethod)
+    {
+        $user = auth()->user();
+
+        $paymentMethod=$user->paymentMethods()->find($paymentMethod->id);
+
+        if (! $paymentMethod) {
+            return response()->json([
+                'status_code' => 403,
+                'message' => __('messages.unauthorized_action'),
+            ], 403);
+        }
+        Stripe::setApiKey(config('services.stripe.secret'));
+
+        try {
+            DB::transaction(function () use ($user, $paymentMethod) {
+    
+                $user->paymentMethods()->update([
+                    'is_default' => false,
+                ]);
+    
+                $paymentMethod->update([
+                    'is_default' => true,
+                ]);
+
+                if ($user->stripe_customer_id) {
+                    \Stripe\Customer::update(
+                        $user->stripe_customer_id,
+                        [
+                            'invoice_settings' => [
+                                'default_payment_method' => $paymentMethod->stripe_payment_method_id,
+                            ],
+                        ]
+                    );
+                }
+            });
+    
+            return response()->json([
+                'status_code' => 200,
+                'message' => __('messages.default_payment_method_updated_successfully'),
+                'data' => new PaymentMethodResource($paymentMethod->fresh()),
+            ]);
+    
+        } catch (\Throwable $e) {
+    
+            Log::error('Failed to set default payment method.', [
+                'user_id' => $user->id,
+                'payment_method_id' => $paymentMethod->id,
+                'error' => $e->getMessage(),
+            ]);
+    
+            return response()->json([
+                'status_code' => 500,
+                'message' => __('messages.something_went_wrong'),
+            ], 500);
+        }
+    }
+
+    public function deletePaymentMethod(PaymentMethod $paymentMethod)
+    {
+        $user = auth()->user();
+
+        $paymentMethod=$user->paymentMethods()->find($paymentMethod->id);
+
+        if (! $paymentMethod) {
+            return response()->json([
+                'status_code' => 403,
+                'message' => __('messages.unauthorized_action'),
+            ], 403);
+        }
+
+        Stripe::setApiKey(config('services.stripe.secret'));
+
+        try {
+
+            DB::transaction(function () use ($user, $paymentMethod) {
+                //check if payment method is default
+                $wasDefault = $paymentMethod->is_default;
+
+                // Detach the payment method from Stripe
+                $stripePaymentMethod = StripePaymentMethod::retrieve(
+                    $paymentMethod->stripe_payment_method_id
+                );
+
+                $stripePaymentMethod->detach();
+                
+                $paymentMethod->delete();
+
+                // If the deleted card was the default, promote another one
+                if ($wasDefault) {
+
+                    $newDefault = $user->paymentMethods()
+                        ->latest()
+                        ->first();
+
+                    if ($newDefault) {
+
+                        $newDefault->update([
+                            'is_default' => true,
+                        ]);
+
+                        if ($user->stripe_customer_id) {
+                            \Stripe\Customer::update(
+                                $user->stripe_customer_id,
+                                [
+                                    'invoice_settings' => [
+                                        'default_payment_method' => $newDefault->stripe_payment_method_id,
+                                    ],
+                                ]
+                            );
+                        }
+
+                    } elseif ($user->stripe_customer_id) {
+
+                        // User has no remaining payment methods
+                        \Stripe\Customer::update(
+                            $user->stripe_customer_id,
+                            [
+                                'invoice_settings' => [
+                                    'default_payment_method' => null,
+                                ],
+                            ]
+                        );
+                    }
+                }
+            });
+
+            return response()->json([
+                'status_code' => 200,
+                'message' => __('messages.payment_method_deleted_successfully'),
+            ]);
+
+        } catch (\Throwable $e) {
+
+            Log::error('Failed to delete payment method.', [
+                'user_id' => $user->id,
+                'payment_method_id' => $paymentMethod->id,
+                'error' => $e->getMessage(),
+            ]);
+
+            return response()->json([
+                'status_code' => 500,
+                'message' => __('messages.something_went_wrong'),
+            ], 500);
+        }
+    }
+
+    public function transactions(Request $request){
+
+        $request->validate([
+            'status' => ['nullable', Rule::in(PaymentStatus::values())],
+            'booking' => ['nullable', 'integer', 'exists:bookings,id'],
+            'property' => ['nullable', 'string', 'max:255'],
+            'from' => ['nullable', 'date'],
+            'to' => ['nullable', 'date', 'after_or_equal:from'],
+        ]);
+
+        $user=$request->user();
+
+        $transactions=Payment::query()
+        ->whereHas('booking',function($query) use ($user){
+            $query->where('user_id',$user->id);
+        })
+        ->when($request->filled('status'), function ($query) use ($request) {
+            $query->where('status', $request->status);
+        })
+        ->when($request->filled('booking'), function ($query) use ($request) {
+            $query->where('booking_id', $request->booking);
+        })
+        ->when($request->filled('property'),function ($query) use ($request){
+            $query->whereHas('booking.property',function ($query) use ($request){
+                $query->where('name','like',"%$request->property%");
+            });
+        })
+        ->when($request->filled('from'), function ($query) use ($request) {
+            $query->whereDate('created_at', '>=', $request->from);
+        })
+
+        ->when($request->filled('to'), function ($query) use ($request) {
+            $query->whereDate('created_at', '<=', $request->to);
+        })
+        ->with('booking.property')
+        ->latest()
+
+        ->paginate(10);
+
+        return response()->json([
+            'status_code' => 200,
+            'message' => $transactions->isEmpty()
+                ? __('messages.no_transactions_yet')
+                : __('messages.transactions_retrieved_successfully'),
+    
+            'data' => TransactionResource::collection($transactions),
+    
+            'pagination' => [
+                'current_page' => $transactions->currentPage(),
+                'last_page' => $transactions->lastPage(),
+                'per_page' => $transactions->perPage(),
+                'total' => $transactions->total(),
+            ],
+        ]);
+
     }
 }

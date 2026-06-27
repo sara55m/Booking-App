@@ -220,4 +220,10 @@ return [
     'no_reviews_yet'=>'No Reviews Yet',
     'no_favorite_properties_added_yet'=>'No Favorite Properties Added Yet',
     'favorites_retrieved_successfully'=>'Favorite Properties Retrieved Successfully',
+    'no_payment_methods_found'=>'No Saved Payment Methods Found',
+    'payment_methods_retrieved_successfully'=>'Payment Methods Retrieved Successfully',
+    'default_payment_method_updated_successfully'=>'Default Payment Method Updated Successfully',
+    'payment_method_deleted_successfully'=>'Payment Method Deleted Successfully',
+    'no_transactions_yet'=>'No Transactions yet',
+    'transactions_retrieved_successfully'=>'Transactions Retrieved Successfully',
 ];

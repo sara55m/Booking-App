@@ -25,6 +25,7 @@ class User extends Authenticatable implements FilamentUser,MustVerifyEmail
     protected $fillable = [
         'name',
         'email',
+        'stripe_customer_id',
         'password',
         'role',
         'phone',
@@ -76,6 +77,10 @@ class User extends Authenticatable implements FilamentUser,MustVerifyEmail
     public function favoriteProperties()
     {
         return $this->belongsToMany(Property::class, 'favorites','user_id','property_id')->withTimestamps();
+    }
+
+    public function paymentMethods(){
+        return $this->hasMany(PaymentMethod::class);
     }
 
     public function canAccessPanel(Panel $panel): bool

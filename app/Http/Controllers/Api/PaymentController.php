@@ -15,6 +15,7 @@ use App\Enums\PaymentMethod;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Events\BookingPaymentConfirmed;
+use App\Models\PaymentMethod as UserPaymentMethod;
 
 class PaymentController extends Controller
 {
@@ -72,10 +73,25 @@ class PaymentController extends Controller
             'payment_method' => PaymentMethod::CARD,
         ]);
 
+        $user=$booking->user;
+        if(! $user->stripe_customer_id){
+            $customer=\Stripe\Customer::create([
+                'name' => $user->name,
+                'email' => $user->email,
+            ]);
+
+            $user->update([
+                'stripe_customer_id'=>$customer->id,
+            ]);
+        }
+
 
         //create checkout session
         $session=Session::create([
             'payment_method_types' =>[PaymentMethod::CARD->value],
+            'payment_intent_data' => [
+                'setup_future_usage' => 'off_session',
+            ],
             'line_items' => [[
                 'price_data' => [
                     'currency' => 'egp',
@@ -92,6 +108,7 @@ class PaymentController extends Controller
             'metadata' => [
             'payment_id' => $payment->id,
             ],
+            'customer' => $user->stripe_customer_id,
             ]);
 
             $payment->update([
@@ -165,6 +182,8 @@ class PaymentController extends Controller
                 'message' => __('messages.invalid_signature')
             ], 400);
         }
+
+        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
 
         /*
         |--------------------------------------------------------------------------
@@ -286,6 +305,36 @@ class PaymentController extends Controller
                         ]);
                     }
 
+                    $paymentIntent =
+                        \Stripe\PaymentIntent::retrieve(
+                            $session->payment_intent
+                        );
+
+                    $stripePaymentMethod =
+                        \Stripe\PaymentMethod::retrieve(
+                            $paymentIntent->payment_method
+                        );
+
+                        $isFirstPaymentMethod = ! UserPaymentMethod::where(
+                            'user_id',
+                            $booking->user_id
+                        )->exists();
+                        
+                        UserPaymentMethod::firstOrCreate(
+                            [
+                                'user_id' => $booking->user_id,
+                                'fingerprint' => $stripePaymentMethod->card->fingerprint,
+                            ],
+                            [
+                                'stripe_payment_method_id' => $stripePaymentMethod->id,
+                                'brand' => $stripePaymentMethod->card->brand,
+                                'last_four' => $stripePaymentMethod->card->last4,
+                                'exp_month' => $stripePaymentMethod->card->exp_month,
+                                'exp_year' => $stripePaymentMethod->card->exp_year,
+                                'is_default' => $isFirstPaymentMethod,
+                            ]
+                        );
+
                     DB::commit();
 
                     //fire booking payment confirmation events
@@ -303,10 +352,7 @@ class PaymentController extends Controller
                     ]);
 
                     return response()->json([
-
-                        'message' =>
-                            __('messages.something_went_wrong'),
-
+                        'message' =>  __('messages.something_went_wrong'),
                     ], 500);
                 }
 
