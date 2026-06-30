@@ -39,6 +39,8 @@ return [
         'key' => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
         'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
+        'success_url' => 'http://127.0.0.1:8000/payment-success',
+        'cancel_url' => 'http://127.0.0.1:8000/payment-cancelled',
     ]
 
 ];

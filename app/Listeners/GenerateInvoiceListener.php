@@ -22,6 +22,7 @@ class GenerateInvoiceListener
      */
     public function handle(BookingPaymentConfirmed $event): void
     {
+        
         $this->invoiceService->generate(
             $event->booking,
             $event->payment

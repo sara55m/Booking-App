@@ -227,4 +227,5 @@ return [
     'payment_method_deleted_successfully'=>'تم حذف طريقة الدفع بنجاح',
     'no_transactions_yet'=>'لا توجد معاملات حتى الأن',
     'transactions_retrieved_successfully'=>'تم استرجاع المعاملات بنجاح',
+    'redeem_points_exceeds_the_user_reward_points' => 'عدد نقاط الاستبدال يتجاوز رصيد نقاط المكافآت المتاح لديك.',
 ];

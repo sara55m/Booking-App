@@ -7,6 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use App\Notifications\BookingConfirmedNotification;
 
+
 class SendBookingConfirmedMailListener implements ShouldQueue
 {
     /**
@@ -27,7 +28,9 @@ class SendBookingConfirmedMailListener implements ShouldQueue
             'property',
         ]);
 
-        $booking->user->notify(
+        $user=$booking->user;
+
+        $user->notify(
             new BookingConfirmedNotification($booking)
         );
     }

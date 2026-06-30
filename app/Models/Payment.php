@@ -7,6 +7,7 @@ use App\Enums\BookingStatus;
 use Illuminate\Database\Eloquent\Model;
 use App\Enums\PaymentStatus;
 use App\Enums\PaymentMethod;
+use App\Models\RewardPoint;
 
 class Payment extends Model
 {
@@ -22,12 +23,16 @@ class Payment extends Model
         'stripe_session_id',
         'stripe_payment_intent_id',
         'refunded_amount',
-        'refunded_at'
+        'refunded_at',
+        'earned_points',
+        'redeemed_points',
+        'discount_amount'
     ];
 
     protected $casts = [
         'amount' => 'decimal:2',
         'refunded_amount'=>'decimal:2',
+        'discount_amount'=>'decimal:2',
         'paid_at' => 'datetime',
         'refunded_at'=>'datetime',
         'status' => PaymentStatus::class,
@@ -37,6 +42,10 @@ class Payment extends Model
     public function booking()
     {
         return $this->belongsTo(Booking::class, 'booking_id');
+    }
+
+    public function rewardPoints(){
+        return $this->hasMany(RewardPoint::class,'payment_id');
     }
 
     //accessors

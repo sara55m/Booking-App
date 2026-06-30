@@ -6,8 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Booking;
 use App\Models\Payment;
-use Stripe\Stripe;
-use Stripe\Checkout\Session;
 use App\Enums\PaymentStatus;
 use App\Enums\BookingStatus;
 use App\Enums\BookingPaymentStatus;
@@ -16,131 +14,203 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Events\BookingPaymentConfirmed;
 use App\Models\PaymentMethod as UserPaymentMethod;
+use App\Services\StripeService;
+use App\Services\RewardService;
 
 class PaymentController extends Controller
 {
-    public function checkout(Request $request,Booking $booking)
-    {
-        //validate amount to pay
+    public function checkout(
+        Request $request,
+        Booking $booking,
+        StripeService $stripeService,
+        RewardService $rewardService
+    ) {
         $request->validate([
-            'amount'=>['required','numeric','min:1'],
+            'amount' => ['required', 'numeric', 'min:1'],
+            'redeem_points' => ['nullable', 'integer', 'min:0', 'multiple_of:100'],
         ]);
-        //check user is authorized to make payment
-        if($booking->user_id !== auth()->id()){
-            return response()->json(['message' => __('messages.unauthorized_action')], 403);
+
+        $user = $booking->user;
+
+        if ($user->id !== auth()->id()) {
+            return response()->json([
+                'message' => __('messages.unauthorized_action'),
+            ], 403);
         }
 
-        //check if booking is already completed or cancelled
-        if(in_array($booking->status,[BookingStatus::CANCELLED,BookingStatus::COMPLETED])){
-            return response()->json(['message' => __('messages.booking_already_completed_or_cancelled')], 400);
+        if (in_array($booking->status, [
+            BookingStatus::CANCELLED,
+            BookingStatus::COMPLETED,
+        ])) {
+            return response()->json([
+                'message' => __('messages.booking_already_completed_or_cancelled'),
+            ], 400);
         }
 
-        //check if booking is already paid
-        //get total amount for booking
-        $paidAmount = $booking->payments()
-        ->where('status', PaymentStatus::PAID)
-        ->sum('amount');
+        $totalPaid = $booking->payments()
+            ->where('status', PaymentStatus::PAID)
+            ->sum(DB::raw('amount + discount_amount'));
 
-        //calculate remaining amount
-        $remainingAmount=$booking->total_price - $paidAmount;
+        $remainingAmount = $booking->total_price - $totalPaid;
 
-        if($remainingAmount <= 0){
-            return response()->json(['message' => __('messages.booking_already_paid')], 400);
+        if ($remainingAmount <= 0) {
+            return response()->json([
+                'message' => __('messages.booking_already_paid'),
+            ], 400);
         }
 
-        $amountToPay=$request->amount;
+        $requestedAmount = $request->amount;
 
-        if($amountToPay > $remainingAmount){
-            return response()->json(['message' => __('messages.amount_exceeds_the_remaining_balance')], 400);
+        if ($requestedAmount > $remainingAmount) {
+            return response()->json([
+                'message' => __('messages.amount_exceeds_the_remaining_balance'),
+            ], 400);
         }
 
-        //recalculate the remaining
-        $newRemaining=$remainingAmount-$amountToPay;
+        $redeemPoints = $request->input('redeem_points', 0);
 
-        //stripe configuration
-        Stripe::setApiKey(config('services.stripe.secret'));
+        if ($redeemPoints > $user->reward_points) {
+            return response()->json([
+                'message' => __('messages.redeem_points_exceeds_the_user_reward_points'),
+            ], 422);
+        }
 
-        //use database transactions
-        DB::beginTransaction();
+        $discountAmount = min(
+            intdiv($redeemPoints, config('rewards.redeem_rate'))
+                * config('rewards.redeem_value'),
+            $requestedAmount
+        );
+
+        $amountToCharge = max(
+            0,
+            $requestedAmount - $discountAmount
+        );
+
+        $remainingAfterPayment = $remainingAmount - $requestedAmount;
+
+
+        // Creates customer only if needed.
+        // Any Stripe exception is logged inside the service.
+        try {
+            $stripeService->createCustomer($user);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => __('messages.something_went_wrong'),
+            ], 500);
+        }
 
         try {
-            //create payment record with pending status
-        $payment=Payment::create([
-            'booking_id' => $booking->id,
-            'amount' => $amountToPay,
-            'remaining' => $newRemaining,
-            'status' => PaymentStatus::PENDING,
-            'payment_method' => PaymentMethod::CARD,
-        ]);
 
-        $user=$booking->user;
-        if(! $user->stripe_customer_id){
-            $customer=\Stripe\Customer::create([
-                'name' => $user->name,
-                'email' => $user->email,
+            $payment = DB::transaction(function () use (
+                $booking,
+                $amountToCharge,
+                $remainingAfterPayment,
+                $redeemPoints,
+                $discountAmount
+            ) {
+
+                $payment = Payment::create([
+                    'booking_id' => $booking->id,
+                    'amount' => $amountToCharge,
+                    'remaining' => $remainingAfterPayment,
+                    'redeemed_points' => $redeemPoints,
+                    'discount_amount' => $discountAmount,
+                    'status' => PaymentStatus::PENDING,
+                    'payment_method' => PaymentMethod::CARD,
+                ]);
+
+                //if the amount to charge is 0 (fully paid using reward points),no need to create the session
+                if ($amountToCharge <= 0) {
+
+                    $payment->update([
+                        'status' => PaymentStatus::PAID,
+                        'paid_at' => now(),
+                    ]);
+
+                    $booking->update([
+                        'status' => BookingStatus::CONFIRMED,
+                        'payment_status' => BookingPaymentStatus::PAID,
+                        'expires_at' => null,
+                    ]);
+                }
+
+                return $payment;
+            });
+
+        } catch (\Throwable $e) {
+
+            Log::error('Checkout payment creation failed', [
+                'booking_id' => $booking->id,
+                'user_id' => $user->id,
+                'error' => $e->getMessage(),
             ]);
 
-            $user->update([
-                'stripe_customer_id'=>$customer->id,
+            return response()->json([
+                'message' => __('messages.something_went_wrong'),
+            ], 500);
+        }
+
+        // Fully paid using reward points
+        if ($amountToCharge <= 0) {
+
+            $rewardService->process(
+                $user,
+                $booking,
+                $payment
+            );
+
+            event(new BookingPaymentConfirmed($booking, $payment));
+
+            return response()->json([
+                'status_code' => 200,
+                'message' => __('messages.payment_completed_using_reward_points'),
             ]);
         }
 
+        try {
 
-        //create checkout session
-        $session=Session::create([
-            'payment_method_types' =>[PaymentMethod::CARD->value],
-            'payment_intent_data' => [
-                'setup_future_usage' => 'off_session',
-            ],
-            'line_items' => [[
-                'price_data' => [
-                    'currency' => 'egp',
-                    'product_data' => [
-                        'name' => "Payment for booking #{$booking->id}",
-                    ],
-                    'unit_amount' => (int) round($amountToPay * 100),
-                ],
-                'quantity' => 1,
-            ]],
-            'mode' => 'payment',
-            'success_url' => 'http://127.0.0.1:8000/payment-success',
-            'cancel_url' => 'http://127.0.0.1:8000/payment-cancelled',
-            'metadata' => [
-            'payment_id' => $payment->id,
-            ],
-            'customer' => $user->stripe_customer_id,
-            ]);
+            $session = $stripeService->createCheckoutSession(
+                $user,
+                $booking,
+                $payment,
+                $amountToCharge
+            );
 
-            $payment->update([
-                'stripe_session_id' => $session->id,
-                'stripe_payment_intent_id' => $session->payment_intent,
-            ]);
+            DB::transaction(function () use ($payment, $session) {
 
-            DB::commit();
-
+                $payment->update([
+                    'stripe_session_id' => $session->id,
+                    'stripe_payment_intent_id' => $session->payment_intent,
+                ]);
+            });
 
             return response()->json([
-                'status_code'=>200,
+                'status_code' => 200,
                 'message' => __('messages.checkout_session_created'),
                 'session_id' => $session->id,
                 'checkout_url' => $session->url,
             ]);
 
-        }catch (\Exception $e) {
+        } catch (\Throwable $e) {
 
-            DB::rollBack();
+            $payment->update([
+                'status' => PaymentStatus::FAILED,
+            ]);
+
+            Log::error('Checkout session creation failed', [
+                'booking_id' => $booking->id,
+                'payment_id' => $payment->id,
+                'user_id' => $user->id,
+                'error' => $e->getMessage(),
+            ]);
 
             return response()->json([
-
                 'message' => __('messages.something_went_wrong'),
-
-                'error' => $e->getMessage(),
             ], 500);
         }
-
     }
 
-    public function webhook(Request $request)
+    public function webhook(Request $request,RewardService $rewardService)
     {
         $payload = $request->getContent();
 
@@ -252,6 +322,9 @@ class PaymentController extends Controller
                     |--------------------------------------------------------------------------
                     */
 
+                    //calculate earned points (100 Egp = 1 point)
+                    $earnedPoints=intdiv($payment->amount , config('rewards.earn_rate'));
+
                     $payment->update([
 
                         'stripe_payment_intent_id' =>
@@ -263,6 +336,8 @@ class PaymentController extends Controller
                         'paid_at' => now(),
 
                         'status' => PaymentStatus::PAID,
+
+                        'earned_points'=>$earnedPoints
                     ]);
 
                     /*
@@ -273,9 +348,10 @@ class PaymentController extends Controller
 
                     $booking = $payment->booking;
 
+                    //consider adding the amount paid through reward points discount
                     $totalPaid = $booking->payments()
                         ->where('status', PaymentStatus::PAID)
-                        ->sum('amount');
+                        ->sum(DB::raw('amount + discount_amount'));
 
                     $remainingAmount =
                         $booking->total_price - $totalPaid;
@@ -319,7 +395,7 @@ class PaymentController extends Controller
                             'user_id',
                             $booking->user_id
                         )->exists();
-                        
+
                         UserPaymentMethod::firstOrCreate(
                             [
                                 'user_id' => $booking->user_id,
@@ -334,6 +410,13 @@ class PaymentController extends Controller
                                 'is_default' => $isFirstPaymentMethod,
                             ]
                         );
+
+                        // Process rewards
+                    $rewardService->process(
+                        $booking->user,
+                        $booking,
+                        $payment
+                    );
 
                     DB::commit();
 

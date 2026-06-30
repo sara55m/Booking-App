@@ -11,6 +11,7 @@ use Filament\Panel;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Property;
+use App\Models\RewardPoint;
 
 class User extends Authenticatable implements FilamentUser,MustVerifyEmail
 {
@@ -33,6 +34,7 @@ class User extends Authenticatable implements FilamentUser,MustVerifyEmail
         'otp',
         'otp_expires_at',
         'email_verified_at',
+        'reward_points'
     ];
 
     /**
@@ -81,6 +83,10 @@ class User extends Authenticatable implements FilamentUser,MustVerifyEmail
 
     public function paymentMethods(){
         return $this->hasMany(PaymentMethod::class);
+    }
+    
+    public function rewardPoints(){
+        return $this->hasMany(RewardPoint::class,'user_id');
     }
 
     public function canAccessPanel(Panel $panel): bool

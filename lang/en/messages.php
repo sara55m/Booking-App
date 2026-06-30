@@ -226,4 +226,5 @@ return [
     'payment_method_deleted_successfully'=>'Payment Method Deleted Successfully',
     'no_transactions_yet'=>'No Transactions yet',
     'transactions_retrieved_successfully'=>'Transactions Retrieved Successfully',
+    'redeem_points_exceeds_the_user_reward_points'=>'Redeem points exceed the user reward points',
 ];
