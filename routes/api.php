@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\Api\RewardPointsController;
 
 
 Route::middleware('throttle:3,1')->group(function(){
@@ -77,6 +78,10 @@ Route::middleware('auth:sanctum')->group(function () {
     //user transactions(payments)
     Route::get('profile/transactions',[ProfileController::class, 'transactions']);
 
+    //reward points
+    Route::get('/rewards',[RewardPointsController::class , 'summary']);
+    Route::get('/history',[RewardPointsController::class , 'history']);
+    Route::post('rewards/calculate',[RewardPointsController::class , 'calculate']);
 
     //homepage
     Route::get('/home/popular-cities', [HomeController::class, 'popularCities']);

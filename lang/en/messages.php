@@ -227,4 +227,7 @@ return [
     'no_transactions_yet'=>'No Transactions yet',
     'transactions_retrieved_successfully'=>'Transactions Retrieved Successfully',
     'redeem_points_exceeds_the_user_reward_points'=>'Redeem points exceed the user reward points',
+    'reward_points_summary_retrieved_successfully'=>'Reward Points Summary Retrieved Successfully',
+    'reward_points_history_retrieved_successfully'=>'Reward Points History Retrieved Successfully',
+    'reward_discount_calculated_successfully'=>'Reward Discount Calculated Successfully',
 ];

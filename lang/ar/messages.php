@@ -228,4 +228,7 @@ return [
     'no_transactions_yet'=>'لا توجد معاملات حتى الأن',
     'transactions_retrieved_successfully'=>'تم استرجاع المعاملات بنجاح',
     'redeem_points_exceeds_the_user_reward_points' => 'عدد نقاط الاستبدال يتجاوز رصيد نقاط المكافآت المتاح لديك.',
+    'reward_points_summary_retrieved_successfully'=>'تم استرجاع ملخص نقاط المكافأة بنجاح',
+    'reward_points_history_retrieved_successfully'=>'تم استرجاع سجل نقاط المكافأة بنجاح',
+    'reward_discount_calculated_successfully'=>'تم حساب خصم نقاط المكافأة بنجاح',
 ];
