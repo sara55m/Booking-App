@@ -23,6 +23,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Saade\FilamentFullCalendar\FilamentFullCalendarPlugin;
+use App\Filament\Widgets\RewardPointsStats;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -49,6 +50,7 @@ class AdminPanelProvider extends PanelProvider
                 TopProperties::class,
                 BookingsChart::class,
                 MostFavoritedProperties::class,
+                RewardPointsStats::class
             ])
             ->middleware([
                 EncryptCookies::class,

@@ -148,6 +148,26 @@ return [
     'properties_count' => 'عدد العقارات',
     'has_properties' => 'يحتوي على عقارات',
     'unused' => 'غير مستخدم',
+    'points'=>'نقاط المكافأة',
+    'earned'=>'مكتسبة',
+    'redeemed'=>'مستبدلة',
+    'reward_points'=>'سجل نقاط المكافأة',
+    'reward_point'=>'سجل نقاط المكافأة',
+    'current_balance'=>'الرصيد الحالى للمستخدم',
+    'from'=>'من',
+    'until'=>'حتى',
+        'total_points_earned' => 'إجمالي نقاط المكافأة المكتسبة',
+    'points_earned' => 'إجمالي نقاط المكافأة التي اكتسبها المستخدمون',
+
+    'total_points_redeemed' => 'إجمالي نقاط المكافأة المستبدلة',
+    'points_redeemed' => 'إجمالي نقاط المكافأة التي استبدلها المستخدمون',
+
+    'users_with_rewards' => 'المستخدمون الذين لديهم نقاط مكافأة',
+    'users_having_reward_points' => 'عدد المستخدمين الذين يمتلكون رصيدًا من نقاط المكافأة',
+
+    'total_reward_balance' => 'إجمالي رصيد نقاط المكافأة',
+    'current_points_owned_by_users' => 'إجمالي نقاط المكافأة الحالية لدى جميع المستخدمين',
+
 
 
     //api messages

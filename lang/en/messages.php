@@ -148,6 +148,25 @@ return [
     'properties_count' => 'Properties Count',
     'has_properties'=>'Has Properties',
     'unused'=>'Unused',
+    'points'=>'Reward Points',
+    'earned'=>'Earned',
+    'redeemed'=>'Redeemed',
+    'reward_points'=>'Reward Points History',
+    'reward_point'=>'Reward Points History',
+    'current_balance'=>'Current User Balance',
+    'from'=>'From',
+    'until'=>'Until',
+    'total_points_earned' => 'Total Points Earned',
+    'points_earned' => 'All reward points earned by users',
+
+    'total_points_redeemed' => 'Total Points Redeemed',
+    'points_redeemed' => 'All reward points redeemed by users',
+
+    'users_with_rewards' => 'Users With Rewards',
+    'users_having_reward_points' => 'Users with a positive reward points balance',
+
+    'total_reward_balance' => 'Total Reward Balance',
+    'current_points_owned_by_users' => 'Current reward points held by all users',
 
     //api messages
     //properties

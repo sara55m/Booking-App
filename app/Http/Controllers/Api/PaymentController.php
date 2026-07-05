@@ -16,6 +16,7 @@ use App\Events\BookingPaymentConfirmed;
 use App\Models\PaymentMethod as UserPaymentMethod;
 use App\Services\StripeService;
 use App\Services\RewardService;
+use App\Models\User;
 
 class PaymentController extends Controller
 {
@@ -31,6 +32,10 @@ class PaymentController extends Controller
         ]);
 
         $user = $booking->user;
+        //lock uer update to prevent concurrent redemption
+        $user = User::whereKey($user->id)
+        ->lockForUpdate()
+        ->first();
 
         if ($user->id !== auth()->id()) {
             return response()->json([

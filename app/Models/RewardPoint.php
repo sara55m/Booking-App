@@ -17,10 +17,10 @@ class RewardPoint extends Model
     ];
 
     public function user(){
-        $this->belongsTo(User::class);
+        return $this->belongsTo(User::class);
     }
 
     public function payment(){
-        $this->belongsTo(Payment::class);
+        return $this->belongsTo(Payment::class);
     }
 }

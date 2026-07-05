@@ -26,7 +26,7 @@ class RewardService
                     [
                         'user_id' => $user->id,
                         'points' => $payment->redeemed_points,
-                        'description' => "Redeemed for booking #{$booking->id}",
+                        'description' => "Redeemed from payment #{$payment->id} for booking #{$booking->id}",
                     ]
                 );
 
@@ -45,7 +45,7 @@ class RewardService
                     [
                         'user_id' => $user->id,
                         'points' => $payment->earned_points,
-                        'description' => "Earned from booking #{$booking->id}",
+                        'description' => "Earned from payment #{$payment->id} from booking #{$booking->id}",
                     ]
                 );
 
