@@ -151,6 +151,8 @@ return [
     'points'=>'Reward Points',
     'earned'=>'Earned',
     'redeemed'=>'Redeemed',
+    'returned' => 'Returned',
+    'reversed' => 'Reversed',
     'reward_points'=>'Reward Points History',
     'reward_point'=>'Reward Points History',
     'current_balance'=>'Current User Balance',

@@ -6,8 +6,8 @@ enum RewardPointType:string
 {
     case EARNED="earned";
     case REDEEMED="redeemed";
-    case BONUS="bonus";
-    case EXPIRED="expired";
+    case REVERSED = 'reversed';
+    case RETURNED = 'returned';
 
     public static function values(): array
     {

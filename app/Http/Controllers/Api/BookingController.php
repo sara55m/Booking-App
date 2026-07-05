@@ -19,6 +19,7 @@ use App\Services\OfferService;
 use App\Models\Offer;
 use App\Events\BookingCreated;
 use App\Events\BookingCancelled;
+use App\Services\RewardService;
 use Illuminate\Support\Facades\Gate;
 
 class BookingController extends Controller
@@ -220,7 +221,7 @@ class BookingController extends Controller
                 'data' => new BookingResource($booking)],200);
     }
 
-    public function cancel(Booking $booking)
+    public function cancel(Booking $booking,RewardService $rewardService)
     {
         // Check if the booking belongs to the authenticated user
         Gate::authorize('cancel', $booking);
@@ -242,7 +243,7 @@ class BookingController extends Controller
 
         try{
             //get all paid payments for the booking
-            $payments=$booking->payments()->where('status',PaymentStatus::PAID)->get();
+            $payments=$booking->payments()->where('status',PaymentStatus::PAID)->with('booking.user')->get();
 
             //refund each payment amount using stripe refund
             foreach($payments as $payment)
@@ -258,6 +259,8 @@ class BookingController extends Controller
                     'refunded_amount' =>$payment->amount,
                     'refunded_at' => now(),
                 ]);
+                //handle the reward points
+                $rewardService->reverse($payment);
             }
 
             // Update the booking status to cancelled and booking payment status to refunded

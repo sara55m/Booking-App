@@ -56,6 +56,52 @@ class RewardService
         });
     }
 
+    public function reverse(Payment $payment): void
+    {
+        $user = $payment->booking->user;
+        $booking = $payment->booking;
+        DB::transaction(function () use ($payment,$user,$booking) {
+            if ($payment->redeemed_points > 0) {
+
+                $history = RewardPoint::firstOrCreate(
+                    [
+                        'payment_id' => $payment->id,
+                        'type' => RewardPointType::RETURNED,
+                    ],
+                    [
+                        'user_id' => $user->id,
+                        'points' => $payment->redeemed_points,
+                        'description' => 'Returned redeemed points for cancelled booking #' . $booking->id,
+                    ]
+                );
+
+                if ($history->wasRecentlyCreated) {
+                    $user->increment('reward_points', $payment->redeemed_points);
+                }
+            }
+
+            if ($payment->earned_points > 0) {
+
+                $history = RewardPoint::firstOrCreate(
+                    [
+                        'payment_id' => $payment->id,
+                        'type' => RewardPointType::REVERSED,
+                    ],
+                    [
+                        'user_id' => $user->id,
+                        'points' => $payment->earned_points,
+                        'description' => 'Reversed earned points for cancelled booking #' . $booking->id,
+                    ]
+                );
+
+                if ($history->wasRecentlyCreated) {
+                    //allow negative reward points value
+                    $user->decrement('reward_points', $payment->earned_points);
+                }
+            }
+        });
+    }
+
     public function getSummary(User $user){
         $rewardPoints=$user->reward_points;
 

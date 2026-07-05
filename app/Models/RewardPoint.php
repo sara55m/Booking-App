@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Payment;
 use App\Models\User;
+use App\Enums\RewardPointType;
 
 class RewardPoint extends Model
 {
@@ -14,6 +15,10 @@ class RewardPoint extends Model
         'points',
         'type',
         'description',
+    ];
+
+    protected $casts=[
+        'type' => RewardPointType::class,
     ];
 
     public function user(){

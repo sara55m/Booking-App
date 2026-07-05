@@ -25,12 +25,20 @@ class RewardPointsTable
                     ->sortable(),
 
                 TextColumn::make('type')
-                    ->label(__("messages.type"))
-                    ->colors([
-                        'success' =>RewardPointType::EARNED,
-                        'danger' => RewardPointType::REDEEMED,
-                    ])
+                    ->label(__('messages.type'))
                     ->badge()
+                    ->formatStateUsing(fn (RewardPointType $state) => match ($state) {
+                        RewardPointType::EARNED => __('messages.earned'),
+                        RewardPointType::REDEEMED => __('messages.redeemed'),
+                        RewardPointType::RETURNED => __('messages.returned'),
+                        RewardPointType::REVERSED => __('messages.reversed'),
+                    })
+                    ->colors([
+                        'success' => RewardPointType::EARNED,
+                        'danger' => RewardPointType::REDEEMED,
+                        'info' => RewardPointType::RETURNED,
+                        'warning' => RewardPointType::REVERSED,
+                    ])
                     ->sortable(),
 
                 TextColumn::make('points')
@@ -56,11 +64,6 @@ class RewardPointsTable
                     ->limit(40)
                     ->tooltip(fn ($record) => $record->description),
 
-                TextColumn::make('user.reward_points')
-                    ->label(__('messages.current_balance'))
-                    ->badge()
-                    ->color('primary'),
-
                 TextColumn::make('created_at')
                     ->label(__("messages.created_at"))
                     ->dateTime()
@@ -70,8 +73,10 @@ class RewardPointsTable
                 SelectFilter::make('type')
                 ->label(__("messages.type"))
                 ->options([
-                    'earned'=> __("messages.earned"),
-                    'redeemed'=> __("messages.redeemed")
+                    RewardPointType::EARNED->value => __('messages.earned'),
+                    RewardPointType::REDEEMED->value => __('messages.redeemed'),
+                    RewardPointType::RETURNED->value => __('messages.returned'),
+                    RewardPointType::REVERSED->value => __('messages.reversed'),
                 ]),
 
                 Filter::make('created_at')
