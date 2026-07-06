@@ -38,6 +38,7 @@ class CityForm
                             ->schema([
                                 FileUpload::make('image')
                                 ->label(__('messages.image'))
+                                ->required()
                                 ->image()
                                 ->acceptedFileTypes([
                                     'image/jpg',

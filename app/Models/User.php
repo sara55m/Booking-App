@@ -12,11 +12,12 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Property;
 use App\Models\RewardPoint;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable implements FilamentUser,MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable,HasApiTokens;
+    use HasFactory, Notifiable,HasApiTokens,SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -34,7 +35,7 @@ class User extends Authenticatable implements FilamentUser,MustVerifyEmail
         'otp',
         'otp_expires_at',
         'email_verified_at',
-        'reward_points'
+        'reward_points',
     ];
 
     /**
@@ -84,7 +85,7 @@ class User extends Authenticatable implements FilamentUser,MustVerifyEmail
     public function paymentMethods(){
         return $this->hasMany(PaymentMethod::class);
     }
-    
+
     public function rewardPoints(){
         return $this->hasMany(RewardPoint::class,'user_id');
     }

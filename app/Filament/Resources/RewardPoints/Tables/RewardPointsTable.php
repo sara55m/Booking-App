@@ -79,6 +79,12 @@ class RewardPointsTable
                     RewardPointType::REVERSED->value => __('messages.reversed'),
                 ]),
 
+                SelectFilter::make('user_id')
+                    ->relationship('user', 'name')
+                    ->preload()
+                    ->searchable()
+                    ->label(__('messages.user')),
+
                 Filter::make('created_at')
                 ->form([
                     DatePicker::make('from')->label(__("messages.from")),

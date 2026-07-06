@@ -11,7 +11,6 @@ use Filament\Actions\DeleteAction;
 use Filament\Tables\Table;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
-
 class BookingsTable
 {
     public static function configure(Table $table): Table

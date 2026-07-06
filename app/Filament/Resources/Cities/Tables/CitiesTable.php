@@ -10,6 +10,8 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Tables\Filters\SelectFilter;
+use Illuminate\Support\Facades\Storage;
+use Filament\Tables\Columns\ImageColumn;
 
 class CitiesTable
 {
@@ -23,6 +25,13 @@ class CitiesTable
                 TextColumn::make('slug')
                     ->label(__('messages.slug'))
                     ->searchable(),
+
+                ImageColumn::make('image')
+                    ->label(__('messages.image'))
+                    ->disk('public')
+                    ->circular()
+                    ->imageSize(60)
+                    ->getStateUsing(fn ($record) => Storage::disk('public')->url($record->image)),
                 IconColumn::make('is_active')
                     ->label(__('messages.is_active'))
                     ->boolean(),

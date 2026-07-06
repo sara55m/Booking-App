@@ -11,7 +11,6 @@ use App\Models\PropertyType;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
 class PropertyTypeResource extends Resource
@@ -24,7 +23,7 @@ class PropertyTypeResource extends Resource
     {
         return __('messages.property_types');
     }
-    protected static ?int $navigationSort = 3;
+    protected static ?int $navigationSort = 4;
 
     public static function getModelLabel(): string
     {

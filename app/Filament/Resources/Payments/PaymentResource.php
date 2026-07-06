@@ -24,7 +24,7 @@ class PaymentResource extends Resource
     {
         return __('messages.payments');
     }
-    protected static ?int $navigationSort = 7;
+    protected static ?int $navigationSort = 8;
 
     public static function getModelLabel(): string
     {

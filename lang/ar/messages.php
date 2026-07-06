@@ -169,6 +169,30 @@ return [
 
     'total_reward_balance' => 'إجمالي رصيد نقاط المكافأة',
     'current_points_owned_by_users' => 'إجمالي نقاط المكافأة الحالية لدى جميع المستخدمين',
+    'has_reward_points' => 'لديه نقاط مكافآت',
+    'has_bookings' => 'لديه حجوزات',
+    'no_bookings' => 'ليس لديه حجوزات',
+    'registration_date'=>'تاريخ التسجيل',
+    'favorites'=>'عدد العقارات المفضلة',
+    'email_verified'=>'تأكيد البريد الالكترونى',
+    'email'=>'البريد الالكترونى',
+    'phone'=>'رقم الهاتف',
+    'role'=>'الدور',
+    'security'=>'الأمان',
+    'password'=>'كلمة المرور',
+    'confirm_password'=>'تأكيد كلمة المرور',
+    'view_bookings'=>'عرض الحجوزات',
+    'view_reviews'=>'عرض التقييمات',
+    'favorited_by'=>'تمت اضافتها للمفضلة بواسطة',
+    'view_favorites'=>'عرض العقارات المفضلة',
+    'view_history'=>'عرض سجل نقاط المكافأة',
+    'email_verified_at'=>'تاريخ نأكيد البريد الالكترونى',
+    'id'=>'المعرف',
+    'all'=>'الكل',
+    'verified'=>'مؤكد',
+    'not_verified'=>'غير مؤكد',
+    'deleted_at'=>'تاريخ الحذف',
+
 
 
 

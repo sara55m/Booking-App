@@ -62,6 +62,11 @@ class PropertiesTable
                         1 => 'Active',
                         0 => 'Inactive',
                     ]),
+                    SelectFilter::make('favorite_user')
+                    ->label(__('messages.favorited_by'))
+                    ->relationship('favoritedBy', 'name')
+                    ->searchable()
+                    ->preload(),
             ])
             ->recordActions([
                 ViewAction::make(),
