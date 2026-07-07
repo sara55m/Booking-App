@@ -220,6 +220,11 @@ return [
     'booking_cancelled_admin_notification' =>
     'Booking :reference has been cancelled by :customer for :property.',
 
+    'booking_payment_failed' =>'Booking Payment Failed',
+
+    'booking_payment_failed_admin_notification' =>
+    'Payment of :payment_amount for booking :reference by :customer at :property has failed.',
+
 
     //api messages
     //properties

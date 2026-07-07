@@ -218,6 +218,11 @@ return [
     'booking_cancelled'=>'تم الغاء الحجز',
     'booking_cancelled_admin_notification'=>'تم الغاء الحجز :reference بواسطة :customer للعقار :property.',
 
+    'booking_payment_failed' =>'فشل عملية دفع الحجز',
+
+    'booking_payment_failed_admin_notification' =>
+    'فشلت عملية دفع بقيمة :payment_amount للحجز :reference الخاص بالمستخدم :customer في :property.',
+
     //api messages
     //properties
     'properties_retrieved_successfully' => 'تم استرجاع العقارات بنجاح',

@@ -17,6 +17,7 @@ use App\Models\PaymentMethod as UserPaymentMethod;
 use App\Services\StripeService;
 use App\Services\RewardService;
 use App\Models\User;
+use App\Events\BookingPaymentFailed;
 
 class PaymentController extends Controller
 {
@@ -208,6 +209,8 @@ class PaymentController extends Controller
                 'user_id' => $user->id,
                 'error' => $e->getMessage(),
             ]);
+            //fire payment failed event
+            event(new BookingPaymentFailed($booking, $payment));
 
             return response()->json([
                 'message' => __('messages.something_went_wrong'),
