@@ -18,7 +18,8 @@ class TransactionResource extends JsonResource
             'id'=>$this->id,
 
             'booking'=>[
-                'id'=>$this->booking->id
+                'id'=>$this->booking->id,
+                'reference'=>$this->booking->reference
             ],
             'property'=>[
                 'id'=>$this->booking->property->id,

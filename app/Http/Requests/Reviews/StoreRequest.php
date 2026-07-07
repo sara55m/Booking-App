@@ -23,7 +23,7 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'booking_id'=>'required|exists:bookings,id',
+            'booking_reference'=>'required|exists:bookings,reference',
             'rating'=>'required|integer|min:1|max:5',
             'comment'=>'nullable|string|max:1000',
             'review_tags'=>'nullable|array',

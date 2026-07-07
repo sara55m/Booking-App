@@ -27,6 +27,7 @@ class ReviewResource extends JsonResource
             'booking' => $this->whenLoaded('booking', function () {
                 return [
                     'id' => $this->booking->id,
+                    'reference'=>$this->booking->reference,
                     'check_in' => $this->booking->check_in->format('Y-m-d'),
                     'check_out' => $this->booking->check_out->format('Y-m-d'),
                 ];

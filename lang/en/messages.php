@@ -208,6 +208,8 @@ return [
     'refunded_at'=>'Refund At',
     'view_booking'=>'View Booking',
     'view_payments'=>'View Payments',
+    'reference'=>'Reference',
+    'booking_reference'=>'Booking Reference',
 
     //api messages
     //properties

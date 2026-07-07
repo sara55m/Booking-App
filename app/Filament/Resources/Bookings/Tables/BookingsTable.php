@@ -12,12 +12,18 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Actions\Action;
 use App\Models\Booking;
 use App\Filament\Resources\Payments\PaymentResource;
+use App\Filament\Resources\Reviews\ReviewResource;
 class BookingsTable
 {
     public static function configure(Table $table): Table
     {
         return $table
             ->columns([
+                TextColumn::make('reference')
+                    ->label(__("messages.reference"))
+                    ->sortable()
+                    ->searchable()
+                    ->placeholder('-'),
                 TextColumn::make('user.name')
                     ->label(__('messages.user'))
                     ->sortable(),
@@ -107,7 +113,17 @@ class BookingsTable
                     ->icon('heroicon-o-credit-card')
                     ->url(fn (Booking $record) => PaymentResource::getUrl('index', [
                         'filters' => [
-                            'booking_id' => [
+                            'booking' => [
+                                'value' => $record->id,
+                            ],
+                        ],
+                    ])),
+                    Action::make('view_reviews')
+                    ->label(__('messages.view_reviews'))
+                    ->icon('heroicon-o-chat-bubble-oval-left')
+                    ->url(fn (Booking $record) => ReviewResource::getUrl('index', [
+                        'filters' => [
+                            'booking' => [
                                 'value' => $record->id,
                             ],
                         ],

@@ -18,7 +18,7 @@ class ReviewController extends Controller
 
     public function index(Property $property)
     {
-        $reviews = $property->approvedReviews()->with('user','tags')->latest()->paginate(10);
+        $reviews = $property->approvedReviews()->with('user','tags','booking','property')->latest()->paginate(10);
         return response()->json(
             [
                 'status_code' => 200,
@@ -28,7 +28,7 @@ class ReviewController extends Controller
 
     public function store(StoreRequest $request)
     {
-        $booking=Booking::findOrFail($request->booking_id);
+        $booking = Booking::where('reference', $request->booking_reference)->firstOrFail();
         //validate the user already has a booking to review
         Gate::authorize('create', [Review::class,$booking]);
 
@@ -55,6 +55,8 @@ class ReviewController extends Controller
             if($request->has('review_tags')){
                 $review->tags()->sync($request->review_tags ?? []);
             }
+
+            $review->load('user','tags','property','booking');
 
             return $review;
         });
@@ -92,7 +94,7 @@ class ReviewController extends Controller
             }
         });
 
-        $review->load('user','tags');
+        $review->load('user','tags','booking','property');
 
         return response()->json(
             [

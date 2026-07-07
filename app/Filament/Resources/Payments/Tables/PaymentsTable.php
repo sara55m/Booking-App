@@ -22,8 +22,8 @@ class PaymentsTable
     {
         return $table
             ->columns([
-                TextColumn::make('booking_id')
-                    ->label(__('messages.booking'))
+                TextColumn::make('booking.reference')
+                    ->label(__('messages.booking_reference'))
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('amount')
@@ -60,9 +60,9 @@ class PaymentsTable
             ])
             ->filters([
                 //booking id filter
-                SelectFilter::make('booking_id')
-                ->label(__("messages.booking"))
-                ->relationship('booking','id'),
+                SelectFilter::make('booking')
+                ->label(__("messages.booking_reference"))
+                ->relationship('booking','reference'),
                 //amount range filter
                 Filter::make('amount')
                 ->label(__('messages.amount'))

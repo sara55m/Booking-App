@@ -14,6 +14,8 @@ use App\Models\Offer;
 use App\Observers\OfferObserver;
 use App\Models\PropertyType;
 use App\Observers\PropertyTypeObserver;
+use App\Observers\BookingObserver;
+use App\Models\Booking;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -40,5 +42,6 @@ class AppServiceProvider extends ServiceProvider
         City::observe(CityObserver::class);
         Offer::observe(OfferObserver::class);
         PropertyType::observe(PropertyTypeObserver::class);
+        Booking::observe(BookingObserver::class);
     }
 }

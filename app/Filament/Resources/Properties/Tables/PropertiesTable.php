@@ -11,6 +11,9 @@ use Filament\Tables\Table;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ViewAction;
+use Filament\Actions\Action;
+use App\Models\Property;
+use App\Filament\Resources\Reviews\ReviewResource;
 
 class PropertiesTable
 {
@@ -72,6 +75,16 @@ class PropertiesTable
                 ViewAction::make(),
                 EditAction::make(),
                 DeleteAction::make(),
+                Action::make('view_reviews')
+                    ->label(__('messages.view_reviews'))
+                    ->icon('heroicon-o-chat-bubble-oval-left')
+                    ->url(fn (Property $record) => ReviewResource::getUrl('index', [
+                        'filters' => [
+                            'property_id' => [
+                                'value' => $record->id,
+                            ],
+                        ],
+                    ])),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

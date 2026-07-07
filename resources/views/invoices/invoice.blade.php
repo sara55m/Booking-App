@@ -92,8 +92,8 @@
     <table>
 
         <tr>
-            <th>Booking ID</th>
-            <td>{{ $booking->id }}</td>
+            <th>Booking Reference</th>
+            <td>{{ $booking->reference }}</td>
         </tr>
 
         <tr>

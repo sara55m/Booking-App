@@ -11,6 +11,8 @@ use Filament\Actions\ViewAction;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Actions\Action;
 use Filament\Tables\Filters\Filter;
+use App\Models\Review;
+use App\Filament\Resources\Bookings\BookingResource;
 
 class ReviewsTable
 {
@@ -22,6 +24,10 @@ class ReviewsTable
                     ->searchable()
                     ->sortable()
                     ->label(__('messages.user')),
+                TextColumn::make('booking.reference')
+                    ->searchable()
+                    ->sortable()
+                    ->label(__('messages.booking')),
                 TextColumn::make('property.name')
                     ->searchable()
                     ->sortable()
@@ -64,13 +70,13 @@ class ReviewsTable
                     ->searchable()
                     ->label(__('messages.property')),
 
-                    SelectFilter::make('booking_id')
-                    ->relationship('booking', 'id')
+                SelectFilter::make('booking')
+                    ->relationship('booking', 'reference')
                     ->preload()
                     ->searchable()
-                    ->label(__('messages.booking')),
+                    ->label(__('messages.booking_reference')),
 
-                    SelectFilter::make('rating')
+                SelectFilter::make('rating')
                     ->label(__('messages.rating'))
                     ->options([
                         1 => '1',
@@ -109,6 +115,13 @@ class ReviewsTable
                 ->visible(fn($record) => $record->status !== 'rejected'),
                 ViewAction::make(),
                 EditAction::make(),
+                Action::make('view_booking')
+                    ->label(__('messages.view_booking'))
+                    ->icon('heroicon-o-calendar')
+                    ->url(fn (Review $record) => BookingResource::getUrl('view', [
+                        'record' => $record->booking,
+                    ]))
+                    ->openUrlInNewTab(false),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

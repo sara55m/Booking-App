@@ -46,7 +46,7 @@ class BookingCancelledNotification extends Notification implements ShouldQueue
             ->subject('Booking Cancelled')
             ->greeting('Hello '.$notifiable->name.',')
             ->line('Your booking has been cancelled successfully.')
-            ->line('Booking ID: '.$this->booking->id)
+            ->line('Booking Reference: '.$this->booking->reference)
             ->line('Property: '.$this->booking->property->name)
             ->line('Check-in: '.$this->booking->check_in->format('d M Y'))
             ->line('Check-out: '.$this->booking->check_out->format('d M Y'))

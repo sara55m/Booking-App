@@ -47,7 +47,7 @@ class BookingConfirmedNotification extends Notification implements ShouldQueue
 
             ->line('Your booking has been confirmed successfully.')
 
-            ->line('Booking ID: '.$this->booking->id)
+            ->line('Booking Reference: '.$this->booking->reference)
 
             ->line('Property: '.$this->booking->property->name)
 

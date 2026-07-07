@@ -12,6 +12,7 @@ use App\Enums\BookingPaymentStatus;
 class Booking extends Model
 {
     protected $fillable = [
+        'reference',
         'user_id',
         'property_id',
         'room_id',

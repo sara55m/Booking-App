@@ -208,6 +208,8 @@ return [
     'refunded_at' => 'تاريخ الاسترداد',
     'view_booking'=>'عرض الحجز',
     'view_payments'=>'عرض الدفعات',
+    'reference'=>'الرقم المرجعى',
+    'booking_reference'=>'الرقم المرجعى للحجز',
 
 
 
