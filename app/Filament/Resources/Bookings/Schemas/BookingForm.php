@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Bookings\Schemas;
 
 use App\Enums\BookingStatus;
+use App\Enums\BookingPaymentStatus;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Schemas\Components\Tabs;
@@ -70,6 +71,12 @@ class BookingForm
                                     ->label(__('messages.status'))
                                     ->options(BookingStatus::class)
                                     ->default('pending')
+                                    ->required(),
+
+                                Select::make('payment_status')
+                                    ->label(__('messages.payment_status'))
+                                    ->options(BookingPaymentStatus::class)
+                                    ->default('unpaid')
                                     ->required(),
                             ]),
                     ])->columns(2)->columnSpanFull(),

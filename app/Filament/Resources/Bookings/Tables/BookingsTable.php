@@ -3,14 +3,15 @@
 namespace App\Filament\Resources\Bookings\Tables;
 
 use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\DeleteAction;
 use Filament\Tables\Table;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Actions\Action;
+use App\Models\Booking;
+use App\Filament\Resources\Payments\PaymentResource;
 class BookingsTable
 {
     public static function configure(Table $table): Table
@@ -100,11 +101,20 @@ class BookingsTable
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),
-                DeleteAction::make(),
+                //view payments action
+                Action::make('view_payments')
+                    ->label(__('messages.view_payments'))
+                    ->icon('heroicon-o-credit-card')
+                    ->url(fn (Booking $record) => PaymentResource::getUrl('index', [
+                        'filters' => [
+                            'booking_id' => [
+                                'value' => $record->id,
+                            ],
+                        ],
+                    ])),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

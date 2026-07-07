@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\Bookings\Pages;
 
 use App\Filament\Resources\Bookings\BookingResource;
-use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
 
@@ -15,7 +14,6 @@ class ViewBooking extends ViewRecord
     {
         return [
             EditAction::make(),
-            DeleteAction::make()
         ];
     }
 }

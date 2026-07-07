@@ -32,7 +32,7 @@ class MostFavoritedProperties extends TableWidget
                 ->label(__('messages.name'))
                 ->searchable(),
 
-                TextColumn::make('city')
+                TextColumn::make('city.name')
                 ->label(__('messages.city'))
                 ->searchable(),
 

@@ -3,18 +3,18 @@
 namespace App\Filament\Resources\Payments\Tables;
 
 use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
+use Filament\Actions\Action;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use App\Enums\PaymentStatus;
-use Filament\Actions\DeleteAction;
 use Filament\Tables\Filters\Filter;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
 use App\Enums\PaymentMethod;
 use Filament\Tables\Filters\SelectFilter;
+use App\Models\Payment;
+use App\Filament\Resources\Bookings\BookingResource;
 
 class PaymentsTable
 {
@@ -59,10 +59,14 @@ class PaymentsTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
+                //booking id filter
+                SelectFilter::make('booking_id')
+                ->label(__("messages.booking"))
+                ->relationship('booking','id'),
                 //amount range filter
                 Filter::make('amount')
                 ->label(__('messages.amount'))
-                ->form([
+                ->schema([
                     TextInput::make('min_amount')->numeric()->label(__('messages.min_amount')),
                     TextInput::make('max_amount')->numeric()->label(__('messages.max_amount')),
                 ])
@@ -85,7 +89,7 @@ class PaymentsTable
                 //payment date range filter
                 Filter::make('paid_at')
                 ->label(__('messages.paid_at'))
-                ->form([
+                ->schema([
                     DatePicker::make('min_paid_at')->label(__('messages.min_paid_at')),
                     DatePicker::make('max_paid_at')->label(__('messages.max_paid_at')),
                 ])
@@ -97,12 +101,16 @@ class PaymentsTable
             ])
             ->recordActions([
                 ViewAction::make(),
-                EditAction::make(),
-                DeleteAction::make(),
+                Action::make('view_booking')
+                    ->label(__('messages.view_booking'))
+                    ->icon('heroicon-o-calendar')
+                    ->url(fn (Payment $record) => BookingResource::getUrl('view', [
+                        'record' => $record->booking,
+                    ]))
+                    ->openUrlInNewTab(false),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

@@ -193,6 +193,21 @@ return [
     'verified'=>'Verified',
     'not_verified'=>'Not Verified',
     'deleted_at'=>'Deleted At',
+    'payment_information'=>'Payment Info',
+    'currency'=>'Currency',
+    'stripe_information' => 'Stripe Info',
+    'transaction_id' => 'Transaction ID',
+    'stripe_session_id' => 'Stripe Session ID',
+    'stripe_payment_intent_id' => 'Stripe Payment Intent ID',
+    'rewards'=>'Rewards Info',
+    'earned_points'=>'Earned Points',
+    'redeemed_points'=>'Redeemed Points',
+    'discount_amount'=>'Discount Amount',
+    'refund_information'=>'Refund Info',
+    'refunded_amount'=>'Refunded Amount',
+    'refunded_at'=>'Refund At',
+    'view_booking'=>'View Booking',
+    'view_payments'=>'View Payments',
 
     //api messages
     //properties

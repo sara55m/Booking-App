@@ -192,6 +192,22 @@ return [
     'verified'=>'مؤكد',
     'not_verified'=>'غير مؤكد',
     'deleted_at'=>'تاريخ الحذف',
+    'payment_information'=>'معلومات الدفع',
+    'currency'=>'العملة',
+    'stripe_information' => 'معلومات بوابة الدفع Stripe',
+    'transaction_id' => 'معرّف المعاملة',
+    'stripe_session_id' => 'معرّف جلسة الدفع',
+    'stripe_payment_intent_id' => 'معرّف عملية الدفع',
+    'rewards' => 'معلومات المكافآت',
+    'earned_points' => 'النقاط المكتسبة',
+    'redeemed_points' => 'النقاط المستبدلة',
+    'discount_amount' => 'قيمة الخصم',
+
+    'refund_information' => 'معلومات الاسترداد',
+    'refunded_amount' => 'المبلغ المسترد',
+    'refunded_at' => 'تاريخ الاسترداد',
+    'view_booking'=>'عرض الحجز',
+    'view_payments'=>'عرض الدفعات',
 
 
 
