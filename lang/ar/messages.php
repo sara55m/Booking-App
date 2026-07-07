@@ -211,8 +211,12 @@ return [
     'reference'=>'الرقم المرجعى',
     'booking_reference'=>'الرقم المرجعى للحجز',
 
+    //notifications
 
-
+    'booking_confirmed' => 'تم تأكيد الحجز',
+    'booking_confirmed_admin_notification' =>'تم تأكيد الحجز :reference بواسطة :customer للعقار :property.',
+    'booking_cancelled'=>'تم الغاء الحجز',
+    'booking_cancelled_admin_notification'=>'تم الغاء الحجز :reference بواسطة :customer للعقار :property.',
 
     //api messages
     //properties

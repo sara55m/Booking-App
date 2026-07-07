@@ -210,6 +210,16 @@ return [
     'view_payments'=>'View Payments',
     'reference'=>'Reference',
     'booking_reference'=>'Booking Reference',
+    //notifications
+    'booking_confirmed' => 'Booking Confirmed',
+
+    'booking_confirmed_admin_notification' =>
+    'Booking :reference has been confirmed by :customer for :property.',
+    'booking_cancelled' => 'Booking Cancelled',
+
+    'booking_cancelled_admin_notification' =>
+    'Booking :reference has been cancelled by :customer for :property.',
+
 
     //api messages
     //properties

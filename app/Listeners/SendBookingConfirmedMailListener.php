@@ -4,9 +4,10 @@ namespace App\Listeners;
 
 use App\Events\BookingPaymentConfirmed;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use App\Notifications\BookingConfirmedNotification;
-
+use App\Models\User;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\BookingConfirmedAdminNotification;
 
 class SendBookingConfirmedMailListener implements ShouldQueue
 {
@@ -32,6 +33,14 @@ class SendBookingConfirmedMailListener implements ShouldQueue
 
         $user->notify(
             new BookingConfirmedNotification($booking)
+        );
+
+        //send database notifications to all admins
+        $admins=User::where('role','admin')->get();
+
+        Notification::send(
+            $admins,
+            new BookingConfirmedAdminNotification($booking)
         );
     }
 }
