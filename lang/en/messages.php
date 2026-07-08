@@ -224,6 +224,11 @@ return [
 
     'booking_payment_failed_admin_notification' =>
     'Payment of :payment_amount for booking :reference by :customer at :property has failed.',
+    'view_payment'=>'View Payment',
+
+    'review_created'=>'Review Created',
+    'review_created_admin_notification'=>'Review Created for booking :booking at property :property by user :user',
+    'view_review'=>'View Review',
 
 
     //api messages

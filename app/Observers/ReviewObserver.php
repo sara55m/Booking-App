@@ -4,6 +4,9 @@ namespace App\Observers;
 
 use App\Models\Review;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Notification;
+use App\Models\User;
+use App\Notifications\ReviewCreatedAdminNotification;
 
 class ReviewObserver
 {
@@ -24,6 +27,14 @@ class ReviewObserver
     public function created(Review $review): void
     {
         $this->recalculate($review);
+        //send review created notification to admins
+        $admins=User::where('role','admin')->get();
+
+        Notification::send(
+            $admins,
+            new ReviewCreatedAdminNotification($review)
+        );
+
     }
 
     /**

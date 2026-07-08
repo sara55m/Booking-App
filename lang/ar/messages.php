@@ -222,6 +222,11 @@ return [
 
     'booking_payment_failed_admin_notification' =>
     'فشلت عملية دفع بقيمة :payment_amount للحجز :reference الخاص بالمستخدم :customer في :property.',
+    'view_payment'=>'عرض المعاملة',
+
+    'review_created'=>'تم إضافة تقييم',
+    'review_created_admin_notification'=>'تم إضافة تقييم للحجز :booking بواسطة المستخدم :user لعقار :property',
+    'view_review'=>'عرض التقييم',
 
     //api messages
     //properties
