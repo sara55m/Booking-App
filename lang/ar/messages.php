@@ -227,6 +227,8 @@ return [
     'review_created'=>'تم إضافة تقييم',
     'review_created_admin_notification'=>'تم إضافة تقييم للحجز :booking بواسطة المستخدم :user لعقار :property',
     'view_review'=>'عرض التقييم',
+    'booking_expiring_soon'=>'سينتهى الحجز قريبا',
+    'booking_expiring_soon_notification'=>'الحجز :booking سينتهى عند :expires_at',
 
     //api messages
     //properties

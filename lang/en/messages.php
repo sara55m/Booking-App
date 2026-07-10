@@ -229,6 +229,8 @@ return [
     'review_created'=>'Review Created',
     'review_created_admin_notification'=>'Review Created for booking :booking at property :property by user :user',
     'view_review'=>'View Review',
+    'booking_expiring_soon'=>'Booking Expiring Soon',
+    'booking_expiring_soon_notification'=>'Booking :booking is expiring at :expires_at',
 
 
     //api messages
