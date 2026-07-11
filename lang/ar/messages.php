@@ -230,6 +230,23 @@ return [
     'booking_expiring_soon'=>'سينتهى الحجز قريبا',
     'booking_expiring_soon_notification'=>'الحجز :booking سينتهى عند :expires_at',
 
+    //booking infolist
+    'booking_information'=>'معلومات الحجز',
+    'customer_information'=>'معلومات النزيل',
+    'reward_points_number'=>'عدد نقاط المكافأة',
+    'property_information'=>'معلومات العقار',
+    'property_name'=>'اسم العقار',
+    'timestamps'=>'التواريخ',
+    'expires_at'=>'تاريخ الانتهاء',
+    'invoice_info'=>'معلومات الفاتورة',
+    'invoice_number'=>'رقم الفاتورة',
+    'invoice_path'=>'مسار الفاتورة',
+    'offer_info'=>'معلومات العرض',
+    'booking_discount_amount'=>'قيمة الخصم للحجز',
+    'original_price'=>'السعر قبل الخصم',
+    'guests_exceed_room_capacity' =>
+    'لا يمكن أن يتجاوز عدد النزلاء سعة الغرفة (:capacity).',
+
     //api messages
     //properties
     'properties_retrieved_successfully' => 'تم استرجاع العقارات بنجاح',

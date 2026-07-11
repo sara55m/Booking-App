@@ -3,11 +3,8 @@
 namespace App\Filament\Resources\Bookings\Pages;
 
 use App\Filament\Resources\Bookings\BookingResource;
-use Filament\Actions\DeleteAction;
 use Filament\Actions\ViewAction;
 use Filament\Resources\Pages\EditRecord;
-use App\Models\Room;
-use Carbon\Carbon;
 use App\Models\Booking;
 use Filament\Notifications\Notification;
 
@@ -20,14 +17,13 @@ class EditBooking extends EditRecord
         $record = $this->record;
         $recordId = $record->id;
 
-        $roomId = $data['room_id'];
+        $roomId = $record->room_id;
 
-        $roomChanged = $data['room_id'] != $record->room_id;
         $checkInChanged = $data['check_in'] != $record->check_in;
         $checkOutChanged = $data['check_out'] != $record->check_out;
 
         // Only validate if something actually changed
-        if ($roomChanged || $checkInChanged || $checkOutChanged) {
+        if ($checkInChanged || $checkOutChanged) {
 
             if (!Booking::isRoomAvailable(
                 $roomId,
@@ -64,7 +60,6 @@ class EditBooking extends EditRecord
     {
         return [
             ViewAction::make(),
-            DeleteAction::make(),
         ];
     }
 }

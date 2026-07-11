@@ -152,6 +152,10 @@ class Booking extends Model
     //transition between statuses
     public function canTransitionTo(BookingStatus $newStatus): bool
     {
+
+        if ($this->status === $newStatus) {
+            return true;
+        }
         return match ($this->status) {
 
             BookingStatus::PENDING => in_array($newStatus, [

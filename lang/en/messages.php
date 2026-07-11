@@ -232,6 +232,23 @@ return [
     'booking_expiring_soon'=>'Booking Expiring Soon',
     'booking_expiring_soon_notification'=>'Booking :booking is expiring at :expires_at',
 
+    // Booking Infolist
+    'booking_information' => 'Booking Information',
+    'customer_information' => 'Customer Information',
+    'reward_points_number' => 'Reward Points',
+    'property_information' => 'Property Information',
+    'property_name' => 'Property Name',
+    'timestamps' => 'Timestamps',
+    'expires_at' => 'Expires At',
+    'invoice_info' => 'Invoice Information',
+    'invoice_number' => 'Invoice Number',
+    'invoice_path' => 'Invoice Path',
+    'offer_info' => 'Offer Information',
+    'booking_discount_amount'=>'Booking Discount Amount',
+    'original_price'=>'Price Before Discount',
+    'guests_exceed_room_capacity' =>
+    'The number of guests cannot exceed the room capacity (:capacity).',
+
 
     //api messages
     //properties

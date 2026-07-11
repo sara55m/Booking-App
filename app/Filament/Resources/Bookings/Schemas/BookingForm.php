@@ -24,35 +24,11 @@ class BookingForm
                         Tab::make('Basic Info')
                             ->label(__('messages.basic_info'))
                             ->components([
-                                Select::make('user_id')
-                                    ->label(__('messages.user'))
-                                    ->relationship('user','name')
-                                    ->required(),
-
-                                Select::make('property_id')
-                                    ->label(__('messages.property'))
-                                    ->relationship('property', 'name')
-                                    ->searchable()
-                                    ->preload()
-                                    ->live()
-                                    ->required()
-                                    ->afterStateUpdated(fn ($set) => $set('room_id', null)),
-
-                                Select::make('room_id')
-                                    ->label(__('messages.room'))
-                                    ->options(fn (Get $get) =>
-                                        Room::query()
-                                            ->where('property_id', $get('property_id'))
-                                            ->pluck('name', 'id')
-                                            ->toArray()
-                                    )
-                                    ->searchable()
-                                    ->required()
-                                    ->disabled(fn (Get $get) => blank($get('property_id'))),
-
                                 TextInput::make('guests_count')
                                 ->label(__('messages.guests_count'))
                                 ->numeric()
+                                ->minValue(1)
+                                ->maxValue(fn ($record) => $record?->room?->capacity),
                             ]),
                         Tab::make('Dates & Status')
                             ->label(__('messages.dates_status'))
@@ -67,16 +43,14 @@ class BookingForm
                                     ->minDate(fn($context) => $context === 'create' ? now() : null)
                                     ->afterOrEqual('check_in'),
 
+                                DatePicker::make('expires_at')
+                                    ->label(__('messages.expires_at'))
+                                    ->nullable(),
+
                                 Select::make('status')
                                     ->label(__('messages.status'))
                                     ->options(BookingStatus::class)
                                     ->default('pending')
-                                    ->required(),
-
-                                Select::make('payment_status')
-                                    ->label(__('messages.payment_status'))
-                                    ->options(BookingPaymentStatus::class)
-                                    ->default('unpaid')
                                     ->required(),
                             ]),
                     ])->columns(2)->columnSpanFull(),
