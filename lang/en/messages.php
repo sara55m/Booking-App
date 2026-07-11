@@ -95,7 +95,7 @@ return [
     'pending_bookings' => 'Pending Bookings',
     'confirmed_bookings' => 'Confirmed Bookings',
     'totally_paid' => 'Totally Paid Payments',
-    'partially_paid' => 'Partially Paid Payments',
+    'failed_payments' => 'Failed Payments',
     'refunded' => 'Refunded Payments',
     'top_rated_properties' => 'Top Properties',
     'reviews_count' => 'Reviews Count',

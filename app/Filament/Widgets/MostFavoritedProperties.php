@@ -36,6 +36,10 @@ class MostFavoritedProperties extends TableWidget
                 ->label(__('messages.city'))
                 ->searchable(),
 
+                TextColumn::make('propertyType.name')
+                ->label(__('messages.property_type'))
+                ->searchable(),
+
             TextColumn::make('favorited_by_count')
                 ->label(__('messages.favorited_by_count'))
                 ->badge()

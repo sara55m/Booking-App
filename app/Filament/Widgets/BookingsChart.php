@@ -7,7 +7,9 @@ use App\Models\Booking;
 
 class BookingsChart extends ChartWidget
 {
-    public function heading(): string
+    protected ?string $heading = null;
+
+    public function getHeading(): string
     {
         return __('messages.bookings_over_time');
     }
@@ -16,7 +18,7 @@ class BookingsChart extends ChartWidget
     protected function getData(): array
     {
         $data = Booking::selectRaw('MONTH(created_at) as month, COUNT(*) as total')
-            ->groupBy('month')
+            ->groupByRaw('MONTH(created_at)')
             ->pluck('total', 'month');
 
         if ($data->isEmpty()) {

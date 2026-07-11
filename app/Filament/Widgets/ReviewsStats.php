@@ -5,14 +5,18 @@ namespace App\Filament\Widgets;
 use Filament\Widgets\StatsOverviewWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use App\Models\Review;
+use App\Enums\ReviewStatus;
 
 class ReviewsStats extends StatsOverviewWidget
 {
     protected function getStats(): array
     {
-        $totalApprovedReviews = Review::where('status','approved')->count() ?? 0;
-        $totalPendingReviews = Review::where('status','pending')->count() ?? 0;
-        $lowRatingReviews = Review::where('rating', '<=', 2)->count() ?? 0;
+        $totalApprovedReviews = Review::where('status',ReviewStatus::Approved)->count() ?? 0;
+
+        $totalPendingReviews = Review::where('status',ReviewStatus::Pending)->count() ?? 0;
+
+        $lowRatingReviews = Review::where('status',ReviewStatus::Approved)->where('rating', '<=', 2)->count() ?? 0;
+
         return [
             //Total Approved Reviews
             Stat::make('Total Approved Reviews', $totalApprovedReviews)
