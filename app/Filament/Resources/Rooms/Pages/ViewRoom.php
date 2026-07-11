@@ -6,6 +6,7 @@ use App\Filament\Resources\Rooms\RoomResource;
 use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Actions\DeleteAction;
+use App\Filament\Widgets\RoomAvailabilityCalendar;
 
 class ViewRoom extends ViewRecord
 {
@@ -16,7 +17,7 @@ class ViewRoom extends ViewRecord
     {
         return [
             //pass the cuurent room id to the widget
-            \App\Filament\Widgets\RoomAvailabilityCalendar::make([
+            RoomAvailabilityCalendar::make([
                 'roomId' => $this->record->id,
             ]),
         ];

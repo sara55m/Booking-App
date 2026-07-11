@@ -20,7 +20,7 @@ class UserForm
             ->components([
                 Tabs::make()
                 ->schema([
-                    Tab::make('General')
+                    Tab::make(__("messages.basic_info"))
                         ->schema([
                             TextInput::make('name')
                                 ->label(__("messages.name"))
@@ -34,7 +34,7 @@ class UserForm
                                 ->unique(ignoreRecord: true),
 
                             TextInput::make('phone')
-                            ->label(__("messages.phone"))
+                                ->label(__("messages.phone"))
                                 ->tel(),
 
                             Select::make('role')

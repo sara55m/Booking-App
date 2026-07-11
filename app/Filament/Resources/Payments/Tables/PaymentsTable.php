@@ -33,12 +33,7 @@ class PaymentsTable
                 TextColumn::make('status')
                     ->label(__('messages.payment_status'))
                     ->badge()
-                    ->colors([
-                        'warning' => PaymentStatus::PENDING->value,
-                        'success' => PaymentStatus::PAID->value,
-                        'danger' => PaymentStatus::FAILED->value,
-                        'info' => PaymentStatus::REFUNDED->value,
-                    ])
+                    ->color(fn (PaymentStatus $state) => $state->color())
                     ->searchable(),
                 TextColumn::make('payment_method')
                     ->label(__('messages.payment_method'))
@@ -46,7 +41,8 @@ class PaymentsTable
                 TextColumn::make('paid_at')
                     ->label(__('messages.paid_at'))
                     ->dateTime('Y-m-d H:i:s')
-                    ->sortable(),
+                    ->sortable()
+                    ->placeholder('-'),
                 TextColumn::make('created_at')
                     ->label(__('messages.created_at'))
                     ->dateTime()
@@ -59,7 +55,7 @@ class PaymentsTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //booking id filter
+                //booking reference filter
                 SelectFilter::make('booking')
                 ->label(__("messages.booking_reference"))
                 ->relationship('booking','reference'),

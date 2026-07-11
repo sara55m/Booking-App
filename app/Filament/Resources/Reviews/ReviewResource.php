@@ -12,7 +12,7 @@ use App\Models\Review;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
+use App\Filament\Resources\Reviews\Schemas\ReviewInfolist;
 use Filament\Tables\Table;
 
 class ReviewResource extends Resource
@@ -45,6 +45,11 @@ class ReviewResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return ReviewForm::configure($schema);
+    }
+
+    public static function infolist(Schema $schema): Schema
+    {
+        return ReviewInfolist::configure($schema);
     }
 
     public static function table(Table $table): Table

@@ -24,7 +24,7 @@ class ReviewForm
                             ->schema([
                                 //remember make the booking id disabled
                                 Select::make('booking_id')
-                                    ->relationship('booking','id')
+                                    ->relationship('booking','reference')
                                     ->label(__('messages.booking'))
                                     ->reactive()
                                     ->afterStateUpdated(function ($state,$set) {

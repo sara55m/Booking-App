@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Enums\ReviewStatus;
 
 class Review extends Model
 {
@@ -14,6 +15,13 @@ class Review extends Model
         'comment',
         'status',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'status' => ReviewStatus::class,
+        ];
+    }
 
     public function user()
     {

@@ -81,6 +81,9 @@ class BookingInfolist
                                 TextEntry::make('room.number')
                                     ->label(__('messages.room_number')),
 
+                                TextEntry::make('room.name')
+                                    ->label(__('messages.room_type')),
+
                                 TextEntry::make('property.city.name')
                                     ->label(__('messages.city')),
                             ]),

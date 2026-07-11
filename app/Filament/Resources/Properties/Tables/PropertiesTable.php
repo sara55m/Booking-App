@@ -62,10 +62,10 @@ class PropertiesTable
                 SelectFilter::make('is_active')
                 ->label(__('messages.is_active'))
                     ->options([
-                        1 => 'Active',
-                        0 => 'Inactive',
+                        1 => __('messages.active'),
+                        0 => __('messages.inactive'),
                     ]),
-                    SelectFilter::make('favorite_user')
+                SelectFilter::make('favorite_user')
                     ->label(__('messages.favorited_by'))
                     ->relationship('favoritedBy', 'name')
                     ->searchable()

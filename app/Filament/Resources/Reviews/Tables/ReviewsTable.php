@@ -13,6 +13,7 @@ use Filament\Actions\Action;
 use Filament\Tables\Filters\Filter;
 use App\Models\Review;
 use App\Filament\Resources\Bookings\BookingResource;
+use App\Enums\ReviewStatus;
 
 class ReviewsTable
 {
@@ -40,11 +41,7 @@ class ReviewsTable
                 TextColumn::make('status')
                     ->label(__('messages.status'))
                     ->badge()
-                    ->color(fn ($state) => match ($state) {
-                        'pending' => 'warning',
-                        'approved' => 'success',
-                        'rejected' => 'danger',
-                    })
+                    ->color(fn (ReviewStatus $state) => $state->color())
                     ->default('pending'),
                 TextColumn::make('created_at')
                     ->dateTime()
@@ -95,26 +92,30 @@ class ReviewsTable
                     SelectFilter::make('status')
                     ->label(__('messages.status'))
                     ->options([
-                        'pending' => __('messages.pending'),
-                        'approved' => __('messages.approved'),
-                        'rejected' => __('messages.rejected'),
+                        ReviewStatus::Pending->value => __('messages.pending'),
+                        ReviewStatus::Approved->value => __('messages.approved'),
+                        ReviewStatus::Rejected->value => __('messages.rejected'),
                     ]),
             ])
             ->recordActions([
+                //approve and reject actions
                 Action::make('approve')
-                ->action(fn($record) => $record->update(['status' => 'approved']))
+                ->action(fn($record) => $record->update(['status' => ReviewStatus::Approved]))
                 ->label(__('messages.approve'))
                 ->color('success')
                 ->icon('heroicon-o-check')
-                ->visible(fn($record) => $record->status !== 'approved'),
+                ->visible(fn($record) => $record->status !== ReviewStatus::Approved),
+
                 Action::make('reject')
-                ->action(fn($record) => $record->update(['status' => 'rejected']))
+                ->action(fn($record) => $record->update(['status' =>ReviewStatus::Rejected]))
                 ->label(__('messages.reject'))
                 ->color('danger')
                 ->icon('heroicon-o-x-mark')
-                ->visible(fn($record) => $record->status !== 'rejected'),
+                ->visible(fn($record) => $record->status !== ReviewStatus::Rejected),
+
                 ViewAction::make(),
                 EditAction::make(),
+
                 Action::make('view_booking')
                     ->label(__('messages.view_booking'))
                     ->icon('heroicon-o-calendar')

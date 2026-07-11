@@ -15,4 +15,16 @@ enum BookingStatus: string
     {
         return array_column(self::cases(), 'value');
     }
+
+    public function color(): string
+    {
+        return match ($this) {
+            self::PENDING => 'warning',
+            self::CONFIRMED => 'success',
+            self::CHECKED_IN => 'info',
+            self::CHECKED_OUT => 'primary',
+            self::COMPLETED => 'gray',
+            self::CANCELLED => 'danger',
+        };
+    }
 }

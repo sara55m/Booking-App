@@ -37,10 +37,12 @@ class RoomsTable
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('created_at')
+                    ->label(__('messages.created_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
+                    ->label(__('messages.updated_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -62,7 +64,7 @@ class RoomsTable
 
                 Filter::make('price')
                     ->label(__('messages.price_range'))
-                    ->form([
+                    ->schema([
                         TextInput::make('min_price')->numeric()->label(__('messages.min_price')),
                         TextInput::make('max_price')->numeric()->label(__('messages.max_price')),
                     ])

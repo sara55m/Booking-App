@@ -13,4 +13,14 @@ enum PaymentStatus : string
     {
         return array_column(self::cases(), 'value');
     }
+
+    public function color(): string
+    {
+        return match($this) {
+            self::PENDING => 'warning',
+            self::PAID => 'success',
+            self::FAILED => 'danger',
+            self::REFUNDED => 'primary',
+        };
+    }
 }

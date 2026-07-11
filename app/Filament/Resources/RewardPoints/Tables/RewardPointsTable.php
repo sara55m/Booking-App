@@ -17,6 +17,7 @@ class RewardPointsTable
         return $table
             ->columns([
                 TextColumn::make('id')
+                ->label(__("messages.id"))
                 ->sortable(),
 
                 TextColumn::make('user.name')
@@ -33,24 +34,28 @@ class RewardPointsTable
                         RewardPointType::RETURNED => __('messages.returned'),
                         RewardPointType::REVERSED => __('messages.reversed'),
                     })
-                    ->colors([
-                        'success' => RewardPointType::EARNED,
-                        'danger' => RewardPointType::REDEEMED,
-                        'info' => RewardPointType::RETURNED,
-                        'warning' => RewardPointType::REVERSED,
-                    ])
+                    ->color(fn (RewardPointType $state) => $state->color())
                     ->sortable(),
 
                 TextColumn::make('points')
-                    ->label(__("messages.points"))
+                    ->label(__("messages.reward_points_number"))
                     ->sortable()
-                    ->color(fn ($record) =>
-                        $record->type === RewardPointType::EARNED
-                            ? 'success'
-                            : 'danger'
-                    ),
+                    ->formatStateUsing(fn ($state, $record) => match ($record->type) {
+                        RewardPointType::EARNED,
+                        RewardPointType::RETURNED => "+{$state}",
+                
+                        RewardPointType::REDEEMED,
+                        RewardPointType::REVERSED => "-{$state}",
+                    })
+                    ->color(fn ($record) => match ($record->type) {
+                        RewardPointType::EARNED,
+                        RewardPointType::RETURNED => 'success',
+                
+                        RewardPointType::REDEEMED,
+                        RewardPointType::REVERSED => 'danger',
+                    }),
 
-                TextColumn::make('payment.booking.id')
+                TextColumn::make('payment.booking.reference')
                     ->label(__("messages.booking"))
                     ->sortable(),
 
@@ -86,7 +91,7 @@ class RewardPointsTable
                     ->label(__('messages.user')),
 
                 Filter::make('created_at')
-                ->form([
+                ->schema([
                     DatePicker::make('from')->label(__("messages.from")),
                     DatePicker::make('until')->label(__("messages.until")),
                 ])

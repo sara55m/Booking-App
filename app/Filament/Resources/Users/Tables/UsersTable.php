@@ -49,7 +49,12 @@ class UsersTable
                 ->searchable()
                 ->copyable(),
 
-                ImageColumn::make('image')
+            TextColumn::make('role')
+                ->label(__("messages.role"))
+                ->searchable()
+                ->copyable(),
+
+            ImageColumn::make('image')
                 ->label(__('messages.image'))
                 ->circular()
                 ->imageSize(60)
@@ -178,7 +183,7 @@ class UsersTable
                             ],
                         ],
                     ])),
-                    //view user reward points history
+                //view user reward points history
                 Action::make('viewRewardPointsHistory')
                 ->label(__('messages.view_history'))
                 ->icon('heroicon-o-gift')

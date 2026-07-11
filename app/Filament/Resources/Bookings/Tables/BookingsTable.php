@@ -13,6 +13,7 @@ use Filament\Actions\Action;
 use App\Models\Booking;
 use App\Filament\Resources\Payments\PaymentResource;
 use App\Filament\Resources\Reviews\ReviewResource;
+use App\Enums\BookingStatus;
 class BookingsTable
 {
     public static function configure(Table $table): Table
@@ -32,7 +33,9 @@ class BookingsTable
                     ->sortable(),
                 TextColumn::make('room.name')
                     ->label(__('messages.room'))
-                    ->sortable(),
+                    ->formatStateUsing(function ($state, $record) {
+                        return "{$record->room->number} ({$state})";
+                    }),
                 TextColumn::make('nights_count')
                     ->label(__('messages.number_of_nights'))
                     ->sortable(),
@@ -43,13 +46,7 @@ class BookingsTable
                 TextColumn::make('status')
                     ->label(__('messages.status'))
                     ->badge()
-                    ->colors([
-                        'warning' => 'pending',
-                        'success' => 'confirmed',
-                        'info' => 'checked_in',
-                        'primary' => 'checked_out',
-                        'danger' => 'cancelled',
-                    ])
+                    ->color(fn (BookingStatus $state) => $state->color())
                     ->searchable(),
                 TextColumn::make('created_at')
                     ->label(__('messages.created_at'))
@@ -80,9 +77,15 @@ class BookingsTable
                     ->searchable()
                     ->preload(),
 
-                SelectFilter::make('room_id')
+                SelectFilter::make('room_name')
                     ->relationship('room', 'name')
-                    ->label(__('messages.room'))
+                    ->label(__('messages.room_type'))
+                    ->searchable()
+                    ->preload(),
+
+                SelectFilter::make('room_number')
+                    ->relationship('room', 'number')
+                    ->label(__('messages.room_number'))
                     ->searchable()
                     ->preload(),
 
@@ -95,7 +98,12 @@ class BookingsTable
                 Filter::make('upcoming_bookings')
                     ->label(__('messages.upcoming_bookings'))
                     ->query(fn ($query) =>
-                        $query->whereDate('check_in','>=', today())),
+                        $query->whereDate('check_in','>', today())),
+
+                Filter::make('past_bookings')
+                    ->label(__('messages.past_bookings'))
+                    ->query(fn ($query) =>
+                        $query->whereDate('check_out','<', today())),
 
                 Filter::make('current_bookings')
                 ->label(__('messages.current_bookings'))

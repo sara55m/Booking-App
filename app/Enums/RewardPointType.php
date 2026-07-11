@@ -13,4 +13,14 @@ enum RewardPointType:string
     {
         return array_column(self::cases(), 'value');
     }
+
+    public function color(): string
+    {
+        return match ($this) {
+            self::EARNED => 'success',
+            self::REDEEMED => 'danger',
+            self::RETURNED => 'info',
+            self::REVERSED => 'warning',
+        };
+    }
 }

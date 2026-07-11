@@ -12,4 +12,13 @@ enum ReviewStatus:string
     {
         return array_column(self::cases(), 'value');
     }
+
+    public function color(): string
+    {
+        return match ($this) {
+            self::Pending => 'warning',
+            self::Approved => 'success',
+            self::Rejected => 'danger',
+        };
+    }
 }
