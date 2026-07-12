@@ -58,7 +58,8 @@ class StripeService
         User $user,
         Booking $booking,
         Payment $payment,
-        float $amount
+        float $amount,
+        string $idempotencyKey
     ): Session {
         try {
 
@@ -96,7 +97,11 @@ class StripeService
                 'metadata' => [
                     'payment_id' => $payment->id,
                 ],
-            ]);
+            ],
+            [
+                'idempotency_key' => $idempotencyKey,
+            ]
+        );
 
         } catch (\Throwable $e) {
 
@@ -108,6 +113,19 @@ class StripeService
                 'error'      => $e->getMessage(),
             ]);
 
+            throw $e;
+        }
+    }
+
+    public function retrieveCheckoutSession(string $sessionId): Session
+    {
+        try {
+            return Session::retrieve($sessionId);
+        } catch (\Throwable $e) {
+            Log::error('Failed to retrieve Stripe Checkout Session.', [
+                'session_id' => $sessionId,
+                'error'      => $e->getMessage(),
+            ]);
             throw $e;
         }
     }

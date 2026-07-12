@@ -11,8 +11,10 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Booking;
 use App\Models\Payment;
+use Illuminate\Contracts\Events\ShouldDispatchAfterCommit;
 
-class BookingPaymentConfirmed implements ShouldBroadcast
+
+class BookingPaymentConfirmed implements ShouldBroadcast, ShouldDispatchAfterCommit
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 

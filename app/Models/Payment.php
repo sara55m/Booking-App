@@ -26,7 +26,8 @@ class Payment extends Model
         'refunded_at',
         'earned_points',
         'redeemed_points',
-        'discount_amount'
+        'discount_amount',
+        'idempotency_key',
     ];
 
     protected $casts = [

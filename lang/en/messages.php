@@ -333,4 +333,10 @@ return [
     'reward_points_summary_retrieved_successfully'=>'Reward Points Summary Retrieved Successfully',
     'reward_points_history_retrieved_successfully'=>'Reward Points History Retrieved Successfully',
     'reward_discount_calculated_successfully'=>'Reward Discount Calculated Successfully',
+    //checkout messages
+    'payment_already_completed'=>'Payment Already Completed',
+    'idempotency_key_required'=>'Idempotency Key is required',
+    'something_went_wrong_in_stripe_customer_creation'=>'Something went wrong in Stripe customer creation',
+    'something_went_wrong_in_stripe_session_creation'=>'Something went wrong in Stripe session creation',
+    'something_went_wrong_in_checkout_payment_creation'=>'Something went wrong in checkout payment creation',
 ];

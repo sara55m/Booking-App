@@ -330,4 +330,10 @@ return [
     'reward_points_summary_retrieved_successfully'=>'تم استرجاع ملخص نقاط المكافأة بنجاح',
     'reward_points_history_retrieved_successfully'=>'تم استرجاع سجل نقاط المكافأة بنجاح',
     'reward_discount_calculated_successfully'=>'تم حساب خصم نقاط المكافأة بنجاح',
+    //checkout messages
+    'payment_already_completed'=>'تم إتمام عملية الدفع مسبقاً',
+    'idempotency_key_required'=>'مفتاح Idempotency مطلوب',
+    'something_went_wrong_in_stripe_customer_creation'=>'حدث خطأ أثناء إنشاء عميل Stripe',
+    'something_went_wrong_in_stripe_session_creation'=>'حدث خطأ أثناء إنشاء جلسة Stripe',
+    'something_went_wrong_in_checkout_payment_creation'=>'حدث خطأ أثناء إنشاء عملية الدفع في صفحة الدفع',
 ];
