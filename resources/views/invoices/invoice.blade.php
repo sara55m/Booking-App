@@ -75,13 +75,18 @@
         <strong>Invoice Type:</strong>
 
         {{
-            match($booking->payment_status->value){
-                'partial' => 'Partial Payment Invoice',
-                'paid' => 'Full Payment Invoice',
+            match($booking->payment_status){
+                \App\Enums\BookingPaymentStatus::PARTIAL => 'Partial Payment Invoice',
+                \App\Enums\BookingPaymentStatus::PAID => 'Full Payment Invoice',
+                \App\Enums\BookingPaymentStatus::REFUNDED => 'Refund Invoice',
                 default => 'Pending Payment Invoice',
             }
         }}
     </p>
+
+    @php
+    $isRefund = $booking->payment_status === \App\Enums\BookingPaymentStatus::REFUNDED;
+    @endphp
 
     <p><strong>Invoice Date:</strong> {{ now()->format('d M Y') }}</p>
 
@@ -159,32 +164,45 @@
             <td>{{ number_format($booking->total_price,2) }} EGP</td>
         </tr>
 
-        <tr>
-            <th>Payment Portion</th>
-            <td>{{ number_format($portion,2) }} EGP</td>
-        </tr>
+        @if($isRefund)
+            <tr>
+                <th>Total Refunded</th>
+                <td>{{ number_format($totalRefunded,2) }} EGP</td>
+            </tr>
+            
+            <tr>
+                <th>Final Balance</th>
+                <td>0.00 EGP</td>
+            </tr>
+        @else
 
-        @if($payment->discount_amount > 0)
-        <tr>
-            <th>Reward Points Discount</th>
-            <td>- {{ number_format($payment->discount_amount,2) }} EGP</td>
-        </tr>
+            <tr>
+                <th>Payment Portion</th>
+                <td>{{ number_format($portion,2) }} EGP</td>
+            </tr>
+
+            @if($payment->discount_amount > 0)
+            <tr>
+                <th>Reward Points Discount</th>
+                <td>- {{ number_format($payment->discount_amount,2) }} EGP</td>
+            </tr>
+            @endif
+
+            <tr>
+                <th>Amount Charged</th>
+                <td>{{ number_format($payment->amount,2) }} EGP</td>
+            </tr>
+
+            <tr>
+                <th>Total Paid So Far</th>
+                <td>{{ number_format($totalPaid,2) }} EGP</td>
+            </tr>
+
+            <tr>
+                <th>Remaining Balance</th>
+                <td>{{ number_format($payment->remaining,2) }} EGP</td>
+            </tr>
         @endif
-
-        <tr>
-            <th>Amount Charged</th>
-            <td>{{ number_format($payment->amount,2) }} EGP</td>
-        </tr>
-
-        <tr>
-            <th>Total Paid So Far</th>
-            <td>{{ number_format($totalPaid,2) }} EGP</td>
-        </tr>
-
-        <tr>
-            <th>Remaining Balance</th>
-            <td>{{ number_format($payment->remaining,2) }} EGP</td>
-        </tr>
 
     </table>
 
@@ -193,7 +211,7 @@
     <table>
 
         <tr>
-            <th>Payment Date</th>
+            <th>Latest Payment Date</th>
             <td>{{ $payment->paid_at->format('d M Y h:i A') }}</td>
         </tr>
 
@@ -201,39 +219,67 @@
             <th>Payment Method</th>
             <td>{{ ucfirst($payment->payment_method->value) }}</td>
         </tr>
+        @if($isRefund)
+            <tr>
+                <th>Refund Status</th>
+                <td>Refunded</td>
+            </tr>
+            
+            <tr>
+                <th>Refund Date</th>
+                <td>{{ $payment->refunded_at?->format('d M Y h:i A') }}</td>
+            </tr>
+        @else
 
-        <tr>
-            <th>Payment Status</th>
-            <td>{{ ucfirst($payment->status->value) }}</td>
-        </tr>
+            <tr>
+                <th>Payment Status</th>
+                <td>{{ ucfirst($payment->status->value) }}</td>
+            </tr>
 
-        @if($payment->transaction_id)
-        <tr>
-            <th>Transaction ID</th>
-            <td>{{ $payment->transaction_id }}</td>
-        </tr>
+            @if($payment->transaction_id)
+            <tr>
+                <th>Transaction ID</th>
+                <td>{{ $payment->transaction_id }}</td>
+            </tr>
+            @endif
         @endif
 
     </table>
 
-    @if($payment->earned_points > 0 || $payment->redeemed_points > 0)
+    @if($totalEarnedPoints > 0 || $totalRedeemedPoints > 0)
 
     <h2>Rewards</h2>
 
     <table>
+        @if($isRefund)
+            @if($totalEarnedPoints > 0)
+            <tr>
+                <th>Total Reward Points Reversed</th>
+                <td>{{ number_format($totalEarnedPoints) }}</td>
+            </tr>
+            @endif
 
-        @if($payment->earned_points > 0)
-        <tr>
-            <th>Reward Points Earned</th>
-            <td>{{ number_format($payment->earned_points) }}</td>
-        </tr>
-        @endif
+            @if($totalRedeemedPoints > 0)
+            <tr>
+                <th>Total Reward Points Returned</th>
+                <td>{{ number_format($totalRedeemedPoints) }}</td>
+            </tr>
+            @endif
+        @else
 
-        @if($payment->redeemed_points > 0)
-        <tr>
-            <th>Reward Points Redeemed</th>
-            <td>{{ number_format($payment->redeemed_points) }}</td>
-        </tr>
+            @if($payment->earned_points > 0)
+            <tr>
+                <th>Reward Points Earned</th>
+                <td>{{ number_format($payment->earned_points) }}</td>
+            </tr>
+            @endif
+
+            @if($payment->redeemed_points > 0)
+            <tr>
+                <th>Reward Points Redeemed</th>
+                <td>{{ number_format($payment->redeemed_points) }}</td>
+            </tr>
+            @endif
         @endif
 
         <tr>
@@ -248,16 +294,26 @@
 </div>
 
 <div class="footer">
+    @if($isRefund)
 
-    <p><strong>Thank you for booking with us.</strong></p>
+        <p><strong>Your booking has been cancelled and refunded.</strong></p>
 
-    <p>
-        This invoice serves as proof of payment for your booking.
-    </p>
+        <p>
+        This invoice serves as confirmation of your refund.
+        </p>
 
-    <p>
-        Please keep this invoice for your records.
-    </p>
+    @else
+
+        <p><strong>Thank you for booking with us.</strong></p>
+
+        <p>
+            This invoice serves as proof of payment for your booking.
+        </p>
+
+        <p>
+            Please keep this invoice for your records.
+        </p>
+    @endif
 
 </div>
 

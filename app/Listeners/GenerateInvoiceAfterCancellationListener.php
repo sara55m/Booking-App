@@ -2,10 +2,10 @@
 
 namespace App\Listeners;
 
-use App\Events\PaymentSucceeded;
+use App\Events\BookingCancelled;
 use App\Services\InvoiceService;
 
-class GenerateInvoiceListener
+class GenerateInvoiceAfterCancellationListener
 {
     /**
      * Create the event listener.
@@ -18,12 +18,12 @@ class GenerateInvoiceListener
     /**
      * Handle the event.
      */
-    public function handle(PaymentSucceeded $event): void
+    public function handle(BookingCancelled $event): void
     {
+        $booking = $event->booking;
+        $booking->load('payments');
         $this->invoiceService->generate(
-            $event->booking,
-            $event->payment
+            $booking,
         );
-
     }
 }

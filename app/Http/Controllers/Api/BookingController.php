@@ -244,14 +244,15 @@ class BookingController extends Controller
         try{
             //get all paid payments for the booking
             $payments=$booking->payments()->where('status',PaymentStatus::PAID)->with('booking.user')->get();
-
-            //refund each payment amount using stripe refund
+            //refund each payment amount using stripe refund or reward points refund only
             foreach($payments as $payment)
             {
-                \Stripe\Refund::create([
-                    'payment_intent' =>
-                    $payment->stripe_payment_intent_id,
-                ]);
+                if ($payment->stripe_payment_intent_id) {
+                    \Stripe\Refund::create([
+                        'payment_intent' =>
+                        $payment->stripe_payment_intent_id,
+                    ]);
+                }
 
                 //update payment status and refund data
                 $payment->update([
