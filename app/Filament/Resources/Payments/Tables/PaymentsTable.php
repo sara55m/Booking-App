@@ -25,7 +25,8 @@ class PaymentsTable
                 TextColumn::make('booking.reference')
                     ->label(__('messages.booking_reference'))
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->searchable(),
                 TextColumn::make('amount')
                     ->label(__('messages.amount'))
                     ->money('EGP')

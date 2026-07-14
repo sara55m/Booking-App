@@ -7,6 +7,7 @@ use App\Models\Payment;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use App\Enums\PaymentStatus;
 
 class InvoiceService
 {
@@ -23,7 +24,7 @@ class InvoiceService
         $paymentPortion = $payment->amount + $payment->discount_amount;
 
         $totalPaid = $booking->payments()
-        ->where('status', \App\Enums\PaymentStatus::PAID)
+        ->where('status', PaymentStatus::PAID)
         ->sum(DB::raw('amount + discount_amount'));
 
         $currentRewardBalance = $booking->user->fresh()->reward_points;

@@ -339,4 +339,16 @@ return [
     'something_went_wrong_in_stripe_customer_creation'=>'Something went wrong in Stripe customer creation',
     'something_went_wrong_in_stripe_session_creation'=>'Something went wrong in Stripe session creation',
     'something_went_wrong_in_checkout_payment_creation'=>'Something went wrong in checkout payment creation',
+
+    //
+    'payment_succeeded' => 'Payment Succeeded',
+    'payment_received_successfully' => 'We have successfully received your payment.',
+    'payment_type' => 'Payment Type: :type',
+    'partial_payment' => 'Partial Payment',
+    'full_payment' => 'Full Payment',
+    'updated_invoice_attached' => 'Your updated invoice is attached to this email.',
+    'payment_received_admin_title' => 'Payment Received',
+    'payment_received_admin_body' => 'A :payment_type payment of :amount has been received for booking :reference from :customer.',
+    'booking_payment_received' => 'Booking Payment Received',
+    'booking_payment_succeeded_admin_notification'=>'A :payment_type payment of :payment_amount has been received for booking :reference from :customer at :property. The remaining amount is :remaining_amount.',
 ];

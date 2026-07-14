@@ -6,6 +6,7 @@ use App\Enums\BookingPaymentStatus;
 use App\Enums\BookingStatus;
 use App\Enums\PaymentStatus;
 use App\Events\BookingPaymentConfirmed;
+use App\Events\PaymentSucceeded;
 use App\Models\Booking;
 use App\Models\Payment;
 use App\Models\PaymentMethod as UserPaymentMethod;
@@ -112,6 +113,9 @@ class StripeWebhookService
                     $remainingAmount =
                         $booking->total_price - $totalPaid;
 
+                    //check if the booking is being confirmed for the first time
+                    $wasConfirmed = $booking->status === BookingStatus::CONFIRMED;
+
                     $booking->update([
                         'status' => BookingStatus::CONFIRMED,
                         'expires_at' => null,
@@ -119,6 +123,8 @@ class StripeWebhookService
                             ? BookingPaymentStatus::PAID
                             : BookingPaymentStatus::PARTIAL,
                     ]);
+
+                    $booking->refresh();
 
                     $paymentIntent =
                         \Stripe\PaymentIntent::retrieve(
@@ -157,9 +163,13 @@ class StripeWebhookService
                         $payment
                     );
 
-                    //fire booking payment confirmation events
-                    event(new BookingPaymentConfirmed($booking,$payment));
+                    //fire payment completed event to generate the invoice
+                    event(new PaymentSucceeded($booking,$payment));
 
+                    if(! $wasConfirmed && $booking->status === BookingStatus::CONFIRMED){
+                        //fire booking confirmation event if it is the first payment
+                        event(new BookingPaymentConfirmed($booking,$payment));
+                    }
             });
 
             return response()->json([

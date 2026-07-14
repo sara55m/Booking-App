@@ -2,10 +2,9 @@
 
 namespace App\Listeners;
 
-use App\Events\BookingPaymentConfirmed;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
+use App\Events\PaymentSucceeded;
 use App\Services\InvoiceService;
+use Illuminate\Support\Facades\Log;
 
 class GenerateInvoiceListener
 {
@@ -20,9 +19,8 @@ class GenerateInvoiceListener
     /**
      * Handle the event.
      */
-    public function handle(BookingPaymentConfirmed $event): void
+    public function handle(PaymentSucceeded $event): void
     {
-        
         $this->invoiceService->generate(
             $event->booking,
             $event->payment

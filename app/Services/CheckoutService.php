@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use App\Enums\PaymentMethod;
 use App\Enums\BookingPaymentStatus;
 use App\Events\BookingPaymentConfirmed;
+use App\Events\PaymentSucceeded;
 use App\Services\RewardService;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\JsonResponse;
@@ -198,6 +199,9 @@ class CheckoutService
             $payment
         );
 
+        //fire the payment succeeded event
+        event(new PaymentSucceeded($booking, $payment));
+        //fire the booking confirmed event
         event(new BookingPaymentConfirmed($booking, $payment));
 
         return response()->json([

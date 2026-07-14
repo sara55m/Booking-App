@@ -336,4 +336,16 @@ return [
     'something_went_wrong_in_stripe_customer_creation'=>'حدث خطأ أثناء إنشاء عميل Stripe',
     'something_went_wrong_in_stripe_session_creation'=>'حدث خطأ أثناء إنشاء جلسة Stripe',
     'something_went_wrong_in_checkout_payment_creation'=>'حدث خطأ أثناء إنشاء عملية الدفع في صفحة الدفع',
+
+    //
+    'payment_succeeded' => 'تم استلام الدفع بنجاح',
+    'payment_received_successfully' => 'لقد استلمنا دفعتك بنجاح.',
+    'payment_type' => 'نوع الدفعة: :type',
+    'partial_payment' => 'دفعة جزئية',
+    'full_payment' => 'دفعة كاملة',
+    'updated_invoice_attached' => 'تم إرفاق الفاتورة المحدثة مع هذه الرسالة.',
+    'payment_received_admin_title' => 'تم استلام دفعة',
+    'payment_received_admin_body' => 'تم استلام :payment_type بقيمة :amount للحجز رقم :reference من العميل :customer.',
+    'booking_payment_received' => 'تم استلام دفعة الحجز',
+    'booking_payment_succeeded_admin_notification'=>'تم استلام :payment_type بقيمة :payment_amount للحجز رقم :reference من العميل :customer. المبلغ المتبقي: :remaining_amount.',
 ];

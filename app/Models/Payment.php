@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use App\Enums\BookingPaymentStatus;
-use App\Enums\BookingStatus;
 use Illuminate\Database\Eloquent\Model;
 use App\Enums\PaymentStatus;
 use App\Enums\PaymentMethod;
@@ -102,67 +100,6 @@ class Payment extends Model
     public function scopeFailed($query)
     {
         return $query->where('status', 'failed');
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Helpers
-    |--------------------------------------------------------------------------
-    */
-
-    /**
-     * Mark payment as paid
-     */
-    public function markAsPaid(): void
-    {
-        $this->update([
-            'status'  => PaymentStatus::PAID,
-            'paid_at' => now(),
-        ]);
-    }
-
-    /**
-     * Mark payment as failed
-     */
-    public function markAsFailed(): void
-    {
-        $this->update([
-            'status' => PaymentStatus::FAILED,
-        ]);
-    }
-
-    /**
-     * Refund payment
-     */
-    public function refund(): void
-    {
-        $this->update([
-            'status' => PaymentStatus::REFUNDED,
-        ]);
-    }
-
-    // Automatically update booking status when payment is created, updated or deleted
-    protected static function booted()
-    {
-        static::created(fn ($payment) => self::updateBookingStatus($payment));
-        static::updated(fn ($payment) => self::updateBookingStatus($payment));
-        static::deleted(fn ($payment) => self::updateBookingStatus($payment));
-    }
-
-    //update booking status and booking payment status
-    protected static function updateBookingStatus($payment)
-    {
-        $booking = $payment->booking()->with('payments')->first();
-
-        if (! $booking) return;
-
-        $totalPaid = $booking->payments->sum('amount');
-
-        if ($totalPaid >= $booking->total_price) {
-            $booking->update(['payment_status'=>BookingPaymentStatus::PAID,'status' => BookingStatus::CONFIRMED]);
-        } else {
-            $booking->update(['payment_status'=>BookingPaymentStatus::PARTIAL,'status' => BookingStatus::CONFIRMED]);
-        }
     }
 
 }
