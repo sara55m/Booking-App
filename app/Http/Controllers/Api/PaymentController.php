@@ -76,7 +76,7 @@ class PaymentController extends Controller
         
         try {
 
-            $payment = $checkoutService->createPayment(
+            $result = $checkoutService->createPayment(
                 $booking,
                 $amountToCharge,
                 $remainingAfterPayment,
@@ -84,6 +84,10 @@ class PaymentController extends Controller
                 $discountAmount,
                 $idempotencyKey
             );
+
+            $payment = $result['payment'];
+            $booking=$result['booking'];
+            $wasConfirmed = $result['wasConfirmed'];
         
         } catch (\Throwable $e) {
         
@@ -103,7 +107,8 @@ class PaymentController extends Controller
             return $checkoutService->completeRewardPayment(
                 $user,
                 $booking,
-                $payment
+                $payment,
+                $wasConfirmed
             );
         }
 

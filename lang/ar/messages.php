@@ -332,6 +332,7 @@ return [
     'reward_discount_calculated_successfully'=>'تم حساب خصم نقاط المكافأة بنجاح',
     //checkout messages
     'payment_already_completed'=>'تم إتمام عملية الدفع مسبقاً',
+    'payment_completed_using_reward_points'=>'تم إتمام عملية الدفع باستخدام نقاط المكافأة',
     'idempotency_key_required'=>'مفتاح Idempotency مطلوب',
     'something_went_wrong_in_stripe_customer_creation'=>'حدث خطأ أثناء إنشاء عميل Stripe',
     'something_went_wrong_in_stripe_session_creation'=>'حدث خطأ أثناء إنشاء جلسة Stripe',

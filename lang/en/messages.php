@@ -335,6 +335,7 @@ return [
     'reward_discount_calculated_successfully'=>'Reward Discount Calculated Successfully',
     //checkout messages
     'payment_already_completed'=>'Payment Already Completed',
+    'payment_completed_using_reward_points'=>'Payment Completed Using Reward Points',
     'idempotency_key_required'=>'Idempotency Key is required',
     'something_went_wrong_in_stripe_customer_creation'=>'Something went wrong in Stripe customer creation',
     'something_went_wrong_in_stripe_session_creation'=>'Something went wrong in Stripe session creation',

@@ -16,6 +16,7 @@ use App\Services\RewardService;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Support\Facades\Log;
 
 class CheckoutService
 {
@@ -107,7 +108,7 @@ class CheckoutService
         int $redeemPoints,
         float $discountAmount,
         string $idempotencyKey
-    ): Payment {
+    ): array{
         return DB::transaction(function () use (
             $booking,
             $amountToCharge,
@@ -120,12 +121,20 @@ class CheckoutService
             $booking = Booking::whereKey($booking->id)
                 ->lockForUpdate()
                 ->first();
+
+            //check if the booking is already confirmed
+            $wasConfirmed= $booking->status === BookingStatus::CONFIRMED;
+
             //check if a payment with the same idempotency key already exists
             $payment = Payment::where('idempotency_key', $idempotencyKey)
             ->first();
 
             if ($payment) {
-                return $payment;
+                return [
+                    'payment' => $payment,
+                    'booking' => $booking,
+                    'wasConfirmed' => $wasConfirmed,
+                ];
             }
 
             //otherwise, create a new payment record
@@ -152,8 +161,13 @@ class CheckoutService
     
                 // Another request created the payment first.
                 // Return the existing payment instead of failing.
-                return Payment::where('idempotency_key', $idempotencyKey)
+                $payment=Payment::where('idempotency_key', $idempotencyKey)
                     ->first();
+                return [
+                    'payment' => $payment,
+                    'booking' => $booking,
+                    'wasConfirmed' => $wasConfirmed,
+                ];
             }
     
             // Fully paid using reward points
@@ -163,36 +177,33 @@ class CheckoutService
                     'status' => PaymentStatus::PAID,
                     'paid_at' => now(),
                 ]);
+
+                $remainingAmount=$payment->remaining;
     
                 $booking->update([
                     'status' => BookingStatus::CONFIRMED,
-                    'payment_status' => BookingPaymentStatus::PAID,
+                    'payment_status' => $remainingAmount <= 0
+                            ? BookingPaymentStatus::PAID
+                            : BookingPaymentStatus::PARTIAL,
                     'expires_at' => null,
                 ]);
             }
     
-            return $payment;
+            return [
+                'payment' => $payment,
+                'booking' => $booking,
+                'wasConfirmed' => $wasConfirmed,
+            ];
         });
     }
 
     public function completeRewardPayment(
         User $user,
         Booking $booking,
-        Payment $payment
+        Payment $payment,
+        bool $wasConfirmed
     ): JsonResponse {
-
-        //if the payment is already completed, return a success response
-        if (
-            $payment->status === PaymentStatus::PAID &&
-            $payment->paid_at
-        ) {
-            return response()->json([
-                'status_code' => 200,
-                'message' => __('messages.payment_completed_using_reward_points'),
-            ]);
-        }
-
-        //otherwise, process the reward payment
+        //process the reward payment
         $this->rewardService->process(
             $user,
             $booking,
@@ -201,8 +212,10 @@ class CheckoutService
 
         //fire the payment succeeded event
         event(new PaymentSucceeded($booking, $payment));
-        //fire the booking confirmed event
-        event(new BookingPaymentConfirmed($booking, $payment));
+        //fire the booking confirmed event only if it is the first payment and the booking was not already confirmed
+        if(! $wasConfirmed && $booking->status === BookingStatus::CONFIRMED){
+            event(new BookingPaymentConfirmed($booking, $payment));
+        }
 
         return response()->json([
             'status_code' => 200,
