@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Enums\BookingStatus;
 
 class BookingResource extends JsonResource
 {
@@ -40,9 +41,15 @@ class BookingResource extends JsonResource
             'original_price'=>$this->original_price.' EGP',
             'discount_amount'=>$this->discount_amount,
             'total_price' => $this->total_price.' EGP',
-            'expires_at'=>$this->expires_at,
+            'expires_at' => $this->status === BookingStatus::PENDING
+                ? $this->expires_at?->toIso8601String()
+                : null,
+            'balance_due_date'=>$this->balance_due_date,
             'status' => $this->status,
+            'cancellation_reason' => $this->status === BookingStatus::CANCELLED ? $this->cancellation_reason : null,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
+            'invoice_number' => $this->invoice_number,
+            'invoice_path' => $this->invoice_path ? asset('storage/' . $this->invoice_path) : null,
         ];
     }
 }

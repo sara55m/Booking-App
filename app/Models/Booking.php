@@ -229,4 +229,13 @@ class Booking extends Model
         };
     }
 
+    protected static function booted(): void
+    {
+        static::creating(function (Booking $booking) {
+            if (is_null($booking->balance_due_date) && $booking->check_in) {
+                $booking->balance_due_date = Carbon::parse($booking->check_in)->subDays(3);
+            }
+        });
+    }
+
 }

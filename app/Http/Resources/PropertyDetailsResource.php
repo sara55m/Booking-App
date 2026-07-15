@@ -36,6 +36,7 @@ class PropertyDetailsResource extends JsonResource
                     'icon'=>$amenity->icon ? asset('storage/'.$amenity->icon) : null,
                 ];
             }),
+            'minimum_partial_payment_percentage'=>$this->minimum_partial_payment_percentage ?? config('booking.minimum_partial_payment_percentage'),
             'rooms'=>RoomResource::collection($this->rooms),
             'reviews'=>ReviewResource::collection($this->approvedReviews),
         ];
