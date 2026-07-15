@@ -373,4 +373,7 @@ return [
 
     'booking_auto_cancelled_admin_title' => 'Booking Auto-Cancelled (Unpaid)',
     'booking_auto_cancelled_admin_body' => 'Booking :reference by :customer for :property was auto-cancelled due to unpaid balance. Deposit forfeited.',
+
+    'booking_expired' => 'Booking Expired',
+    'booking_expired_admin_notification' => 'Booking :booking has expired due to unpaid payment and was automatically cancelled.',
 ];

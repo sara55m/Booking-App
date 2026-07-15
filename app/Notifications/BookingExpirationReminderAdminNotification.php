@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
@@ -10,7 +11,7 @@ use App\Filament\Resources\Bookings\BookingResource;
 use Filament\Notifications\Notification as FilamentNotification;
 use Filament\Actions\Action;
 
-class BookingExpiredAdminNotification extends Notification implements ShouldQueue
+class BookingExpirationReminderAdminNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -35,12 +36,13 @@ class BookingExpiredAdminNotification extends Notification implements ShouldQueu
     public function toDatabase(object $notifiable): array
     {
         return FilamentNotification::make()
-            ->title(__('messages.booking_expired'))
-            ->body(__('messages.booking_expired_admin_notification', [
+            ->title(__('messages.booking_expiring_soon'))
+            ->body(__('messages.booking_expiring_soon_notification', [
                 'booking' => $this->booking->reference,
+                'expires_at'=>$this->booking->expires_at,
             ]))
-            ->icon('heroicon-o-exclamation-triangle')
-            ->iconColor('danger')
+            ->icon('heroicon-o-clock')
+            ->iconColor('warning')
             ->actions([
                 Action::make('view')
                     ->label(__('messages.view_booking'))
@@ -51,5 +53,7 @@ class BookingExpiredAdminNotification extends Notification implements ShouldQueu
             ])
             ->getDatabaseMessage();
     }
-    
+
+
+
 }

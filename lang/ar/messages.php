@@ -365,9 +365,7 @@ return [
     'balance_overdue_admin_body' => 'الحجز :reference الخاص بـ :customer في :property لديه مبلغ متأخر السداد قدره :amount.',
 
     'booking_auto_cancelled_subject' => 'تم إلغاء حجزك',
-    'booking_auto_cancelled_line1' => 'تم إلغاء حجزك :reference في :property بسبب عدم سداد المبلغ المتبقي.',
-    'booking_auto_cancelled_line2' => 'العربون غير قابل للاسترداد وفقاً لسياسة الحجز الخاصة بنا.',
 
-    'booking_auto_cancelled_admin_title' => 'إلغاء تلقائي للحجز (غير مدفوع)',
-    'booking_auto_cancelled_admin_body' => 'تم إلغاء الحجز :reference الخاص بـ :customer في :property تلقائياً بسبب عدم السداد. تم مصادرة العربون.',
+    'booking_expired' => 'انتهت صلاحية الحجز',
+    'booking_expired_admin_notification' => 'انتهت صلاحية الحجز :booking بسبب عدم الدفع وتم إلغاؤه تلقائياً.',
 ];

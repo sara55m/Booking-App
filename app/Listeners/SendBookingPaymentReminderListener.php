@@ -8,7 +8,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use App\Notifications\BookingPaymentReminderNotification;
 use App\Models\User;
 use Illuminate\Support\Facades\Notification;
-use App\Notifications\BookingExpiredAdminNotification;
+use App\Notifications\BookingExpirationReminderAdminNotification;
 
 class SendBookingPaymentReminderListener implements ShouldQueue
 {
@@ -39,7 +39,7 @@ class SendBookingPaymentReminderListener implements ShouldQueue
 
         Notification::send(
             $admins,
-            new BookingExpiredAdminNotification($event->booking)
+            new BookingExpirationReminderAdminNotification($event->booking)
         );
     }
 }
