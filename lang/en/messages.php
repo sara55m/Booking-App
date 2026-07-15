@@ -39,6 +39,9 @@ return [
     'select_cover_image' => 'Select Cover Image',
     'check_in' => 'Check In',
     'check_out' => 'Check Out',
+    'expires_at_help' => 'If the booking is not confirmed before this time, it will expire automatically.',
+    'balance_due_date' => 'Balance Due Date',
+    'balance_due_date_help' => 'The remaining balance must be paid by this date.',
     'status' => 'Status',
     'booking' => 'Booking',
     'bookings' => 'Bookings',
@@ -343,8 +346,6 @@ return [
     'something_went_wrong_in_stripe_customer_creation'=>'Something went wrong in Stripe customer creation',
     'something_went_wrong_in_stripe_session_creation'=>'Something went wrong in Stripe session creation',
     'something_went_wrong_in_checkout_payment_creation'=>'Something went wrong in checkout payment creation',
-
-    //
     'payment_succeeded' => 'Payment Succeeded',
     'payment_received_successfully' => 'We have successfully received your payment.',
     'payment_type' => 'Payment Type: :type',
@@ -355,4 +356,21 @@ return [
     'payment_received_admin_body' => 'A :payment_type payment of :amount has been received for booking :reference from :customer.',
     'booking_payment_received' => 'Booking Payment Received',
     'booking_payment_succeeded_admin_notification'=>'A :payment_type payment of :payment_amount has been received for booking :reference from :customer at :property. The remaining amount is :remaining_amount.',
+
+    //notifications
+    'balance_due_reminder_subject' => 'Remaining Balance Due Soon',
+    'balance_due_reminder_greeting' => 'Hello :name!',
+    'balance_due_reminder_line1' => 'This is a reminder about your booking :reference at :property.',
+    'balance_due_reminder_line2' => 'A remaining balance of :amount is due by :date.',
+    'balance_due_reminder_line3' => 'Please complete your payment to avoid any issues with your reservation.',
+
+    'balance_overdue_admin_title' => 'Balance Overdue',
+    'balance_overdue_admin_body' => 'Booking :reference by :customer for :property has an overdue balance of :amount.',
+
+    'booking_auto_cancelled_subject' => 'Your Booking Has Been Cancelled',
+    'booking_auto_cancelled_line1' => 'Your booking :reference at :property has been cancelled due to an unpaid balance.',
+    'booking_auto_cancelled_line2' => 'Your deposit is non-refundable per our booking policy.',
+
+    'booking_auto_cancelled_admin_title' => 'Booking Auto-Cancelled (Unpaid)',
+    'booking_auto_cancelled_admin_body' => 'Booking :reference by :customer for :property was auto-cancelled due to unpaid balance. Deposit forfeited.',
 ];

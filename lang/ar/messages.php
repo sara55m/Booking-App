@@ -39,6 +39,9 @@ return [
     'select_cover_image' => 'اختر صورة الغلاف',
     'check_in' => 'تاريخ الوصول',
     'check_out' => 'تاريخ المغادرة',
+    'expires_at_help' => 'إذا لم يتم تأكيد الحجز قبل هذا الوقت، فسيتم إلغاؤه تلقائيًا.',
+    'balance_due_date' => 'تاريخ استحقاق الرصيد المتبقي',
+    'balance_due_date_help' => 'يجب سداد الرصيد المتبقي قبل هذا التاريخ.',
     'status' => 'الحالة',
     'booking' => 'الحجز',
     'bookings' => 'الحجوزات',
@@ -340,8 +343,6 @@ return [
     'something_went_wrong_in_stripe_customer_creation'=>'حدث خطأ أثناء إنشاء عميل Stripe',
     'something_went_wrong_in_stripe_session_creation'=>'حدث خطأ أثناء إنشاء جلسة Stripe',
     'something_went_wrong_in_checkout_payment_creation'=>'حدث خطأ أثناء إنشاء عملية الدفع في صفحة الدفع',
-
-    //
     'payment_succeeded' => 'تم استلام الدفع بنجاح',
     'payment_received_successfully' => 'لقد استلمنا دفعتك بنجاح.',
     'payment_type' => 'نوع الدفعة: :type',
@@ -352,4 +353,21 @@ return [
     'payment_received_admin_body' => 'تم استلام :payment_type بقيمة :amount للحجز رقم :reference من العميل :customer.',
     'booking_payment_received' => 'تم استلام دفعة الحجز',
     'booking_payment_succeeded_admin_notification'=>'تم استلام :payment_type بقيمة :payment_amount للحجز رقم :reference من العميل :customer. المبلغ المتبقي: :remaining_amount.',
+
+    //notifications
+    'balance_due_reminder_subject' => 'موعد استحقاق المبلغ المتبقي قريب',
+    'balance_due_reminder_greeting' => 'مرحباً :name!',
+    'balance_due_reminder_line1' => 'هذا تذكير بخصوص حجزك :reference في :property.',
+    'balance_due_reminder_line2' => 'يوجد مبلغ متبقٍ قدره :amount مستحق بحلول :date.',
+    'balance_due_reminder_line3' => 'يرجى إتمام الدفع لتجنب أي مشكلة تخص حجزك.',
+
+    'balance_overdue_admin_title' => 'مبلغ متأخر السداد',
+    'balance_overdue_admin_body' => 'الحجز :reference الخاص بـ :customer في :property لديه مبلغ متأخر السداد قدره :amount.',
+
+    'booking_auto_cancelled_subject' => 'تم إلغاء حجزك',
+    'booking_auto_cancelled_line1' => 'تم إلغاء حجزك :reference في :property بسبب عدم سداد المبلغ المتبقي.',
+    'booking_auto_cancelled_line2' => 'العربون غير قابل للاسترداد وفقاً لسياسة الحجز الخاصة بنا.',
+
+    'booking_auto_cancelled_admin_title' => 'إلغاء تلقائي للحجز (غير مدفوع)',
+    'booking_auto_cancelled_admin_body' => 'تم إلغاء الحجز :reference الخاص بـ :customer في :property تلقائياً بسبب عدم السداد. تم مصادرة العربون.',
 ];

@@ -8,6 +8,9 @@ use Carbon\Carbon;
 use App\Models\Room;
 use Illuminate\Database\Eloquent\Builder;
 use App\Enums\BookingPaymentStatus;
+use App\Enums\PaymentStatus;
+use App\Enums\BookingCancellationReason;
+use Illuminate\Support\Facades\DB;
 
 class Booking extends Model
 {
@@ -28,7 +31,9 @@ class Booking extends Model
         'original_price',
         'discount_amount',
         'invoice_number',
-        'invoice_path'
+        'invoice_path',
+        'balance_due_date',
+        'cancellation_reason',
     ];
 
     protected $casts = [
@@ -42,6 +47,8 @@ class Booking extends Model
         'original_price'=>'decimal:2',
         'discount_amount'=>'decimal:2',
         'expires_at'=>'datetime',
+        'balance_due_date' => 'date',
+        'cancellation_reason' =>BookingCancellationReason::class,
     ];
 
     public function user()
@@ -62,6 +69,33 @@ class Booking extends Model
     public function payments()
     {
         return $this->hasMany(Payment::class);
+    }
+
+    public function getAmountPaidAttribute(): float
+    {
+        return round(
+            $this->payments->where('status',PaymentStatus::PAID)->sum(DB::raw('amount + discount_amount')),
+            2
+        );
+    }
+
+    public function getRemainingBalanceAttribute(): float
+    {
+        return round($this->total_price - $this->amount_paid, 2);
+    }
+
+    // Check if the booking has not been fully paid yet 
+    public function hasOutstandingBalance(): bool
+    {
+        return $this->remaining_balance > 0;
+    }
+
+    //check if the balance due date has passed and the booking still has an outstanding balance
+    public function isBalanceOverdue(): bool
+    {
+        return $this->hasOutstandingBalance()
+            && $this->balance_due_date !== null
+            && $this->balance_due_date->isPast();
     }
 
     public function review()

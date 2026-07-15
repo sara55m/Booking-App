@@ -106,6 +106,11 @@ class BookingInfolist
                                     ->label(__('messages.expires_at'))
                                     ->dateTime()
                                     ->placeholder('-'),
+
+                                TextEntry::make('balance_due_date')
+                                ->label(__('messages.balance_due_date'))
+                                ->dateTime()
+                                ->placeholder('-'),
                             ]),
                     ]),
 

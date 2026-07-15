@@ -8,6 +8,7 @@ enum PaymentStatus : string
     case PAID = 'paid';
     case FAILED = 'failed';
     case REFUNDED = 'refunded';
+    case FORFEITED = 'forfeited';
 
     public static function values(): array
     {

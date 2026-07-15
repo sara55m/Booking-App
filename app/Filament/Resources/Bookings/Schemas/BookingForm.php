@@ -3,14 +3,12 @@
 namespace App\Filament\Resources\Bookings\Schemas;
 
 use App\Enums\BookingStatus;
-use App\Enums\BookingPaymentStatus;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
-use App\Models\Room;
-use Filament\Schemas\Components\Utilities\Get;
+use Carbon\Carbon;
 use Filament\Forms\Components\TextInput;
 
 class BookingForm
@@ -36,7 +34,17 @@ class BookingForm
                                 DatePicker::make('check_in')
                                     ->label(__('messages.check_in'))
                                     ->minDate(fn ($context) => $context === 'create' ? now() : null)
-                                    ->required(),
+                                    ->required()
+                                    ->live()
+                                    ->afterStateUpdated(function ($state, callable $set, callable $get) {
+                                        if (filled($get('balance_due_date'))) {
+                                            return; // don't clobber an admin's manual override
+                                        }
+                                    
+                                        $set('balance_due_date', $state
+                                            ? Carbon::parse($state)->subDays(3)->toDateString()
+                                            : null);
+                                    }),
                                 DatePicker::make('check_out')
                                     ->label(__('messages.check_out'))
                                     ->required()
@@ -45,7 +53,13 @@ class BookingForm
 
                                 DatePicker::make('expires_at')
                                     ->label(__('messages.expires_at'))
+                                    ->helperText(__('messages.expires_at_help'))
                                     ->nullable(),
+
+                                DatePicker::make('balance_due_date')
+                                ->label(__('messages.balance_due_date'))
+                                ->helperText(__('messages.balance_due_date_help'))
+                                ->nullable(),
 
                                 Select::make('status')
                                     ->label(__('messages.status'))

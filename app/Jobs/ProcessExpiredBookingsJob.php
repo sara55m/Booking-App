@@ -8,6 +8,7 @@ use App\Models\Booking;
 use App\Enums\BookingPaymentStatus;
 use App\Enums\BookingStatus;
 use App\Notifications\BookingExpiredNotification;
+use App\Enums\BookingCancellationReason;
 
 class ProcessExpiredBookingsJob implements ShouldQueue
 {
@@ -34,7 +35,8 @@ class ProcessExpiredBookingsJob implements ShouldQueue
                 foreach ($bookings as $booking) {
 
                     $booking->update([
-                        'status' => BookingStatus::CANCELLED
+                        'status' => BookingStatus::CANCELLED,
+                        'cancellation_reason'=>BookingCancellationReason::PAYMENT_EXPIRED,
                     ]);
 
                     //send expiration mail

@@ -21,6 +21,7 @@ use App\Events\BookingCreated;
 use App\Events\BookingCancelled;
 use App\Services\RewardService;
 use Illuminate\Support\Facades\Gate;
+use App\Enums\BookingCancellationReason;
 
 class BookingController extends Controller
 {
@@ -267,6 +268,7 @@ class BookingController extends Controller
             // Update the booking status to cancelled and booking payment status to refunded
             $booking->update([
                 'status' => BookingStatus::CANCELLED,
+                'cancellation_reason'=>BookingCancellationReason::CUSTOMER_REQUESTED,
                 'payment_status'=>BookingPaymentStatus::REFUNDED,
             ]);
 
