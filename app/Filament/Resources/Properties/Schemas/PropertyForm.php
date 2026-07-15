@@ -34,6 +34,14 @@ class PropertyForm
                                 ->label(__('messages.type'))
                                 ->preload()
                                 ->required(),
+                                TextInput::make('minimum_partial_payment_percentage')
+                                    ->label(__('messages.minimum_partial_payment_percentage'))
+                                    ->numeric()
+                                    ->minValue(1)
+                                    ->maxValue(100)
+                                    ->suffix('%')
+                                    ->helperText(__('messages.minimum_partial_payment_percentage_help'))
+                                    ->nullable(),
                             ]),
                         Tab::make('Location')
                             ->label(__('messages.location'))

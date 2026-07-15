@@ -13,18 +13,16 @@ use App\Services\CheckoutService;
 use App\Events\BookingPaymentFailed;
 use Illuminate\Http\JsonResponse;
 use App\Enums\PaymentStatus;
+use App\Http\Requests\Bookings\CheckoutRequest;
 
 class PaymentController extends Controller
 {
     public function checkout(
-        Request $request,
+        CheckoutRequest $request,
         Booking $booking,
         CheckoutService $checkoutService
     ) {
-        $validated=$request->validate([
-            'amount' => ['required', 'numeric', 'min:1'],
-            'redeem_points' => ['nullable', 'integer', 'min:0', 'multiple_of:100'],
-        ]);
+        $validated=$request->validated();
 
         $idempotencyKey = $request->header('Idempotency-Key');
 

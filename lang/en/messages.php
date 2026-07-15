@@ -25,6 +25,8 @@ return [
     'amenity' => 'Amenity',
     'amenities' => 'Amenities',
     'icon' => 'Icon',
+    'minimum_partial_payment_percentage' => 'Minimum Partial Payment (%)',
+    'minimum_partial_payment_percentage_help' => 'Leave empty to use the platform default.',
     'amenity_details' => 'Amenity Details',
     'created_at' => 'Created At',
     'updated_at' => 'Updated At',
@@ -334,6 +336,7 @@ return [
     'reward_points_history_retrieved_successfully'=>'Reward Points History Retrieved Successfully',
     'reward_discount_calculated_successfully'=>'Reward Discount Calculated Successfully',
     //checkout messages
+    'minimum_payment_error' => 'The payment amount must be at least :amount.',
     'payment_already_completed'=>'Payment Already Completed',
     'payment_completed_using_reward_points'=>'Payment Completed Using Reward Points',
     'idempotency_key_required'=>'Idempotency Key is required',

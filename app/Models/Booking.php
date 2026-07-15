@@ -106,6 +106,15 @@ class Booking extends Model
         return $pricePerNight * $this->calculateNumberOfNights();
     }
 
+    //calculate the minimum payment amount for booking partial payments
+    public function getMinimumPaymentAmount(): float
+    {
+        $percentage = $this->property->minimum_partial_payment_percentage
+            ?? config('booking.minimum_partial_payment_percentage', 30);
+
+        return round($this->total_price * ($percentage / 100), 2);
+    }
+
     /**
      * Whether check-in date has passed
      */

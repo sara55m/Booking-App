@@ -174,6 +174,7 @@ class CheckoutService
             if ($amountToCharge <= 0) {
     
                 $payment->update([
+                    'payment_method' => PaymentMethod::WALLET,
                     'status' => PaymentStatus::PAID,
                     'paid_at' => now(),
                 ]);

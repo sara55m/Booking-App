@@ -25,6 +25,8 @@ return [
     'amenity' => 'وسيلة راحة',
     'amenities' => 'وسائل الراحة',
     'icon' => 'الأيقونة',
+    'minimum_partial_payment_percentage' => 'الحد الأدنى لنسبة الدفع الجزئي (%)',
+    'minimum_partial_payment_percentage_help' => 'اترك هذا الحقل فارغًا لاستخدام القيمة الافتراضية للمنصة.',
     'amenity_details' => 'تفاصيل وسيلة الراحة',
     'created_at' => 'تاريخ الإنشاء',
     'updated_at' => 'تاريخ التحديث',
@@ -331,6 +333,7 @@ return [
     'reward_points_history_retrieved_successfully'=>'تم استرجاع سجل نقاط المكافأة بنجاح',
     'reward_discount_calculated_successfully'=>'تم حساب خصم نقاط المكافأة بنجاح',
     //checkout messages
+    'minimum_payment_error' => 'يجب ألا يقل مبلغ الدفع عن :amount.',
     'payment_already_completed'=>'تم إتمام عملية الدفع مسبقاً',
     'payment_completed_using_reward_points'=>'تم إتمام عملية الدفع باستخدام نقاط المكافأة',
     'idempotency_key_required'=>'مفتاح Idempotency مطلوب',

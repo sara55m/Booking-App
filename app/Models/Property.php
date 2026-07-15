@@ -17,6 +17,7 @@ class Property extends Model
         'reviews_count',
         'average_rating',
         'is_featured',
+        'minimum_partial_payment_percentage'
     ];
 
     protected $casts = [
