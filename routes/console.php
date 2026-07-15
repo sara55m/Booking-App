@@ -15,7 +15,7 @@ Artisan::command('inspire', function () {
 Schedule::job(new ProcessExpiredBookingsJob)->everyMinute();
 
 //schedule bookings balance due check job to run daily
-Schedule::job(new CheckBookingBalanceDueJob)->everyMinute();
+Schedule::job(new CheckBookingBalanceDueJob)->daily();
 
 //schedule bookings cancellation job to run daily
-Schedule::job(new CancelUnpaidOverdueBookingsJob)->everyMinute();
+Schedule::job(new CancelUnpaidOverdueBookingsJob)->daily();
