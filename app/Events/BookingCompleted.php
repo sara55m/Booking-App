@@ -11,13 +11,12 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Booking;
 
-class BookingCreated
+class BookingCompleted
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     //define booking 
     public Booking $booking;
-
     /**
      * Create a new event instance.
      */

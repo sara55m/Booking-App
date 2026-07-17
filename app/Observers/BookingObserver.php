@@ -3,6 +3,8 @@
 namespace App\Observers;
 
 use App\Models\Booking;
+use App\Enums\BookingStatus;
+use App\Events\BookingCompleted;
 
 class BookingObserver
 {
@@ -22,7 +24,12 @@ class BookingObserver
      */
     public function updated(Booking $booking): void
     {
-        //
+        if (
+            $booking->wasChanged('status') &&
+            $booking->status === BookingStatus::COMPLETED
+        ) {
+            event(new BookingCompleted($booking));
+        }
     }
 
     /**

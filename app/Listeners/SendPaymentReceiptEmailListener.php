@@ -26,7 +26,7 @@ class SendPaymentReceiptEmailListener implements ShouldQueue
      */
     public function handle(PaymentSucceeded $event): void
     {
-        $booking = $event->booking->fresh([
+        $booking = $event->booking->loadMissing([
             'user',
             'property',
         ]);
