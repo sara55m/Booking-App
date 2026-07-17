@@ -13,6 +13,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use App\Filament\Resources\Rooms\Pages\ViewRoom;
+use App\Filament\Resources\Rooms\Schemas\RoomInfolist;
 
 class RoomResource extends Resource
 {
@@ -23,7 +24,7 @@ class RoomResource extends Resource
         return __('messages.rooms');
     }
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-key';
-    protected static ?int $navigationSort = 6;
+    protected static ?int $navigationSort = 7;
 
     public static function getModelLabel(): string
     {
@@ -43,6 +44,11 @@ class RoomResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return RoomForm::configure($schema);
+    }
+
+    public static function infolist(Schema $schema): Schema
+    {
+        return RoomInfolist::configure($schema);
     }
 
     public static function table(Table $table): Table

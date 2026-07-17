@@ -43,6 +43,11 @@ class Property extends Model
         return $this->hasMany(Booking::class);
     }
 
+    public function roomTypes()
+    {
+        return $this->hasMany(RoomType::class);
+    }
+
     public function rooms()
     {
         return $this->hasMany(Room::class);

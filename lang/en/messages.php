@@ -255,6 +255,13 @@ return [
     'original_price'=>'Price Before Discount',
     'guests_exceed_room_capacity' =>
     'The number of guests cannot exceed the room capacity (:capacity).',
+    'yes'=>'Yes',
+    'no'=>'No',
+    'room_types'=>'Room Types',
+    'rooms_count'=>'Rooms Count',
+    'view_rooms'=>'View Rooms',
+    'view_properties'=>'View Properties',
+    'room_type_description'=>'Room Type Description',
 
 
     //api messages

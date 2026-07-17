@@ -215,7 +215,7 @@ class ProfileController extends Controller
         })
         ->withActiveOffer()
         ->with('coverImage','city')
-        ->withMin('rooms', 'price-per-night')
+        ->withMin('roomTypes', 'base_price')
         ->latest()->paginate(10);
 
         return response()->json(

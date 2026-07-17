@@ -106,7 +106,6 @@ class RoomAvailabilityCalendar extends FullCalendarWidget
         //Add remaining AVAILABLE after last booking
         if ($currentDate < $end) {
             $events[] = [
-                'id' => $booking->id,
                 'title' => 'Available',
                 'start' => $currentDate,
                 'end' => $end,

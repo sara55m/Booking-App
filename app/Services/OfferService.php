@@ -107,7 +107,7 @@ class OfferService
 
         $offer = $property->offers->first();
 
-        $pricePerNight = $property->rooms_min_pricepernight;
+        $pricePerNight = $property->room_types_min_base_price;
 
         $originalPrice = $pricePerNight * $nights;
 

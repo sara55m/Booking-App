@@ -25,7 +25,7 @@ class ReviewResource extends Resource
     {
         return __('messages.reviews');
     }
-    protected static ?int $navigationSort = 9;
+    protected static ?int $navigationSort = 10;
 
     public static function getModelLabel(): string
     {

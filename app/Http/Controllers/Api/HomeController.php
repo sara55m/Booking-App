@@ -102,7 +102,7 @@ class HomeController extends Controller
         $properties=Cache::tags(['home'])->remember('home:deals-and-offers',now()->addHours(6),function(){
             return Property::query()
             ->where('is_active', true)
-            ->withMin('rooms','price-per-night')
+            ->withMin('roomTypes', 'base_price')
             ->whereHas('offers', function ($query) {
                 $query->active();
             })

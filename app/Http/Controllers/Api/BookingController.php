@@ -45,7 +45,7 @@ class BookingController extends Controller
                 $query->where('name', 'like', '%' . $request->search . '%');
             });
         })
-        ->with(['property','room','offer'])
+        ->with(['property','room.roomType','offer'])
         ->latest()
         ->paginate(10);
 
@@ -99,7 +99,7 @@ class BookingController extends Controller
         //calculate number of nights
         $numberOfNights=$booking->calculateNumberOfNights();
         //calculate total price
-        $originalPrice=$booking->calculateTotalPrice($room->{'price-per-night'});
+        $originalPrice=$booking->calculateTotalPrice($room->roomType->base_price);
 
         $totalPrice=$originalPrice;
         $discountAmount=0;
@@ -167,7 +167,7 @@ class BookingController extends Controller
 
         //load relations
         $booking->load([
-            'room',
+            'room.roomType',
             'property',
             'offer',
         ]);
@@ -213,7 +213,7 @@ class BookingController extends Controller
     {
         Gate::authorize('view',$booking);
 
-        $booking->load(['property','room','offer']);
+        $booking->load(['property','room.roomType','offer']);
 
         return response()->json(
             [

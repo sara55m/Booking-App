@@ -12,6 +12,9 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\Filter;
+use Filament\Actions\Action;
+use App\Filament\Resources\Properties\PropertyResource;
+use App\Models\PropertyType;
 
 
 class PropertyTypesTable
@@ -66,6 +69,18 @@ class PropertyTypesTable
                 ViewAction::make(),
                 EditAction::make(),
                 DeleteAction::make(),
+                //show properties action
+                Action::make('view_properties')
+                    ->label(__('messages.view_properties'))
+                    ->icon('heroicon-o-key')
+                    ->visible(fn (PropertyType $record) => $record->properties()->exists())
+                    ->url(fn (PropertyType $record) => PropertyResource::getUrl('index', [
+                        'filters' => [
+                            'PropertyType' => [
+                                'value' => $record->id,
+                            ],
+                        ],
+                    ])),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

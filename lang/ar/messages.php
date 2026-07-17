@@ -217,6 +217,13 @@ return [
     'view_payments'=>'عرض الدفعات',
     'reference'=>'الرقم المرجعى',
     'booking_reference'=>'الرقم المرجعى للحجز',
+    'yes'=>'نعم',
+    'no'=>'لا',
+    'room_types'=>'أنواع الغرف',
+    'rooms_count'=>'عدد الغرف',
+    'view_rooms'=>'عرض الغرف',
+    'view_properties'=>'عرض العقارات',
+    'room_type_description'=>'وصف نوع الغرفة',
 
     //notifications
 

@@ -8,16 +8,19 @@ class Room extends Model
 {
     protected $fillable = [
         'property_id',
-        'name',
+        'room_type_id',
         'description',
-        'price-per-night',
-        'capacity',
         'number',
     ];
 
     public function property()
     {
         return $this->belongsTo(Property::class, 'property_id');
+    }
+
+    public function roomType()
+    {
+        return $this->belongsTo(RoomType::class, 'room_type_id');
     }
 
     public function images()
@@ -39,5 +42,11 @@ class Room extends Model
     public function amenities()
     {
         return $this->belongsToMany(Amenity::class, 'amenity_room', 'room_id', 'amenity_id')->withTimestamps();
+    }
+
+    //attributes
+    public function getDisplayNameAttribute(): string
+    {
+        return "{$this->number} ({$this->roomType->name})";
     }
 }

@@ -78,6 +78,7 @@ class PropertiesTable
                 Action::make('view_reviews')
                     ->label(__('messages.view_reviews'))
                     ->icon('heroicon-o-chat-bubble-oval-left')
+                    ->visible(fn (Property $record) => $record->reviews()->exists())
                     ->url(fn (Property $record) => ReviewResource::getUrl('index', [
                         'filters' => [
                             'property_id' => [

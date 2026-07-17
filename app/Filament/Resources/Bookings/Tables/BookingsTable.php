@@ -31,11 +31,8 @@ class BookingsTable
                 TextColumn::make('property.name')
                     ->label(__('messages.property'))
                     ->sortable(),
-                TextColumn::make('room.name')
-                    ->label(__('messages.room'))
-                    ->formatStateUsing(function ($state, $record) {
-                        return "{$record->room->number} ({$state})";
-                    }),
+                TextColumn::make('room.display_name')
+                    ->label(__('messages.room')),
                 TextColumn::make('nights_count')
                     ->label(__('messages.number_of_nights'))
                     ->sortable(),
@@ -77,8 +74,8 @@ class BookingsTable
                     ->searchable()
                     ->preload(),
 
-                SelectFilter::make('room_name')
-                    ->relationship('room', 'name')
+                SelectFilter::make('room_type_name')
+                    ->relationship('room.roomType', 'name')
                     ->label(__('messages.room_type'))
                     ->searchable()
                     ->preload(),
@@ -119,6 +116,7 @@ class BookingsTable
                 Action::make('view_payments')
                     ->label(__('messages.view_payments'))
                     ->icon('heroicon-o-credit-card')
+                    ->visible(fn (Booking $record) => $record->payments()->exists())
                     ->url(fn (Booking $record) => PaymentResource::getUrl('index', [
                         'filters' => [
                             'booking' => [
@@ -126,16 +124,15 @@ class BookingsTable
                             ],
                         ],
                     ])),
-                    Action::make('view_reviews')
-                    ->label(__('messages.view_reviews'))
+                    //view review
+                Action::make('view_review')
+                    ->label(__('messages.view_review'))
                     ->icon('heroicon-o-chat-bubble-oval-left')
-                    ->url(fn (Booking $record) => ReviewResource::getUrl('index', [
-                        'filters' => [
-                            'booking' => [
-                                'value' => $record->id,
-                            ],
-                        ],
-                    ])),
+                    ->visible(fn (Booking $record) => $record->review()->exists())
+                    ->url(fn (Booking $record) => ReviewResource::getUrl('view', [
+                        'record' => $record->review,
+                    ]))
+                    ->openUrlInNewTab(false),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

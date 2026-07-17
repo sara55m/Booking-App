@@ -24,7 +24,7 @@ class BookingResource extends JsonResource
                     'name' => $this->property->name],
             'room' => [
                     'id' => $this->room->id,
-                    'name' => $this->room->name,
+                    'name' => $this->room->roomType->name,
                     'number' => $this->room->number
             ],
             'check_in' => $this->check_in->format('Y-m-d'),

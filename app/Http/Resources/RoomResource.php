@@ -17,12 +17,21 @@ class RoomResource extends JsonResource
     {
         return [
             'id'=>$this->id,
-            'property_id'=>$this->property_id,
-            'name'=>$this->name,
-            'number'=>$this->number,
+            'room_number'=>$this->number,
+            'property' => [
+                'id' => $this->property->id,
+                'name' => $this->property->name,
+            ],
+
+            'type' => [
+                'id' => $this->roomType->id,
+                'name' => $this->roomType->name,
+                'description' => $this->roomType->description,
+                'capacity' => $this->roomType->capacity,
+                'price_per_night' => $this->roomType->base_price.' EGP',
+            ],
             'cover_image' => $this->coverImage ? asset('storage/'.$this->coverImage->image) : null,
             'images'=>RoomImageResource::collection($this->images),
-            'number'=>$this->number,
             'description'=>$this->description ?? null,
             'amenities'=>$this->amenities->map(function($amenity){
                 return [
@@ -31,8 +40,6 @@ class RoomResource extends JsonResource
                     'icon'=>$amenity->icon ? asset('storage/'.$amenity->icon) : null,
                 ];
             }),
-            'price_per_night'=>$this->{'price-per-night'}.' EGP',
-            'capacity'=>$this->capacity,
         ];
     }
 }

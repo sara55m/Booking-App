@@ -39,7 +39,7 @@ class PropertyController extends Controller
                 })
                 ->withActiveOffer()
                 ->with('coverImage','city')
-                ->withMin('rooms', 'price-per-night')
+                ->withMin('roomTypes', 'base_price')
                 ->latest()->paginate(10);
         });
 
@@ -55,7 +55,7 @@ class PropertyController extends Controller
     {
         //cache the property details for 30 minutes to reduce database queries
         $property=Cache::remember("property:{$property->id}",now()->addMinutes(30),function() use ($property){
-            return Property::with(['coverImage','images','amenities','rooms','approvedReviews.user','approvedReviews.tags','city','propertyType'])->findOrFail($property->id);
+            return Property::with(['coverImage','images','amenities','rooms.roomType','approvedReviews.user','approvedReviews.tags','city','propertyType'])->findOrFail($property->id);
         });
 
         return response()->json([
@@ -80,7 +80,7 @@ class PropertyController extends Controller
             });
         })->when($request->guests_number, function ($query) use ($request) {
             $query->where('capacity', '>=', $request->guests_number);
-        })->with('amenities')->get();
+        })->with('amenities','roomType','images','cover_image')->get();
 
         return response()->json([
             'status_code'=>200,

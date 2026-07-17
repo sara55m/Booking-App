@@ -153,6 +153,7 @@ class UsersTable
                 Action::make('viewBookings')
                     ->label(__('messages.view_bookings'))
                     ->icon('heroicon-o-calendar')
+                    ->visible(fn (User $record) => $record->bookings()->exists())
                     ->url(fn (User $record) => BookingResource::getUrl('index', [
                         'filters' => [
                             'user_id' => [
@@ -164,6 +165,7 @@ class UsersTable
                 Action::make('viewReviews')
                 ->label(__('messages.view_reviews'))
                 ->icon('heroicon-o-chat-bubble-oval-left')
+                ->visible(fn (User $record) => $record->reviews()->exists())
                 ->url(fn (User $record) => ReviewResource::getUrl('index', [
                     'filters' => [
                         'user_id' => [
@@ -176,6 +178,7 @@ class UsersTable
                     ->label(__('messages.view_favorites'))
                     ->icon('heroicon-o-heart')
                     ->color('danger')
+                    ->visible(fn (User $record) => $record->favoriteProperties()->exists())
                     ->url(fn (User $record) => PropertyResource::getUrl('index', [
                         'filters' => [
                             'favorite_user' => [
@@ -186,6 +189,7 @@ class UsersTable
                 //view user reward points history
                 Action::make('viewRewardPointsHistory')
                 ->label(__('messages.view_history'))
+                ->visible(fn (User $record) => $record->rewardPoints()->exists())
                 ->icon('heroicon-o-gift')
                 ->color('danger')
                 ->url(fn (User $record) => RewardPointResource::getUrl('index', [
