@@ -41,11 +41,6 @@ class Room extends Model
         return $this->hasMany(Booking::class);
     }
 
-    public function amenities()
-    {
-        return $this->belongsToMany(Amenity::class, 'amenity_room', 'room_id', 'amenity_id')->withTimestamps();
-    }
-
     //attributes
     public function getDisplayNameAttribute(): string
     {

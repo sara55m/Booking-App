@@ -26,7 +26,7 @@ class SendBookingConfirmedMailListener implements ShouldQueue
     {
         $booking = $event->booking->fresh([
             'user',
-            'property',
+            'property'
         ]);
 
         $user=$booking->user;

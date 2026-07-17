@@ -33,7 +33,7 @@ class RoomResource extends JsonResource
             'cover_image' => $this->coverImage ? asset('storage/'.$this->coverImage->image) : null,
             'images'=>RoomImageResource::collection($this->images),
             'description'=>$this->description ?? null,
-            'amenities'=>$this->amenities->map(function($amenity){
+            'amenities'=>$this->roomType->amenities->map(function($amenity){
                 return [
                     'id'=>$amenity->id,
                     'name'=>$amenity->name,

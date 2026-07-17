@@ -117,6 +117,11 @@
         </tr>
 
         <tr>
+            <th>Room Type</th>
+            <td>{{ $booking->room->roomType->name }}</td>
+        </tr>
+
+        <tr>
             <th>Booking Date</th>
             <td>{{ $booking->created_at->format('d M Y h:i A') }}</td>
         </tr>

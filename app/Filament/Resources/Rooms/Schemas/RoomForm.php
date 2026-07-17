@@ -72,11 +72,6 @@ class RoomForm
                                 TextArea::make('description')
                                     ->label(__('messages.description'))
                                     ->required(),
-                                Select::make('amenities')
-                                ->relationship('amenities', 'name')
-                                ->preload()
-                                ->searchable()
-                                ->multiple(),
                             ]),
                             Tab::make('Images')
                             ->label(__('messages.images'))

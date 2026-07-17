@@ -74,8 +74,7 @@ class PropertyController extends Controller
         ->forGuests($validated['guests_number'] ?? null)
         ->forType($validated['room_type_id'] ?? null)
         ->with([
-            'amenities',
-            'roomType',
+            'roomType.amenities',
             'images',
             'coverImage',
         ])

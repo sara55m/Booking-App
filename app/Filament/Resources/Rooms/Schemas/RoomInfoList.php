@@ -51,7 +51,7 @@ class RoomInfolist
                             ->label(__('messages.description'))
                             ->markdown(),
 
-                        TextEntry::make('amenities.name')
+                        TextEntry::make('roomType.amenities.name')
                             ->label(__('messages.amenities'))
                             ->badge()
                             ->separator(','),

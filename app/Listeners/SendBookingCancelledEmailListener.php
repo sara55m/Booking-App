@@ -27,7 +27,10 @@ class SendBookingCancelledEmailListener implements ShouldQueue
      */
     public function handle(BookingCancelled $event): void
     {
-        $booking = $event->booking;
+        $booking = $event->booking->fresh([
+            'user',
+            'property'
+        ]);
 
         $event->booking->user->notify(
             new BookingCancelledNotification($booking)

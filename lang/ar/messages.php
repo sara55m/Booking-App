@@ -262,6 +262,7 @@ return [
     'original_price'=>'السعر قبل الخصم',
     'guests_exceed_room_capacity' =>
     'لا يمكن أن يتجاوز عدد النزلاء سعة الغرفة (:capacity).',
+    'room_type_details'=>'تفاصيل نوع الغرفة',
 
     //api messages
     //properties
