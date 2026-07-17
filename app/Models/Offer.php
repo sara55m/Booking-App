@@ -3,6 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Builder;
+use App\Enums\OfferStatus;
 
 class Offer extends Model
 {
@@ -21,7 +24,9 @@ class Offer extends Model
         'usage_limit',
         'per_user_limit',
         'used_count',
-        'requires_coupon_code'
+        'requires_coupon_code',
+        'notify_users',
+        'notification_sent_at',
     ];
 
     protected $casts=[
@@ -34,6 +39,8 @@ class Offer extends Model
         'per_user_limit'=>'integer',
         'used_count'=>'integer',
         'requires_coupon_code'=>'boolean',
+        'notify_users'=>'boolean',
+        'notification_sent_at'=>'datetime',
     ];
 
     public function property()
@@ -46,7 +53,15 @@ class Offer extends Model
         return $this->hasMany(Booking::class);
     }
 
-    public function scopeActive($query, $nights=1)
+    public function getFormattedDiscountAttribute(): string
+    {
+        return match ($this->discount_type) {
+            'percentage' => "{$this->discount_value}%",
+            'fixed' => 'EGP ' . number_format($this->discount_value, 2),
+        };
+    }
+
+    public function scopeActive(Builder $query, $nights=1)
     {
         return $query
         ->where('is_active', 1)
@@ -57,6 +72,46 @@ class Offer extends Model
         ->where(fn($q) => $q->whereNull('usage_limit')->orWhereColumn('used_count', '<', 'usage_limit'))
         ->select('*')
         ->limit(1);
+    }
+
+    //scope offers for notification
+    public function scopeReadyForNotification(Builder $query): Builder
+    {
+        return $query
+            ->where('is_active', true)
+            ->where('notify_users', true)
+            ->whereNull('notification_sent_at')
+            ->where(function (Builder $query) {
+                $query->whereNull('starts_at')
+                    ->orWhere('starts_at', '<=', now());
+            })
+            ->where(function (Builder $query) {
+                $query->whereNull('ends_at')
+                    ->orWhere('ends_at', '>=', now());
+            });
+    }
+
+    //compute offer status based on start and end dates
+    protected function computedStatus(): Attribute
+    {
+        return Attribute::make(
+            get: function (): OfferStatus {
+
+                if (! $this->is_active) {
+                    return OfferStatus::DISABLED;
+                }
+
+                if ($this->ends_at?->isPast()) {
+                    return OfferStatus::EXPIRED;
+                }
+
+                if ($this->starts_at?->isFuture()) {
+                    return OfferStatus::UPCOMING;
+                }
+
+                return OfferStatus::ACTIVE;
+            }
+        );
     }
 
 

@@ -11,6 +11,7 @@ use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Forms\Get;
 use Illuminate\Support\Facades\Hash;
 use Filament\Resources\Pages\ViewRecord;
+use Filament\Forms\Components\Toggle;
 
 class UserForm
 {
@@ -44,6 +45,11 @@ class UserForm
                                     'admin' => 'Admin',
                                 ])
                                 ->required(),
+
+                            Toggle::make('receive_marketing_emails')
+                                ->label(__("messages.receive_marketing_emails"))
+                                ->required()
+                                ->default(true),
 
                             FileUpload::make('image')
                                 ->label(__("messages.image"))

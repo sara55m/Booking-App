@@ -36,6 +36,7 @@ class User extends Authenticatable implements FilamentUser,MustVerifyEmail
         'otp_expires_at',
         'email_verified_at',
         'reward_points',
+        'receive_marketing_emails'
     ];
 
     /**
@@ -59,6 +60,7 @@ class User extends Authenticatable implements FilamentUser,MustVerifyEmail
             'email_verified_at' => 'datetime',
             'otp_expires_at' => 'datetime',
             'password' => 'hashed',
+            'receive_marketing_emails'=>'boolean'
         ];
     }
 

@@ -14,6 +14,7 @@ use Filament\Tables\Table;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Forms\Components\TextInput;
+use App\Enums\OfferStatus;
 
 class OffersTable
 {
@@ -45,67 +46,11 @@ class OffersTable
                     ->label(__("messages.is_active"))
                     ->boolean(),
                     //dynamic state offer status
-                TextColumn::make('offer_status')
-                    ->label(__('messages.status'))
-                    ->badge()
-                    ->state(function ($record) {
-
-                        $now = now();
-                    
-                        /*
-                        |--------------------------------------------------------------------------
-                        | Expired
-                        |--------------------------------------------------------------------------
-                        */
-                    
-                        if (
-                            $record->ends_at &&
-                            $record->ends_at->isPast()
-                        ) {
-                            return __('messages.expired');
-                        }
-                    
-                        /*
-                        |--------------------------------------------------------------------------
-                        | Upcoming
-                        |--------------------------------------------------------------------------
-                        */
-                    
-                        if (
-                            $record->starts_at &&
-                            $record->starts_at->isFuture()
-                        ) {
-                            return __('messages.upcoming');
-                        }
-                    
-                        /*
-                        |--------------------------------------------------------------------------
-                        | Inactive
-                        |--------------------------------------------------------------------------
-                        */
-                    
-                        if (!$record->is_active) {
-                            return __('messages.inactive');
-                        }
-                    
-                        /*
-                        |--------------------------------------------------------------------------
-                        | Active
-                        |--------------------------------------------------------------------------
-                        */
-                    
-                        return __('messages.active');
-                    })
-                    ->colors([
-
-                        'success' => __('messages.active'),
-                    
-                        'danger' => __('messages.expired'),
-                    
-                        'warning' => __('messages.upcoming'),
-                    
-                        'gray' => __('messages.inactive'),
-                    ]),
+                TextColumn::make('computed_status')
+                ->label(__("messages.status"))
+                ->badge()
+                ->formatStateUsing(fn (OfferStatus $state) => $state->label())
+                ->color(fn (OfferStatus $state) => $state->color()),
                 TextColumn::make('created_at')
                     ->label(__('messages.created_at'))
                     ->dateTime()

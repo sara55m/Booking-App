@@ -265,6 +265,11 @@ return [
     'room_type_not_belongs_to_property' =>
     'The selected room type does not belong to this property.',
     'room_type_details'=>'Room Type Details',
+    'notify_users' => 'Notify Users',
+    'notify_users_help' => 'Send an email notification to users when this offer becomes active.',
+    'notification_sent_at' => 'Notification Sent At',
+    'receive_marketing_emails'=>'Receive Marketing Emails',
+    'unlimited'=>'UnLimited',
 
 
     //api messages
@@ -386,4 +391,8 @@ return [
 
     'booking_expired' => 'Booking Expired',
     'booking_expired_admin_notification' => 'Booking :booking has expired due to unpaid payment and was automatically cancelled.',
+
+    'greeting'=>'Greetings :name',
+    'view_offer' => 'View Offer',
+    'thank_you' => 'Thank you for choosing us!',
 ];

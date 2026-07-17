@@ -10,6 +10,7 @@ use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 
+
 class OfferForm
 {
     public static function configure(Schema $schema): Schema
@@ -131,6 +132,15 @@ class OfferForm
                                 ->required()
                                 ->default(true)
                                 ->label(__('messages.is_active')),
+                            Toggle::make('notify_users')
+                                ->required()
+                                ->default(false)
+                                ->label(__('messages.notify_users')),
+                                TextInput::make('notification_sent_at')
+                                ->label(__('messages.notification_sent_at'))
+                                ->formatStateUsing(fn ($state) => $state ?? __('messages.never'))
+                                ->disabled()
+                                ->dehydrated(false),
                         ])
                         ->columns(2),
 

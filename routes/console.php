@@ -7,6 +7,7 @@ use App\Jobs\ProcessExpiredBookingsJob;
 use App\Jobs\CheckBookingBalanceDueJob;
 use App\Jobs\CancelUnpaidOverdueBookingsJob;
 use App\Jobs\MarkCompletedBookingsJob;
+use App\Jobs\ProcessOfferNotificationsJob;
 
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
@@ -24,3 +25,6 @@ Schedule::job(new CancelUnpaidOverdueBookingsJob)->daily();
 //schedule mark bookings as completed job to run every hour
 Schedule::job(new MarkCompletedBookingsJob)
     ->hourly();
+
+//schedule active offers notification job to run daily
+Schedule::job(new ProcessOfferNotificationsJob)->hourly();

@@ -263,6 +263,11 @@ return [
     'guests_exceed_room_capacity' =>
     'لا يمكن أن يتجاوز عدد النزلاء سعة الغرفة (:capacity).',
     'room_type_details'=>'تفاصيل نوع الغرفة',
+    'notify_users' => 'إشعار المستخدمين',
+    'notify_users_help' => 'إرسال إشعار بريد إلكتروني للمستخدمين عند تفعيل هذا العرض.',
+    'notification_sent_at' => 'تاريخ إرسال الإشعار',
+    'receive_marketing_emails'=>'استلام الرسائل التسويقية',
+    'unlimited'=>'غير محدود',
 
     //api messages
     //properties
@@ -378,4 +383,8 @@ return [
 
     'booking_expired' => 'انتهت صلاحية الحجز',
     'booking_expired_admin_notification' => 'انتهت صلاحية الحجز :booking بسبب عدم الدفع وتم إلغاؤه تلقائياً.',
+
+    'greeting'=>'مرحبا :name',
+    'view_offer' => 'عرض التفاصيل',
+    'thank_you' => 'شكراً لاختيارك لنا!',
 ];
