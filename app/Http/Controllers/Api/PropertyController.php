@@ -11,6 +11,7 @@ use App\Http\Resources\RoomResource;
 use App\Http\Resources\ReviewResource;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
+use App\Http\Requests\Rooms\CheckAvailabilityRequest;
 class PropertyController extends Controller
 {
     public function index(Request $request)
@@ -65,27 +66,35 @@ class PropertyController extends Controller
         ]);
     }
 
-    public function availability(Request $request,Property $property)
+    public function availability(CheckAvailabilityRequest $request,Property $property)
     {
-        $request->validate([
-            'check_in' => 'required|date|after_or_equal:today',
-            'check_out' => 'required|date|after:check_in',
-            'guests_number' => 'nullable|integer|min:1',
-        ]);
+        $validated = $request->validated();
 
-        $rooms=$property->rooms()->whereDoesntHave('bookings', function ($query) use ($request) {
-            $query->where(function ($q) use ($request) {
-                $q->where('check_in', '<', $request->check_out)
-                    ->where('check_out', '>', $request->check_in);
-            });
-        })->when($request->guests_number, function ($query) use ($request) {
-            $query->where('capacity', '>=', $request->guests_number);
-        })->with('amenities','roomType','images','cover_image')->get();
+        $rooms=$property->rooms()->availableBetween($validated['check_in'], $validated['check_out'])
+        ->forGuests($validated['guests_number'] ?? null)
+        ->forType($validated['room_type_id'] ?? null)
+        ->with([
+            'amenities',
+            'roomType',
+            'images',
+            'coverImage',
+        ])
+        ->paginate(10);;
 
         return response()->json([
             'status_code'=>200,
             'message'=>__('messages.availability_retrieved_successfully'),
-            'data'=>RoomResource::collection($rooms)
+            'data'=>RoomResource::collection($rooms),
+            'pagination' => [
+
+                    'current_page' => $rooms->currentPage(),
+
+                    'last_page' => $rooms->lastPage(),
+
+                    'per_page' => $rooms->perPage(),
+
+                    'total' => $rooms->total(),
+                ]
         ]);
     }
 

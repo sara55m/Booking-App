@@ -262,6 +262,8 @@ return [
     'view_rooms'=>'View Rooms',
     'view_properties'=>'View Properties',
     'room_type_description'=>'Room Type Description',
+    'room_type_not_belongs_to_property' =>
+    'The selected room type does not belong to this property.',
 
 
     //api messages

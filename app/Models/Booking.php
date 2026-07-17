@@ -113,9 +113,9 @@ class Booking extends Model
     {
         return !self::where('room_id', $roomId)
             ->where('id', '!=', $recordId) // Exclude current booking when checking availability during update
-            ->where('status', '!=', 'cancelled')
+            ->where('status', '!=', BookingStatus::CANCELLED)
             ->where(function ($query) {
-                $query->where('status', '!=', 'pending')
+                $query->where('status', '!=', BookingStatus::PENDING)
                     ->orWhere('expires_at', '>', now());
             })//exclude expired pending bookings
             ->where(function ($query) use ($checkIn, $checkOut) {

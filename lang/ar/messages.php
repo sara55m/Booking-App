@@ -224,6 +224,8 @@ return [
     'view_rooms'=>'عرض الغرف',
     'view_properties'=>'عرض العقارات',
     'room_type_description'=>'وصف نوع الغرفة',
+    'room_type_not_belongs_to_property' =>
+    'نوع الغرفة المحدد لا ينتمي إلى هذا العقار.',
 
     //notifications
 
