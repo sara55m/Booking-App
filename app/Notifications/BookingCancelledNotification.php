@@ -43,41 +43,67 @@ class BookingCancelledNotification extends Notification implements ShouldQueue
         $returnedPoints=$this->booking->payments()->sum('redeemed_points');
 
         return (new MailMessage)
-            ->subject('Booking Cancelled')
-            ->greeting('Hello '.$notifiable->name.',')
-            ->line('Your booking has been cancelled successfully.')
-            ->line('Booking Reference: '.$this->booking->reference)
-            ->line('Property: '.$this->booking->property->name)
-            ->line('Check-in: '.$this->booking->check_in->format('d M Y'))
-            ->line('Check-out: '.$this->booking->check_out->format('d M Y'))
-            ->line('Cancellation Date: '.now()->format('d M Y H:i'))
+        ->subject(__('messages.booking_cancelled.subject'))
+        ->greeting(__('messages.greeting', [
+            'name' => $notifiable->name,
+        ]))
+        ->line(__('messages.booking_cancelled.introduction'))
+        ->line(__('messages.booking_cancelled.booking_reference', [
+            'reference' => $this->booking->reference,
+        ]))
+        ->line(__('messages.booking_cancelled.property', [
+            'property' => $this->booking->property->name,
+        ]))
+        ->line(__('messages.booking_cancelled.check_in', [
+            'date' => $this->booking->check_in->format('d M Y'),
+        ]))
+        ->line(__('messages.booking_cancelled.check_out', [
+            'date' => $this->booking->check_out->format('d M Y'),
+        ]))
+        ->line(__('messages.booking_cancelled.cancellation_date', [
+            'date' => now()->format('d M Y H:i'),
+        ]))
 
-            ->line('')
+        ->line('')
 
-            ->line('Refund Summary')
+        ->line(__('messages.booking_cancelled.refund_summary'))
 
-            ->line('Refunded Amount: '.number_format($refundedAmount, 2).' EGP')
+        ->line(__('messages.booking_cancelled.refunded_amount', [
+            'amount' => number_format($refundedAmount, 2),
+        ]))
 
-            ->line('Payment Status: '.ucfirst($this->booking->payment_status->value))
+        ->line(__('messages.booking_cancelled.payment_status', [
+            'status' => ucfirst($this->booking->payment_status->value),
+        ]))
 
-            ->line('Booking Status: '.ucfirst($this->booking->status->value))
+        ->line(__('messages.booking_cancelled.booking_status', [
+            'status' => ucfirst($this->booking->status->value),
+        ]))
 
-            ->line('')
+        ->line('')
 
-            ->line('Reward Points')
+        ->line(__('messages.booking_cancelled.reward_points'))
 
-            ->line('Returned Reward Points: '.$returnedPoints)
-            ->line('Reversed Earned Points: '.$reversedPoints)
-            ->line('Current Reward Balance: '.$notifiable->fresh()->reward_points)
+        ->line(__('messages.booking_cancelled.returned_reward_points', [
+            'points' => $returnedPoints,
+        ]))
 
-            ->line('')
+        ->line(__('messages.booking_cancelled.reversed_earned_points', [
+            'points' => $reversedPoints,
+        ]))
 
-            ->line('The refund has been initiated successfully.')
-            ->line('Depending on your bank or card issuer, the refunded amount may take 2-7 business days to appear on your statement.')
+        ->line(__('messages.booking_cancelled.current_reward_balance', [
+            'points' => $notifiable->fresh()->reward_points,
+        ]))
 
-            ->line('If you did not request this cancellation or have any questions, please contact our support team.')
+        ->line('')
 
-            ->salutation('Thank you for using our platform.');
+        ->line(__('messages.booking_cancelled.refund_notice'))
+
+        ->line(__('messages.booking_cancelled.contact_support'))
+
+        ->salutation(__('messages.thank_you'));
+            
     }
 
     /**

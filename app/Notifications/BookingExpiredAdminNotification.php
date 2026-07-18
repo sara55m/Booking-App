@@ -35,7 +35,7 @@ class BookingExpiredAdminNotification extends Notification implements ShouldQueu
     public function toDatabase(object $notifiable): array
     {
         return FilamentNotification::make()
-            ->title(__('messages.booking_expired'))
+            ->title(__('messages.booking_expired_1'))
             ->body(__('messages.booking_expired_admin_notification', [
                 'booking' => $this->booking->reference,
             ]))

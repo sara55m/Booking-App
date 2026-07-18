@@ -35,7 +35,7 @@ class BookingCancelledAdminNotification extends Notification implements ShouldQu
     public function toDatabase(object $notifiable): array
     {
         return FilamentNotification::make()
-            ->title(__('messages.booking_cancelled'))
+            ->title(__('messages.booking_cancelled_1'))
             ->body(__('messages.booking_cancelled_admin_notification', [
                 'reference' => $this->booking->reference,
                 'customer' => $this->booking->user->name,

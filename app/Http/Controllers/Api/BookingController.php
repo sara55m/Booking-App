@@ -84,7 +84,7 @@ class BookingController extends Controller
         }
 
         //check capacity
-        if($data['guests_count'] > $room->capacity) {
+        if($data['guests_count'] > $room->roomType->capacity) {
             return response()->json(['status_code'=>422,'message' => __('messages.number_of_guests_exceeds_capacity')], 422);
         }
         // Check if room is available for the given dates

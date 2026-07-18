@@ -13,8 +13,9 @@ use Laravel\Sanctum\HasApiTokens;
 use App\Models\Property;
 use App\Models\RewardPoint;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Contracts\Translation\HasLocalePreference;
 
-class User extends Authenticatable implements FilamentUser,MustVerifyEmail
+class User extends Authenticatable implements FilamentUser,MustVerifyEmail,HasLocalePreference
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable,HasApiTokens,SoftDeletes;
@@ -36,7 +37,8 @@ class User extends Authenticatable implements FilamentUser,MustVerifyEmail
         'otp_expires_at',
         'email_verified_at',
         'reward_points',
-        'receive_marketing_emails'
+        'receive_marketing_emails',
+        'locale',
     ];
 
     /**
@@ -62,6 +64,11 @@ class User extends Authenticatable implements FilamentUser,MustVerifyEmail
             'password' => 'hashed',
             'receive_marketing_emails'=>'boolean'
         ];
+    }
+
+    public function preferredLocale(): string
+    {
+        return $this->locale;
     }
 
     public function bookings()

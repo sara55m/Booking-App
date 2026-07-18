@@ -35,11 +35,14 @@ class BookingExpiredNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject('Booking Expired')
-            ->greeting('Hello!'.$notifiable->name)
-            ->line('Your booking has expired because payment was not completed in time.')
-            ->line('The reserved room is now available for other users.')
-            ->line('Thank you.');
+            ->subject(__('messages.booking_expired.subject'))
+            ->greeting(__('messages.greeting', [
+                'name' => $notifiable->name,
+            ]))
+            ->line(__('messages.booking_expired.introduction'))
+            ->line(__('messages.booking_expired.room_released'))
+            ->line(__('messages.booking_expired.book_again'))
+            ->salutation(__('messages.thank_you'));
     }
 
     /**

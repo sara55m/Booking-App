@@ -42,34 +42,45 @@ class BookingConfirmedNotification extends Notification implements ShouldQueue
         );
 
         return (new MailMessage)
-            ->subject('Booking Confirmed')
-            ->greeting('Hello '.$notifiable->name)
+            ->subject(__('messages.booking_confirmed.subject'))
+            ->greeting(__('messages.greeting', [
+                'name' => $notifiable->name,
+            ]))
 
-            ->line('Your booking has been confirmed successfully.')
+            ->line(__('messages.booking_confirmed.introduction'))
 
-            ->line('Booking Reference: '.$this->booking->reference)
+            ->line(__('messages.booking_confirmed.booking_reference', [
+                'reference' => $this->booking->reference,
+            ]))
 
-            ->line('Property: '.$this->booking->property->name)
+            ->line(__('messages.booking_confirmed.property', [
+                'property' => $this->booking->property->name,
+            ]))
 
-            ->line('Total Price: '.$this->booking->total_price.' EGP')
+            ->line(__('messages.booking_confirmed.total_price', [
+                'amount' => number_format($this->booking->total_price, 2),
+            ]))
 
-            ->line('Status: '.$this->booking->status->value)
+            ->line(__('messages.booking_confirmed.booking_status', [
+                'status' => ucfirst($this->booking->status->value),
+            ]))
 
-            ->line('Payment Status: '.$this->booking->payment_status->value)
+            ->line(__('messages.booking_confirmed.payment_status', [
+                'status' => ucfirst($this->booking->payment_status->value),
+            ]))
 
-            ->line(
-                'Check-in: ' .
-                $this->booking->check_in
-                    ->format('d F Y \a\t h:i:s a')
-            )
+            ->line(__('messages.booking_confirmed.check_in', [
+                'date' => $this->booking->check_in->format('d F Y \a\t h:i a'),
+            ]))
 
-            ->line(
-                'Check-out: ' .
-                $this->booking->check_out
-                    ->format('d F Y \a\t h:i:s a')
-            )
+            ->line(__('messages.booking_confirmed.check_out', [
+                'date' => $this->booking->check_out->format('d F Y \a\t h:i a'),
+            ]))
 
-            ->line('Thank you for booking with us.')
+            ->line(__('messages.booking_confirmed.invoice_attached'))
+
+            ->line(__('messages.booking_confirmed.thank_you'))
+            
             ->attach($path,[
                 'as' => 'invoice.pdf',
                 'mime' => 'application/pdf',

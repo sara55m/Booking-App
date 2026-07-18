@@ -2,6 +2,9 @@
 
 return [
     //filament dashboard
+    'language'=>'اللغة',
+    'arabic'=>'العربية',
+    'english'=>'الانجليزية',
     'dashboard' => 'لوحة التحكم',
     'properties' => 'العقارات',
     'property'=>'العقار',
@@ -229,9 +232,9 @@ return [
 
     //notifications
 
-    'booking_confirmed' => 'تم تأكيد الحجز',
+    'booking_confirmed_1' => 'تم تأكيد الحجز',
     'booking_confirmed_admin_notification' =>'تم تأكيد الحجز :reference بواسطة :customer للعقار :property.',
-    'booking_cancelled'=>'تم الغاء الحجز',
+    'booking_cancelled_1'=>'تم الغاء الحجز',
     'booking_cancelled_admin_notification'=>'تم الغاء الحجز :reference بواسطة :customer للعقار :property.',
 
     'booking_payment_failed' =>'فشل عملية دفع الحجز',
@@ -383,7 +386,7 @@ return [
 
     'booking_auto_cancelled_subject' => 'تم إلغاء حجزك',
 
-    'booking_expired' => 'انتهت صلاحية الحجز',
+    'booking_expired_1' => 'انتهت صلاحية الحجز',
     'booking_expired_admin_notification' => 'انتهت صلاحية الحجز :booking بسبب عدم الدفع وتم إلغاؤه تلقائياً.',
 
     'greeting'=>'مرحبا :name',
@@ -398,4 +401,83 @@ return [
     'booking_reminder_room'=> 'الغرفة: :room',
     'booking_reminder_guests'=>'عدد النزلاء: :guests',
     'booking_arrival_reminder_closing'=> 'نتطلع لاستقبالكم ونتمنى لكم إقامة ممتعة!',
+
+    //booking cancelled notification
+    'booking_cancelled' => [
+    'subject' => 'تم إلغاء الحجز',
+    'introduction' => 'تم إلغاء حجزك بنجاح.',
+    'booking_reference' => 'رقم مرجع الحجز: :reference',
+    'property' => 'مكان الإقامة: :property',
+    'check_in' => 'تاريخ تسجيل الوصول: :date',
+    'check_out' => 'تاريخ تسجيل المغادرة: :date',
+    'cancellation_date' => 'تاريخ الإلغاء: :date',
+
+    'refund_summary' => 'ملخص الاسترداد',
+    'refunded_amount' => 'المبلغ المسترد: :amount جنيه مصري',
+    'payment_status' => 'حالة الدفع: :status',
+    'booking_status' => 'حالة الحجز: :status',
+
+    'reward_points' => 'نقاط المكافآت',
+    'returned_reward_points' => 'النقاط المعادة: :points',
+    'reversed_earned_points' => 'النقاط المكتسبة التي تم خصمها: :points',
+    'current_reward_balance' => 'الرصيد الحالي من النقاط: :points',
+
+    'refund_notice' => 'تم بدء إجراءات استرداد المبلغ بنجاح. وقد يستغرق ظهور المبلغ المسترد في حسابك من يومين إلى سبعة أيام عمل حسب البنك أو جهة إصدار البطاقة.',
+    'contact_support' => 'إذا لم تطلب إلغاء هذا الحجز أو كانت لديك أي استفسارات، يرجى التواصل مع فريق الدعم.',
+    ],
+
+    //booking confirmed notification
+    'booking_confirmed' => [
+    'subject' => 'تم تأكيد الحجز',
+    'introduction' => 'تم تأكيد حجزك بنجاح.',
+    'booking_reference' => 'رقم مرجع الحجز: :reference',
+    'property' => 'مكان الإقامة: :property',
+    'total_price' => 'إجمالي السعر: :amount جنيه مصري',
+    'booking_status' => 'حالة الحجز: :status',
+    'payment_status' => 'حالة الدفع: :status',
+    'check_in' => 'تاريخ تسجيل الوصول: :date',
+    'check_out' => 'تاريخ تسجيل المغادرة: :date',
+    'invoice_attached' => 'تم إرفاق فاتورة الحجز مع هذا البريد الإلكتروني.',
+    'thank_you' => 'شكراً لاختياركم منصتنا. نتطلع إلى استقبالكم!',
+    ],
+
+    //booking expired notification
+    'booking_expired' => [
+    'subject' => 'انتهت صلاحية الحجز',
+    'introduction' => 'انتهت صلاحية حجزك لعدم إتمام عملية الدفع قبل انتهاء المهلة المحددة.',
+    'room_released' => 'تم إتاحة الغرفة المحجوزة مرة أخرى لتكون متوفرة للنزلاء الآخرين.',
+    'book_again' => 'يسعدنا استقبال حجز جديد منك في أي وقت.',
+    ],
+
+    //booking payment reminder notification
+    'payment_reminder' => [
+    'subject' => 'أكمل دفع الحجز',
+    'introduction' => 'حجزك قيد الانتظار حالياً.',
+    'complete_payment' => 'يرجى إتمام عملية الدفع قبل انتهاء صلاحية الحجز.',
+    'expiration_time' => 'مهلة الدفع: :minutes دقيقة',
+    'expiration_warning' => 'إذا لم يتم إتمام الدفع قبل انتهاء المهلة، فسيتم إلغاء الحجز تلقائياً.',
+    'thank_you' => 'شكراً لاختيارك منصتنا للحجوزات.',
+    ],
+
+    //booking payment received
+    'payment_received' => [
+    'subject' => 'تم استلام الدفعة',
+    'introduction' => 'تم استلام دفعتك بنجاح.',
+    'booking_reference' => 'رقم مرجع الحجز: :reference',
+    'booking_total' => 'إجمالي قيمة الحجز: :amount',
+    'payment_amount' => 'المبلغ المدفوع: :currency :amount',
+    'remaining_amount' => 'المبلغ المتبقي: :currency :amount',
+    'payment_type' => 'نوع الدفعة: :type',
+    'thank_you' => 'شكراً لاختيارك منصتنا للحجوزات.',
+    'invoice_attached' => 'تم إرفاق الفاتورة المحدثة مع هذا البريد الإلكتروني.',
+    ],
+
+    //review reminder notification
+    'review_reminder' => [
+    'subject' => 'كيف كانت إقامتك؟',
+    'introduction' => 'نتمنى أن تكون قد استمتعت بإقامتك في :property.',
+    'feedback_request' => 'يسعدنا معرفة رأيك في تجربتك. تساعدنا ملاحظاتك على تحسين خدماتنا كما تساعد النزلاء الآخرين في اتخاذ قراراتهم.',
+    'leave_review' => 'أضف تقييمك',
+    'thank_you' => 'شكراً لاختيارك منصتنا للحجوزات، ونتطلع لاستقبالكم مرة أخرى قريباً.',
+    ],
 ];

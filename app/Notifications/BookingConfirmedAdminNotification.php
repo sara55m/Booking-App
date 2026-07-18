@@ -35,7 +35,7 @@ class BookingConfirmedAdminNotification extends Notification implements ShouldQu
     public function toDatabase(object $notifiable): array
     {
         return FilamentNotification::make()
-            ->title(__('messages.booking_confirmed'))
+            ->title(__('messages.booking_confirmed_1'))
             ->body(__('messages.booking_confirmed_admin_notification', [
                 'reference' => $this->booking->reference,
                 'customer' => $this->booking->user->name,

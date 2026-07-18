@@ -51,6 +51,15 @@ class UserForm
                                 ->required()
                                 ->default(true),
 
+                            Select::make('locale')
+                                ->label(__('messages.language'))
+                                ->options([
+                                    'en' => __('messages.english'),
+                                    'ar' => __('messages.arabic'),
+                                ])
+                                ->default('en')
+                                ->required(),
+
                             FileUpload::make('image')
                                 ->label(__("messages.image"))
                                 ->image()

@@ -2,6 +2,9 @@
 
 return [
     //filament dashboard
+    'language'=>'Language',
+    'arabic'=>'Arabic',
+    'english'=>'English',
     'dashboard' => 'Dashboard',
     'properties' => 'Properties',
     'property'=>'Property',
@@ -218,11 +221,11 @@ return [
     'reference'=>'Reference',
     'booking_reference'=>'Booking Reference',
     //notifications
-    'booking_confirmed' => 'Booking Confirmed',
+    'booking_confirmed_1' => 'Booking Confirmed',
 
     'booking_confirmed_admin_notification' =>
     'Booking :reference has been confirmed by :customer for :property.',
-    'booking_cancelled' => 'Booking Cancelled',
+    'booking_cancelled_1' => 'Booking Cancelled',
 
     'booking_cancelled_admin_notification' =>
     'Booking :reference has been cancelled by :customer for :property.',
@@ -391,7 +394,7 @@ return [
     'booking_auto_cancelled_admin_title' => 'Booking Auto-Cancelled (Unpaid)',
     'booking_auto_cancelled_admin_body' => 'Booking :reference by :customer for :property was auto-cancelled due to unpaid balance. Deposit forfeited.',
 
-    'booking_expired' => 'Booking Expired',
+    'booking_expired_1' => 'Booking Expired',
     'booking_expired_admin_notification' => 'Booking :booking has expired due to unpaid payment and was automatically cancelled.',
 
     'greeting'=>'Greetings :name',
@@ -406,4 +409,83 @@ return [
     'booking_reminder_room'=> 'Room: :room',
     'booking_reminder_guests'=>'Number of Guests: :guests',
     'booking_arrival_reminder_closing'=>'We look forward to welcoming you and hope you have a wonderful stay!',
+
+    //booking cancelled notification
+    'booking_cancelled' => [
+    'subject' => 'Booking Cancelled',
+    'introduction' => 'Your booking has been cancelled successfully.',
+    'booking_reference' => 'Booking Reference: :reference',
+    'property' => 'Property: :property',
+    'check_in' => 'Check-in: :date',
+    'check_out' => 'Check-out: :date',
+    'cancellation_date' => 'Cancellation Date: :date',
+
+    'refund_summary' => 'Refund Summary',
+    'refunded_amount' => 'Refunded Amount: :amount EGP',
+    'payment_status' => 'Payment Status: :status',
+    'booking_status' => 'Booking Status: :status',
+
+    'reward_points' => 'Reward Points',
+    'returned_reward_points' => 'Returned Reward Points: :points',
+    'reversed_earned_points' => 'Reversed Earned Points: :points',
+    'current_reward_balance' => 'Current Reward Balance: :points',
+
+    'refund_notice' => 'The refund has been initiated successfully. Depending on your bank or card issuer, the refunded amount may take 2–7 business days to appear on your statement.',
+    'contact_support' => 'If you did not request this cancellation or have any questions, please contact our support team.',
+    ],
+
+    //booking confirmed notification
+    'booking_confirmed' => [
+        'subject' => 'Booking Confirmed',
+        'introduction' => 'Your booking has been confirmed successfully.',
+        'booking_reference' => 'Booking Reference: :reference',
+        'property' => 'Property: :property',
+        'total_price' => 'Total Price: :amount EGP',
+        'booking_status' => 'Booking Status: :status',
+        'payment_status' => 'Payment Status: :status',
+        'check_in' => 'Check-in: :date',
+        'check_out' => 'Check-out: :date',
+        'invoice_attached' => 'Your invoice is attached to this email.',
+        'thank_you' => 'Thank you for booking with us. We look forward to welcoming you!',
+    ],
+
+    //booking expired notification
+    'booking_expired' => [
+    'subject' => 'Booking Expired',
+    'introduction' => 'Your booking has expired because payment was not completed before the payment deadline.',
+    'room_released' => 'The reserved room has been released and is now available for other guests.',
+    'book_again' => 'You are welcome to make a new booking at any time.',
+    ],
+
+    //booking payment reminder notification
+    'payment_reminder' => [
+    'subject' => 'Complete Your Booking Payment',
+    'introduction' => 'Your booking is currently pending.',
+    'complete_payment' => 'Please complete your payment before the reservation expires.',
+    'expiration_time' => 'Payment deadline: :minutes minutes',
+    'expiration_warning' => 'If payment is not completed before the deadline, your booking will be cancelled automatically.',
+    'thank_you' => 'Thank you for choosing our booking platform.',
+    ],
+
+    //booking payment received
+    'payment_received' => [
+    'subject' => 'Payment Received',
+    'introduction' => 'We have successfully received your payment.',
+    'booking_reference' => 'Booking Reference: :reference',
+    'booking_total' => 'Booking Total: :amount',
+    'payment_amount' => 'Payment Amount: :currency :amount',
+    'remaining_amount' => 'Remaining Amount: :currency :amount',
+    'payment_type' => 'Payment Type: :type',
+    'thank_you' => 'Thank you for booking with us.',
+    'invoice_attached' => 'Your updated invoice is attached to this email.',
+    ],
+
+    //review reminder notification
+    'review_reminder' => [
+    'subject' => 'How was your stay?',
+    'introduction' => 'We hope you enjoyed your stay at :property.',
+    'feedback_request' => 'We would love to hear about your experience. Your feedback helps us improve our services and assists other guests in making informed decisions.',
+    'leave_review' => 'Leave a Review',
+    'thank_you' => 'Thank you for choosing our booking platform. We hope to welcome you again soon!',
+],
 ];

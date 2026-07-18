@@ -37,15 +37,23 @@ class ReviewReminderNotification extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('How was your stay?')
-            ->greeting('Hi '.$notifiable->name.',')
-            ->line('We hope you enjoyed your stay at '.$this->booking->property->name)
-            ->line('We would love to hear your feedback.')
-            ->action(
-                'Leave a Review',
-                config('app.frontend_url')."/bookings/{$this->booking->reference}/review"
-            )
-            ->line('Thank you for choosing us!');
+        ->subject(__('messages.review_reminder.subject'))
+        ->greeting(__('messages.greeting', [
+            'name' => $notifiable->name,
+        ]))
+    
+        ->line(__('messages.review_reminder.introduction', [
+            'property' => $this->booking->property->name,
+        ]))
+    
+        ->line(__('messages.review_reminder.feedback_request'))
+    
+        ->action(
+            __('messages.review_reminder.leave_review'),
+            config('app.frontend_url') . "/bookings/{$this->booking->reference}/review"
+        )
+    
+        ->line(__('messages.review_reminder.thank_you'));
     }
 
     /**

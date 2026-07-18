@@ -50,27 +50,43 @@ class PaymentSucceededNotification extends Notification implements ShouldQueue
         $currency = strtoupper($this->booking->currency);
 
         return (new MailMessage)
-            ->subject('Payment Received')
-            ->greeting('Hello '.$notifiable->name)
-
-            ->line('We have successfully received your payment.')
-            ->line('Booking Reference: '.$this->booking->reference)
-
-            ->line('Booking Total: '.number_format($this->booking->total_price,2))
-
-            ->line('Payment Amount: '.$currency." ".number_format($this->payment->amount, 2))
-
-            ->line('Remaining Amount: '.$currency." ".number_format($this->payment->remaining, 2))
-
-            ->line('Payment Type: '.$status)
-
-            ->line('Thank you for booking with us.')
-
-            ->attach($path,[
-                'as' => 'invoice.pdf',
-                'mime' => 'application/pdf',
-            ])
-            ->line('Your updated invoice is attached to this email.');
+        ->subject(__('messages.payment_received.subject'))
+        ->greeting(__('messages.greeting', [
+            'name' => $notifiable->name,
+        ]))
+    
+        ->line(__('messages.payment_received.introduction'))
+    
+        ->line(__('messages.payment_received.booking_reference', [
+            'reference' => $this->booking->reference,
+        ]))
+    
+        ->line(__('messages.payment_received.booking_total', [
+            'amount' => number_format($this->booking->total_price, 2),
+        ]))
+    
+        ->line(__('messages.payment_received.payment_amount', [
+            'currency' => $currency,
+            'amount' => number_format($this->payment->amount, 2),
+        ]))
+    
+        ->line(__('messages.payment_received.remaining_amount', [
+            'currency' => $currency,
+            'amount' => number_format($this->payment->remaining, 2),
+        ]))
+    
+        ->line(__('messages.payment_received.payment_type', [
+            'type' => $status,
+        ]))
+    
+        ->line(__('messages.payment_received.thank_you'))
+    
+        ->attach($path, [
+            'as' => 'invoice.pdf',
+            'mime' => 'application/pdf',
+        ])
+    
+        ->line(__('messages.payment_received.invoice_attached'));
     }
 
     /**

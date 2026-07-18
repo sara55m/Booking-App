@@ -37,12 +37,17 @@ class BookingPaymentReminderNotification extends Notification implements ShouldQ
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject('Complete Your Booking Payment')
-            ->greeting('Hello!'.$notifiable->name)
-            ->line('Your booking is currently pending.')
-            ->line('Please complete payment before the reservation expires.')
-            ->line('Expiration time: 15 minutes')
-            ->line('Thank you for using our booking system.');
+            ->subject(__('messages.payment_reminder.subject'))
+            ->greeting(__('messages.greeting', [
+                'name' => $notifiable->name,
+            ]))
+            ->line(__('messages.payment_reminder.introduction'))
+            ->line(__('messages.payment_reminder.complete_payment'))
+            ->line(__('messages.payment_reminder.expiration_time', [
+                'minutes' => 15,
+            ]))
+            ->line(__('messages.payment_reminder.expiration_warning'))
+            ->line(__('messages.payment_reminder.thank_you'));
     }
 
     /**
