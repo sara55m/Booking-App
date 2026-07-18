@@ -108,9 +108,14 @@ class BookingInfolist
                                     ->placeholder('-'),
 
                                 TextEntry::make('balance_due_date')
-                                ->label(__('messages.balance_due_date'))
-                                ->dateTime()
-                                ->placeholder('-'),
+                                    ->label(__('messages.balance_due_date'))
+                                    ->dateTime()
+                                    ->placeholder('-'),
+
+                                TextEntry::make('arrival_reminder_sent_at')
+                                    ->label(__('messages.arrival_reminder_sent_at'))
+                                    ->since()
+                                    ->placeholder(__('messages.never')),
                             ]),
                     ]),
 

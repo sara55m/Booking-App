@@ -34,6 +34,7 @@ class Booking extends Model
         'invoice_path',
         'balance_due_date',
         'cancellation_reason',
+        'arrival_reminder_sent_at',
     ];
 
     protected $casts = [
@@ -49,6 +50,7 @@ class Booking extends Model
         'expires_at'=>'datetime',
         'balance_due_date' => 'date',
         'cancellation_reason' =>BookingCancellationReason::class,
+        'arrival_reminder_sent_at'=>'datetime',
     ];
 
     public function user()
@@ -194,6 +196,15 @@ class Booking extends Model
     public function scopeForUser(Builder $query, int $userId)
     {
         return $query->where('user_id', $userId);
+    }
+
+    //scope for bookings whose check in is in one day
+    public function scopeReadyForArrivalReminder(Builder $query): Builder
+    {
+        return $query
+            ->where('status', BookingStatus::CONFIRMED)
+            ->whereDate('check_in', now()->addDay()->toDateString())
+            ->whereNull('arrival_reminder_sent_at');
     }
 
     //transition between statuses

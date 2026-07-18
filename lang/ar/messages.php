@@ -268,6 +268,8 @@ return [
     'notification_sent_at' => 'تاريخ إرسال الإشعار',
     'receive_marketing_emails'=>'استلام الرسائل التسويقية',
     'unlimited'=>'غير محدود',
+    'arrival_reminder_sent_at'=>'تاريخ ارسال اشعار الوصول',
+    'never'=>'لم يتم الارسال',
 
     //api messages
     //properties
@@ -387,4 +389,13 @@ return [
     'greeting'=>'مرحبا :name',
     'view_offer' => 'عرض التفاصيل',
     'thank_you' => 'شكراً لاختيارك لنا!',
+
+    //booking reminder notification
+    'booking_arrival_reminder_subject'=> 'إقامتك تبدأ غداً!',
+    'booking_arrival_reminder_introduction'=>'هذا تذكير بأن موعد إقامتك سيبدأ غداً.',
+    'booking_reminder_property'=>'مكان الإقامة: :property',
+    'booking_reminder_check_in'=>'تاريخ تسجيل الوصول: :date',
+    'booking_reminder_room'=> 'الغرفة: :room',
+    'booking_reminder_guests'=>'عدد النزلاء: :guests',
+    'booking_arrival_reminder_closing'=> 'نتطلع لاستقبالكم ونتمنى لكم إقامة ممتعة!',
 ];

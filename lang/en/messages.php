@@ -270,6 +270,8 @@ return [
     'notification_sent_at' => 'Notification Sent At',
     'receive_marketing_emails'=>'Receive Marketing Emails',
     'unlimited'=>'UnLimited',
+    'arrival_reminder_sent_at'=>'Arrival Reminder Sent At',
+    'never'=>'Never Sent',
 
 
     //api messages
@@ -395,4 +397,13 @@ return [
     'greeting'=>'Greetings :name',
     'view_offer' => 'View Offer',
     'thank_you' => 'Thank you for choosing us!',
+
+    //booking reminder notification
+    'booking_arrival_reminder_subject'=> 'Your stay starts tomorrow!',
+    'booking_arrival_reminder_introduction'=>'Just a friendly reminder that your stay begins tomorrow.',
+    'booking_reminder_property'=>'Property: :property',
+    'booking_reminder_check_in'=>'Check-in Date: :date',
+    'booking_reminder_room'=> 'Room: :room',
+    'booking_reminder_guests'=>'Number of Guests: :guests',
+    'booking_arrival_reminder_closing'=>'We look forward to welcoming you and hope you have a wonderful stay!',
 ];
