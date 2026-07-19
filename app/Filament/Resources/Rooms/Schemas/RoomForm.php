@@ -101,6 +101,9 @@ class RoomForm
                                         ->label(__('messages.sort_order'))
                                         ->numeric()
                                         ->default(0),
+                                    TextArea::make('caption')
+                                        ->label(__("messages.description"))
+                                        ->nullable(),
                                 ])
                                 ->collapsible()
                                 ->cloneable()

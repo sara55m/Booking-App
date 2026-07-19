@@ -17,7 +17,9 @@ class Property extends Model
         'reviews_count',
         'average_rating',
         'is_featured',
-        'minimum_partial_payment_percentage'
+        'minimum_partial_payment_percentage',
+        'latitude',
+        'longitude',
     ];
 
     protected $casts = [
@@ -26,6 +28,8 @@ class Property extends Model
         'reviews_count' => 'integer',
         'average_rating' => 'decimal:2',
         'is_featured' => 'boolean',
+        'latitude'=>'decimal:2',
+        'longitude'=>'decimal:2'
     ];
 
     public function city()

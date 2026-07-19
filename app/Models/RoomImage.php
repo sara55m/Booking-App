@@ -11,6 +11,12 @@ class RoomImage extends Model
         'image',
         'is_cover',
         'sort_order',
+        'caption',
+    ];
+
+    protected $casts=[
+        'is_cover'=>'boolean',
+        'sort_order'=>'integer'
     ];
 
     public function room()

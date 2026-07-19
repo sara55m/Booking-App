@@ -18,7 +18,11 @@ class CityResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'slug' => $this->slug,
-            'image'=> $this->image ? asset('storage/' . $this->image) : null,
+            'description'=>$this->description,
+            'latitude'=>$this->latitude,
+            'longitude'=>$this->longitude,
+            'cover_image'=> $this->coverImage ? asset('storage/'.$this->coverImage->image) : null,
+            'images'=>CityImageResource::collection($this->images),
         ];
     }
 }

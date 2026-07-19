@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PropertyImageResource extends JsonResource
+class CityImageResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,7 +16,7 @@ class PropertyImageResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'property_id' => $this->property_id,
+            'city_id' => $this->city_id,
             'image' => asset('storage/'.$this->image),
             'is_cover' => $this->is_cover,
             'sort_order' => $this->sort_order,

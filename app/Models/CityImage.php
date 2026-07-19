@@ -4,14 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class PropertyImage extends Model
+class CityImage extends Model
 {
-    protected $fillable = [
-        'property_id',
+    protected $fillable=[
+        'city_id',
         'image',
-        'is_cover',
         'sort_order',
-        'caption',
+        'is_cover',
+        'caption'
     ];
 
     protected $casts=[
@@ -19,8 +19,8 @@ class PropertyImage extends Model
         'sort_order'=>'integer'
     ];
 
-    public function property()
+    public function city()
     {
-        return $this->belongsTo(Property::class, 'property_id');
+        return $this->belongsTo(City::class, 'city_id');
     }
 }

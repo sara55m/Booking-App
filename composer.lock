@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e21f3653b6017a20d04cd9c577afc147",
+    "content-hash": "52f2f3ec6c56516c2e40f1d3bb37395b",
     "packages": [
         {
             "name": "barryvdh/laravel-dompdf",
@@ -5670,6 +5670,61 @@
                 "source": "https://github.com/MyIntervals/PHP-CSS-Parser/tree/v9.3.0"
             },
             "time": "2026-03-03T17:31:43+00:00"
+        },
+        {
+            "name": "salemaljebaly/filament-map-picker",
+            "version": "v1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/salemaljebaly/filament-map-picker.git",
+                "reference": "4c766817529cb23ececb81b763d3511c3d01139e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/salemaljebaly/filament-map-picker/zipball/4c766817529cb23ececb81b763d3511c3d01139e",
+                "reference": "4c766817529cb23ececb81b763d3511c3d01139e",
+                "shasum": ""
+            },
+            "require": {
+                "filament/filament": "^5.0",
+                "illuminate/support": "^11.0|^12.0",
+                "php": "^8.2"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^9.0|^10.0",
+                "phpunit/phpunit": "^11.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "SalemAljebaly\\FilamentMapPicker\\FilamentMapPickerServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "SalemAljebaly\\FilamentMapPicker\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A Leaflet / OpenStreetMap map picker field for Filament v5.",
+            "keywords": [
+                "OpenStreetMap",
+                "filament",
+                "laravel",
+                "leaflet",
+                "map",
+                "picker"
+            ],
+            "support": {
+                "issues": "https://github.com/salemaljebaly/filament-map-picker/issues",
+                "source": "https://github.com/salemaljebaly/filament-map-picker/tree/v1.0.3"
+            },
+            "time": "2026-02-06T22:59:37+00:00"
         },
         {
             "name": "scrivo/highlight.php",

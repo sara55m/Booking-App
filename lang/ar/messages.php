@@ -273,6 +273,8 @@ return [
     'unlimited'=>'غير محدود',
     'arrival_reminder_sent_at'=>'تاريخ ارسال اشعار الوصول',
     'never'=>'لم يتم الارسال',
+    'latitude' => 'خط العرض',
+    'longitude' => 'خط الطول',
 
     //api messages
     //properties

@@ -275,6 +275,8 @@ return [
     'unlimited'=>'UnLimited',
     'arrival_reminder_sent_at'=>'Arrival Reminder Sent At',
     'never'=>'Never Sent',
+    'latitude'=>'Latitude',
+    'longitude'=>'Longitude',
 
 
     //api messages

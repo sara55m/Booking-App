@@ -20,6 +20,7 @@ class RoomImageResource extends JsonResource
             'image' => asset('storage/'.$this->image),
             'is_cover' => $this->is_cover,
             'sort_order' => $this->sort_order,
+            'caption'=>$this->caption,
         ];
     }
 }

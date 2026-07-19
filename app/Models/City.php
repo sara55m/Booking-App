@@ -10,8 +10,28 @@ class City extends Model
         'name',
         'slug',
         'is_active',
-        'image'
+        'is_featured',
+        'description',
+        'latitude',
+        'longitude',
     ];
+
+    protected $casts=[
+        'is_active'=>'boolean',
+        'is_featured'=>'boolean',
+        'latitude'=>'decimal:2',
+        'longitude'=>'decimal:2'
+    ];
+
+    public function images(){
+        return $this->hasMany(CityImage::class);
+    }
+
+    public function coverImage()
+    {
+        return $this->hasOne(CityImage::class)
+        ->where('is_cover', true);
+    }
 
     public function properties()
     {

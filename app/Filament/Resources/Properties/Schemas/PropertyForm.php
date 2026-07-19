@@ -6,11 +6,15 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextArea;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\FileUpload;
+use SalemAljebaly\FilamentMapPicker\MapPicker;
+use Filament\Schemas\Components\Section;
+use App\Models\City;
+
 
 class PropertyForm
 {
@@ -26,7 +30,7 @@ class PropertyForm
                                 TextInput::make('name')
                                 ->label(__('messages.name'))
                                 ->required(),
-                                Textarea::make('description')
+                                TextArea::make('description')
                                 ->label(__('messages.description'))
                                 ->rows(3),
                                 Select::make('property_type_id')
@@ -42,18 +46,6 @@ class PropertyForm
                                     ->suffix('%')
                                     ->helperText(__('messages.minimum_partial_payment_percentage_help'))
                                     ->nullable(),
-                            ]),
-                        Tab::make('Location')
-                            ->label(__('messages.location'))
-                            ->schema([
-                                Select::make('city')
-                                    ->relationship('city', 'name')
-                                    ->label(__('messages.city'))
-                                    ->preload()
-                                    ->required(),
-                                Textarea::make('address')
-                                    ->label(__('messages.address'))
-                                    ->required(),
                             ]),
                         Tab::make('Facilities')
                             ->label(__('messages.facilities'))
@@ -93,6 +85,10 @@ class PropertyForm
                                     ->label(__('messages.sort_order'))
                                     ->numeric()
                                     ->default(0),
+
+                                TextArea::make('caption')
+                                ->label(__("messages.description"))
+                                ->nullable(),
                             ])
                             ->collapsible()
                             ->cloneable()
@@ -129,6 +125,48 @@ class PropertyForm
                                     ->default(true),
                             ]),
                     ])->columns(2)->columnSpanFull(),
+                    Section::make(__('messages.location'))
+                        ->schema([
+                            Select::make('city_id')
+                                ->relationship('city', 'name')
+                                ->label(__('messages.city'))
+                                ->preload()
+                                ->required()
+                                ->live()
+                                ->afterStateUpdated(function ($state, callable $set) {
+                                    $city = City::find($state);
+                                
+                                    if ($city) {
+                                        $set('latitude', $city->latitude);
+                                        $set('longitude', $city->longitude);
+                                    }
+                                }),
+                            Textarea::make('address')
+                                ->label(__('messages.address'))
+                                ->required(),
+                            TextInput::make('latitude')
+                            ->label(__("messages.latitude"))
+                            ->numeric()
+                            ->required()
+                            ->live()
+                            ->readOnly(),
+
+                            TextInput::make('longitude')
+                                ->label(__("messages.longitude"))
+                                ->numeric()
+                                ->required()
+                                ->live()
+                                ->readOnly(),
+
+                            MapPicker::make('location')
+                                ->label(__('messages.location'))
+                                ->latlngFields('latitude', 'longitude')
+                                ->dehydrated(false)
+                                ->searchable()
+                                ->collapsibleSearch()
+                                ->draggable()
+                                ->height(500),
+                        ])->columns(2)->columnSpanFull(),
             ]);
     }
 }
