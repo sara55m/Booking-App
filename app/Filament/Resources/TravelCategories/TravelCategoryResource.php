@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\TravelCategories;
 
 use App\Filament\Resources\TravelCategories\Pages\CreateTravelCategory;
+use App\Filament\Resources\TravelCategories\Pages\ViewTravelCategory;
 use App\Filament\Resources\TravelCategories\Pages\EditTravelCategory;
 use App\Filament\Resources\TravelCategories\Pages\ListTravelCategories;
 use App\Filament\Resources\TravelCategories\Schemas\TravelCategoryForm;
@@ -62,6 +63,7 @@ class TravelCategoryResource extends Resource
         return [
             'index' => ListTravelCategories::route('/'),
             'create' => CreateTravelCategory::route('/create'),
+            'View' => ViewTravelCategory::route('/{record}/view'),
             'edit' => EditTravelCategory::route('/{record}/edit'),
         ];
     }

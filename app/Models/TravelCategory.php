@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class TravelCategory extends Model
 {
-    protected $fillable = ['name','slug','icon','sort_order','is_active'];
+    protected $fillable = ['name','slug','icon','sort_order','is_active','description'];
 
     public function cities()
     {

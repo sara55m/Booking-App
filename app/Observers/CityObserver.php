@@ -7,12 +7,22 @@ use Illuminate\Support\Facades\Cache;
 
 class CityObserver
 {
+
+    private function clearCache(City $city){
+        Cache::tags(['home'])->forget('home:popular-cities');
+
+        Cache::tags(['travel-categories'])->flush();
+    }
     /**
      * Handle the City "created" event.
      */
     public function created(City $city): void
     {
-        Cache::tags(['home'])->forget('home:popular-cities');
+
+    }
+
+    public function saved(City $city){
+        $this->clearCache($city);
     }
 
     /**
@@ -20,7 +30,7 @@ class CityObserver
      */
     public function updated(City $city): void
     {
-        Cache::tags(['home'])->forget('home:popular-cities');
+
     }
 
     /**
@@ -28,7 +38,7 @@ class CityObserver
      */
     public function deleted(City $city): void
     {
-        Cache::tags(['home'])->forget('home:popular-cities');
+        $this->clearCache($city);
     }
 
     /**

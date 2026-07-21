@@ -500,4 +500,5 @@ return [
     'leave_review' => 'Leave a Review',
     'thank_you' => 'Thank you for choosing our booking platform. We hope to welcome you again soon!',
 ],
+'travel_categories_retrieved_successfully'=>'Travel Categories Retrieved Successfully',
 ];

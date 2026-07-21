@@ -11,6 +11,8 @@ use App\Models\Property;
 use App\Http\Resources\PropertyResource;
 use App\Models\PropertyType;
 use App\Http\Resources\PropertyTypeResource;
+use App\Http\Resources\TravelCategoryResource;
+use App\Models\TravelCategory;
 
 class HomeController extends Controller
 {
@@ -23,7 +25,7 @@ class HomeController extends Controller
                 'properties' => fn ($query) => $query->where('is_active', true),
             ])
             ->having('properties_count', '>', 0)
-            ->with('country')
+            ->with('country','travelCategories')
             ->orderByDesc('properties_count')
             ->limit(8)
             ->get();
@@ -121,4 +123,52 @@ class HomeController extends Controller
             'data'=>PropertyResource::collection($properties)
         ]);
     }
+
+    public function travelCategories(){
+        $travelCategories=Cache::tags(['travelCategories'])->remember(
+            'travel-categories:index',
+            now()->addHours(6),
+            fn()=>TravelCategory::query()
+            ->where('is_active', true)
+            ->orderBy('sort_order')
+            ->get());
+
+            return response()->json([
+                'status_code'=>200,
+                'message'=>__('messages.travel_categories_retrieved_successfully'),
+                'data'=>TravelCategoryResource::collection($travelCategories),
+            ]);
+    }
+
+    public function travelCategoryCities(TravelCategory $travelCategory)
+    {
+        $cacheKey ="travel-categories:{$travelCategory->id}:cities";
+
+        $cities = Cache::tags(['travelCategories'])->remember(
+            $cacheKey,
+            now()->addHours(6),
+            function () use ($travelCategory) {
+                return $travelCategory
+                    ->cities()
+                    ->where('is_active', true)
+                    ->with([
+                        'country',
+                        'coverImage',
+                    ])
+                    ->withCount([
+                        'properties' => fn ($query) => $query->where('is_active', true),
+                    ])
+                    ->orderByDesc('properties_count')
+                    ->get();
+            }
+        );
+
+        return response()->json([
+            'status_code' => 200,
+            'message' => __('messages.cities_retrieved_successfully'),
+            'data' => CityResource::collection($cities),
+        ]);
+    }
+
+
 }

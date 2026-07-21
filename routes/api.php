@@ -90,6 +90,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/home/top-rated-properties', [HomeController::class, 'topRatedProperties']);
     Route::get('/home/deals-and-offers', [HomeController::class, 'dealsAndOffers']);
 
+    //travel categories
+    Route::get('/home/travel_categories', [HomeController::class, 'travelCategories']);
+    Route::get('/home/{travelCategory:slug}/travelCategoryCities', [HomeController::class, 'travelCategoryCities']);
+
+
     //properties
     Route::get('/properties', [PropertyController::class, 'index']);
     Route::get('/properties/{property}', [PropertyController::class, 'show']);

@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+
 class CityResource extends JsonResource
 {
     /**
@@ -27,6 +28,10 @@ class CityResource extends JsonResource
             'longitude'=>$this->longitude,
             'cover_image'=> $this->coverImage ? asset('storage/'.$this->coverImage->image) : null,
             'images'=>CityImageResource::collection($this->images),
+            'travel_categories' =>
+                TravelCategoryResource::collection(
+                    $this->whenLoaded('travelCategories')
+                ),
         ];
     }
 }
