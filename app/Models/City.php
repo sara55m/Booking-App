@@ -43,4 +43,9 @@ class City extends Model
     {
         return $this->belongsTo(Country::class);
     }
+
+    public function travelCategories()
+    {
+        return $this->belongsToMany(TravelCategory::class,'city_travel_category');
+    }
 }

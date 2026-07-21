@@ -22,7 +22,7 @@ class RewardPointResource extends Resource
     {
         return __('messages.reward_points');
     }
-    protected static ?int $navigationSort = 12;
+    protected static ?int $navigationSort = 14;
 
     public static function getModelLabel(): string
     {

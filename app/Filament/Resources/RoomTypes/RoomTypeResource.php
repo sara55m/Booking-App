@@ -22,7 +22,7 @@ class RoomTypeResource extends Resource
         return __('messages.room_types');
     }
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?int $navigationSort = 6;
+    protected static ?int $navigationSort = 8;
 
     public static function getModelLabel(): string
     {

@@ -283,6 +283,10 @@ return [
     'iso_code'=>'Iso Code',
     'cities_count'=>'Cities Count',
     'view_cities'=>'View Cities',
+    'travel_categories'=>'Travel Categories',
+    'travel_categories_and_status'=>'Travel Categories and Status',
+    'travel_category'=>'Travel Category',
+    'is_active_and_sort_order'=>'Activity and Sort Order',
 
 
     //api messages

@@ -23,7 +23,7 @@ class PropertyTypeResource extends Resource
     {
         return __('messages.property_types');
     }
-    protected static ?int $navigationSort = 4;
+    protected static ?int $navigationSort = 6;
 
     public static function getModelLabel(): string
     {

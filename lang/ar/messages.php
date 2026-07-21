@@ -281,6 +281,10 @@ return [
     'iso_code'=>'كود الدولة',
     'cities_count'=>'عدد المدن',
     'view_cities'=>'عرض المدن',
+    'travel_categories'=>'تصنيفات السفر',
+    'travel_categories_and_status'=>'تصنيفات السفر و الحالة',
+    'travel_category'=>'تصنيف السفر',
+    'is_active_and_sort_order'=>'النشاط و الترتيب',
 
     //api messages
     //properties

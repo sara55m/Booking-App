@@ -103,9 +103,15 @@ class CityForm
                                 ])
                                 ->addActionLabel(__('messages.add_image')),
                             ]),
-                        Tab::make('status')
-                            ->label(__("messages.status"))
+                        Tab::make('travel categories and status')
+                            ->label(__("messages.travel_categories_and_status"))
                             ->schema([
+                                Select::make('travelCategories')
+                                    ->relationship('travelCategories', 'name')
+                                    ->label(__("messages.travel_categories"))
+                                    ->multiple()
+                                    ->preload()
+                                    ->searchable(),
                                 Toggle::make('is_featured')
                                     ->label(__('messages.featured'))
                                     ->default(false),

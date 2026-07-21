@@ -25,7 +25,7 @@ class AmenityResource extends Resource
     {
         return __('messages.amenities');
     }
-    protected static ?int $navigationSort = 4;
+    protected static ?int $navigationSort = 5;
 
     public static function getModelLabel(): string
     {

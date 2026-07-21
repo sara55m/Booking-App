@@ -24,7 +24,7 @@ class RoomResource extends Resource
         return __('messages.rooms');
     }
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-key';
-    protected static ?int $navigationSort = 7;
+    protected static ?int $navigationSort = 9;
 
     public static function getModelLabel(): string
     {

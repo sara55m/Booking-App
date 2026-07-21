@@ -24,7 +24,7 @@ class BookingResource extends Resource
     {
         return __('messages.bookings');
     }
-    protected static ?int $navigationSort = 8;
+    protected static ?int $navigationSort = 10;
 
     public static function getModelLabel(): string
     {
