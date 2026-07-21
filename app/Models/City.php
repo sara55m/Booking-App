@@ -9,6 +9,7 @@ class City extends Model
     protected $fillable = [
         'name',
         'slug',
+        'country_id',
         'is_active',
         'is_featured',
         'description',
@@ -36,5 +37,10 @@ class City extends Model
     public function properties()
     {
         return $this->hasMany(Property::class);
+    }
+
+    public function country()
+    {
+        return $this->belongsTo(Country::class);
     }
 }

@@ -23,6 +23,7 @@ class HomeController extends Controller
                 'properties' => fn ($query) => $query->where('is_active', true),
             ])
             ->having('properties_count', '>', 0)
+            ->with('country')
             ->orderByDesc('properties_count')
             ->limit(8)
             ->get();

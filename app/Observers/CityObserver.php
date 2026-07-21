@@ -12,7 +12,7 @@ class CityObserver
      */
     public function created(City $city): void
     {
-        Cache::forget('home:popular-cities');
+        Cache::tags(['home'])->forget('home:popular-cities');
     }
 
     /**
@@ -20,7 +20,7 @@ class CityObserver
      */
     public function updated(City $city): void
     {
-        Cache::forget('home:popular-cities');
+        Cache::tags(['home'])->forget('home:popular-cities');
     }
 
     /**
@@ -28,7 +28,7 @@ class CityObserver
      */
     public function deleted(City $city): void
     {
-        Cache::forget('home:popular-cities');
+        Cache::tags(['home'])->forget('home:popular-cities');
     }
 
     /**

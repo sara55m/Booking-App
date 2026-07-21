@@ -275,6 +275,12 @@ return [
     'never'=>'لم يتم الارسال',
     'latitude' => 'خط العرض',
     'longitude' => 'خط الطول',
+    'country'=>'الدولة',
+    'countries'=>'الدول',
+    'flag'=>'العلم',
+    'iso_code'=>'كود الدولة',
+    'cities_count'=>'عدد المدن',
+    'view_cities'=>'عرض المدن',
 
     //api messages
     //properties

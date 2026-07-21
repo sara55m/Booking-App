@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 use Filament\Forms\Components\Repeater;
 use SalemAljebaly\FilamentMapPicker\MapPicker;
 use Filament\Schemas\Components\Section;
+use Filament\Forms\Components\Select;
 
 class CityForm
 {
@@ -25,6 +26,12 @@ class CityForm
                         Tab::make('Basic Info')
                             ->label(__('messages.basic_info'))
                             ->schema([
+                                Select::make('country_id')
+                                ->relationship('country','name')
+                                ->preload()
+                                ->searchable()
+                                ->label(__("messages.country"))
+                                ->required(),
                                 TextInput::make('name')
                                     ->label(__('messages.name'))
                                     ->required()
@@ -61,10 +68,10 @@ class CityForm
                                         ->disk('public')
                                         ->directory('cities')
                                         ->required(),
-    
+
                                     Toggle::make('is_cover')
                                         ->label(__('messages.cover_image')),
-    
+
                                     TextInput::make('sort_order')
                                         ->label(__('messages.sort_order'))
                                         ->numeric()
@@ -76,18 +83,18 @@ class CityForm
                                 ->collapsible()
                                 ->cloneable()
                                 ->reorderable()
-                                ->minItems(2)
+                                ->minItems(1)
                                 ->rules([
                                     function () {
                                         return function (string $attribute, $value, $fail) {
                                             $coverCount = collect($value ?? [])
                                                 ->where('is_cover', true)
                                                 ->count();
-    
+
                                             if ($coverCount < 1) {
                                                 $fail(__('messages.select_one_cover_image'));
                                             }
-    
+
                                             if ($coverCount > 1) {
                                                 $fail(__('messages.only_one_cover_image_allowed'));
                                             }

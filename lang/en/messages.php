@@ -277,6 +277,12 @@ return [
     'never'=>'Never Sent',
     'latitude'=>'Latitude',
     'longitude'=>'Longitude',
+    'country'=>'Country',
+    'countries'=>'Countries',
+    'flag'=>'Flag',
+    'iso_code'=>'Iso Code',
+    'cities_count'=>'Cities Count',
+    'view_cities'=>'View Cities',
 
 
     //api messages
