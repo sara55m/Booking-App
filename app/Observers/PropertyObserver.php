@@ -12,6 +12,7 @@ class PropertyObserver
     {
         Cache::forget("property:{$property->id}");
         Cache::tags(['properties'])->flush();
+        Cache::tags(['cities', 'properties'])->flush();
         Cache::tags("home")->flush();
     }
     /**

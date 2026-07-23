@@ -27,8 +27,9 @@ class PropertyResource extends JsonResource
             'city' => $this->city?->name,
             'reviews_count' => $this->reviews_count,
 
-            'original_price' => $pricing['originalPrice'] ? round($pricing['originalPrice'], 2) . ' EGP' : null,
-            'final_price'    => $pricing['finalPrice'] ? round($pricing['finalPrice'], 2) . ' EGP' : null,
+            'original_price' => $pricing['originalPrice'] ? round($pricing['originalPrice'], 2): null,
+            'final_price'    => $pricing['finalPrice'] ? round($pricing['finalPrice'], 2) : null,
+            'currency' => 'EGP',
             'nights'         => $request->nights ?? 1,
             'offer'          => $pricing['offer'] ? OfferResource::make($pricing['offer']) : null,
             'is_favorite' => auth()->check()

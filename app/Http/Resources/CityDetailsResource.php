@@ -5,8 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-
-class CityResource extends JsonResource
+class CityDetailsResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -23,11 +22,16 @@ class CityResource extends JsonResource
                 'id' => $this->country->id,
                 'name' => $this->country->name,
             ],
+            'latitude'=>$this->latitude,
+            'longitude'=>$this->longitude,
+            'description'=>$this->description,
             'cover_image'=> $this->coverImage ? asset('storage/'.$this->coverImage->image) : null,
+            'images'=>CityImageResource::collection($this->images),
             'travel_categories' =>
                 TravelCategoryResource::collection(
                     $this->whenLoaded('travelCategories')
                 ),
+            'properties_count' => $this->whenCounted('properties'),
         ];
     }
 }

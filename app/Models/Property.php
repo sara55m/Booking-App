@@ -117,29 +117,167 @@ class Property extends Model
     }
 
     /**
+     * search by name or description
+     */
+
+    public function scopeSearch($query, ?string $search)
+    {
+        return $query->when($search, function ($query) use ($search) {
+            $query->where(function ($query) use ($search) {
+                $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%");
+            });
+        });
+    }
+
+    /**
+     * Filter by rating
+     */
+
+     public function scopeMinimumRating($query, ?float $rating)
+    {
+        return $query->when($rating, function ($query) use ($rating) {
+            $query->where('average_rating', '>=', $rating);
+        });
+    }
+
+    /**
      * Filter by city
      */
-    public function scopeCity($query, string $city)
+    public function scopeCity($query, ?string $city)
     {
-        return $query->whereHas('city',function ($q) use ($city){
-            $q->where('name','like',"%{$city}%");
+        return $query->when($city, function ($query) use ($city) {
+            $query->whereHas('city', function ($query) use ($city) {
+                $query->where('slug', $city);
+            });
         });
     }
 
     /**
      * Filter by property type
      */
-    public function scopeType($query, string $type)
+    public function scopeType($query, ?string $type)
     {
-        return $query->whereHas('propertyType', function($q) use ($type) {
-            $q->where('name','like',"%{$type}%");
+        return $query->when($type, function ($query) use ($type) {
+            $query->whereHas('propertyType', function ($query) use ($type) {
+                $query->where('slug',$type);
+            });
         });
     }
 
-    public function scopeWithActiveOffer($query, $nights=1)
+
+    public function scopeMinPrice($query, ?float $price)
+    {
+        return $query->when($price, function ($query) use ($price) {
+            $query->having('room_types_min_base_price', '>=', $price);
+        });
+    }
+
+    public function scopeMaxPrice($query, ?float $price)
+    {
+        return $query->when($price, function ($query) use ($price) {
+            $query->having('room_types_min_base_price', '<=', $price);
+        });
+    }
+
+    public function scopeSort($query, ?string $sort)
+    {
+        //sort with [price_asc,price_desc,latest,rating]
+        return match ($sort) {
+
+            'price_asc' => $query->orderBy('room_types_min_base_price'),
+
+            'price_desc' => $query->orderByDesc('room_types_min_base_price'),
+
+            'rating' => $query
+            ->orderByDesc('average_rating')
+            ->orderByDesc('reviews_count'),
+
+            default => $query->latest(),
+        };
+    }
+
+    public function scopePropertyAmenities($query, ?array $amenities)
+    {
+        return $query->when(! empty($amenities), function ($query) use ($amenities) {
+
+            foreach ($amenities as $amenity) {
+
+                $query->whereHas('amenities', function ($query) use ($amenity) {
+
+                    $query->where('amenities.id', $amenity);
+
+                });
+
+            }
+
+        });
+    }
+
+    public function scopeRoomAmenities($query, ?array $amenities)
+    {
+        return $query->when(! empty($amenities), function ($query) use ($amenities) {
+
+            foreach ($amenities as $amenity) {
+
+                $query->whereHas('roomTypes.amenities', function ($query) use ($amenity) {
+
+                    $query->where('amenities.id', $amenity);
+
+                });
+
+            }
+
+        });
+    }
+    /**
+     * Availability filter : a property is available if it has at least one available room
+     */
+     public function scopeAvailable(
+        $query,
+        ?string $checkIn = null,
+        ?string $checkOut = null,
+        ?int $guests = null,
+    )
+    {
+        return $query->when(
+            $checkIn || $guests,
+            function ($query) use ($checkIn, $checkOut, $guests) {
+
+                $query->whereHas('roomTypes', function ($query) use ($checkIn, $checkOut, $guests) {
+
+                    $query->available($checkIn, $checkOut, $guests);
+
+                });
+
+            }
+        );
+    }
+
+    public function scopeWithActiveOffer($query,int $nights=1)
     {
         return $query->with([
             'offers' => fn ($q) => $q->active($nights)->limit(1)]);
+    }
+
+    //all filters scope
+    public function scopeFilter($query, array $filters)
+    {
+        return $query
+            ->search($filters['search'] ?? null)
+            ->city($filters['city'] ?? null)
+            ->type($filters['type'] ?? null)
+            ->minimumRating($filters['rating'] ?? null)
+            ->minPrice($filters['min_price'] ?? null)
+            ->maxPrice($filters['max_price'] ?? null)
+            ->propertyAmenities($filters['property_amenities'] ?? null)
+            ->roomAmenities($filters['room_amenities'] ?? null)
+            ->available(
+                $filters['check_in'] ?? null,
+                $filters['check_out'] ?? null,
+                $filters['guests'] ?? null
+            )
+            ->sort($filters['sort'] ?? null);
     }
 
 

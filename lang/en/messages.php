@@ -499,6 +499,7 @@ return [
     'feedback_request' => 'We would love to hear about your experience. Your feedback helps us improve our services and assists other guests in making informed decisions.',
     'leave_review' => 'Leave a Review',
     'thank_you' => 'Thank you for choosing our booking platform. We hope to welcome you again soon!',
-],
-'travel_categories_retrieved_successfully'=>'Travel Categories Retrieved Successfully',
+    ],
+    'travel_categories_retrieved_successfully'=>'Travel Categories Retrieved Successfully',
+    'city_retrieved_successfully'=>'City Retrieved Successfully',
 ];

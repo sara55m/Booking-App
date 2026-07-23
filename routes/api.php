@@ -12,6 +12,8 @@ use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\RewardPointsController;
+use App\Http\Controllers\Api\TravelCategoryController;
+use App\Http\Controllers\Api\CityController;
 
 
 Route::middleware('throttle:3,1')->group(function(){
@@ -91,9 +93,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/home/deals-and-offers', [HomeController::class, 'dealsAndOffers']);
 
     //travel categories
-    Route::get('/home/travel_categories', [HomeController::class, 'travelCategories']);
-    Route::get('/home/{travelCategory:slug}/travelCategoryCities', [HomeController::class, 'travelCategoryCities']);
+    Route::get('travel-categories', [TravelCategoryController::class, 'index']);
+    Route::get('travel-categories/{travelCategory:slug}/cities', [TravelCategoryController::class, 'cities']);
 
+    //cities
+    Route::get('cities/{city:slug}',[CityController::class,'show']);
+    //city properties
+    Route::get('cities/{city:slug}/properties',[CityController::class,'properties']);
 
     //properties
     Route::get('/properties', [PropertyController::class, 'index']);

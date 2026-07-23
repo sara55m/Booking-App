@@ -7,12 +7,20 @@ use Illuminate\Support\Facades\Cache;
 
 class TravelCategoryObserver
 {
+
+    private function clearCache(TravelCategory $travelCategory){
+
+        Cache::tags(['travel-categories'])->flush();
+
+        Cache::tags(['cities'])->flush();
+
+    }
     /**
      * Handle the TravelCategory "created" event.
      */
     public function created(TravelCategory $travelCategory): void
     {
-        Cache::tags(['travel-categories'])->flush();
+        $this->clearCache($travelCategory);
     }
 
     /**
@@ -20,7 +28,7 @@ class TravelCategoryObserver
      */
     public function updated(TravelCategory $travelCategory): void
     {
-        Cache::tags(['travel-categories'])->flush();
+        $this->clearCache($travelCategory);
     }
 
     /**
@@ -28,7 +36,7 @@ class TravelCategoryObserver
      */
     public function deleted(TravelCategory $travelCategory): void
     {
-        Cache::tags(['travel-categories'])->flush();
+        $this->clearCache($travelCategory);
     }
 
     /**

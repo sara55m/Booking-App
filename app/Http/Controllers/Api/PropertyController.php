@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Property;
 use App\Http\Resources\PropertyResource;
 use App\Http\Resources\PropertyDetailsResource;
@@ -12,43 +11,52 @@ use App\Http\Resources\ReviewResource;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\Rooms\CheckAvailabilityRequest;
+use App\Http\Requests\Properties\SearchRequest;
 class PropertyController extends Controller
 {
-    public function index(Request $request)
+    public function index(SearchRequest $request)
     {
-        $nights_count = $request->check_in && $request->check_out
-        ? Carbon::parse($request->check_in)->diffInDays($request->check_out)
-        : 1;
+        $validated = $request->validated();
+
+        $nightsCount =
+        isset($validated['check_in'], $validated['check_out'])
+            ? Carbon::parse($validated['check_in'])
+                ->diffInDays($validated['check_out'])
+            : 1;
 
         //make cache key based on request parameters
-        $key = sprintf(
-            'properties:%s:%s:page:%d',
-            $request->city ?? 'all',
-            $request->type ?? 'all',
-            $request->page ?? 1
-        );
+        $cacheData = [
+            'search' => $validated['search'] ?? null,
+            'city' => $validated['city'] ?? null,
+            'type' => $validated['type'] ?? null,
+            'rating' => $validated['rating'] ?? null,
+            'min_price'=>$validated['min_price'] ?? null,
+            'max_price'=>$validated['max_price'] ?? null,
+            'sort' => $validated['sort'] ?? null,
+            'property_amenities'=>$validated['property_amenities'] ?? null,
+            'room_amenities'=>$validated['room_amenities'] ?? null,
+            'guests' => $validated['guests'] ?? null,
+            'check_in' => $validated['check_in'] ?? null,
+            'check_out' => $validated['check_out'] ?? null,
+            'page' => $validated['page'] ?? 1,
+        ];
+        $key = 'properties:' . md5(json_encode($cacheData));
 
         $properties=Cache::tags(['properties'])
-        ->remember($key, now()->addMinutes(15), function () use ($request) {
+        ->remember($key, now()->addMinutes(15), function () use ($validated,$nightsCount) {
             return Property::query()
                 ->where('is_active', true)
-                ->when($request->city, function ($query) use ($request) {
-                    $query->city($request->city);
-                })
-                ->when($request->type, function ($query) use ($request) {
-                    $query->type($request->type);
-                })
-                ->withActiveOffer()
-                ->with('coverImage','city')
                 ->withMin('roomTypes', 'base_price')
-                ->latest()->paginate(10);
+                ->filter($validated)
+                ->withActiveOffer($nightsCount)
+                ->with(['coverImage','city.country'])
+                ->paginate(10);
         });
-
 
         return response()->json([
             'status_code'=>200,
             'message'=>__('messages.properties_retrieved_successfully'),
-            'data'=>PropertyResource::collection($properties)->additional(['nights_count'=>$nights_count])
+            'data'=>PropertyResource::collection($properties)->additional(['nights_count'=>$nightsCount])
         ]);
     }
 

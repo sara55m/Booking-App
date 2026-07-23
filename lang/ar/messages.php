@@ -493,4 +493,6 @@ return [
     'thank_you' => 'شكراً لاختيارك منصتنا للحجوزات، ونتطلع لاستقبالكم مرة أخرى قريباً.',
     ],
     'travel_categories_retrieved_successfully'=>'تم استرجاع تصنيفات السفر بنجاح',
+    'city_retrieved_successfully'=>'تم استرجاع المدينة بنجاح',
+    
 ];

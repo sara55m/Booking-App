@@ -12,6 +12,8 @@ class CityObserver
         Cache::tags(['home'])->forget('home:popular-cities');
 
         Cache::tags(['travel-categories'])->flush();
+
+        Cache::tags(['cities'])->flush();
     }
     /**
      * Handle the City "created" event.
