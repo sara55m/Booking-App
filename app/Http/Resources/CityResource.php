@@ -22,6 +22,7 @@ class CityResource extends JsonResource
             'country' =>[
                 'id' => $this->country->id,
                 'name' => $this->country->name,
+                'flag'=>$this->country->flag ?  asset('storage/'.$this->country->flag) : null,
             ],
             'cover_image'=> $this->coverImage ? asset('storage/'.$this->coverImage->image) : null,
             'travel_categories' =>

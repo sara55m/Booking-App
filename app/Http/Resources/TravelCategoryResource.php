@@ -20,6 +20,7 @@ class TravelCategoryResource extends JsonResource
             'slug'=> $this->slug,
             'icon'=> $this->icon ? asset('storage/'.$this->icon) : null,
             'description'=> $this->description,
+            'cities_count'=>$this->cities_count
         ];
     }
 }

@@ -21,6 +21,7 @@ class CityDetailsResource extends JsonResource
             'country' =>[
                 'id' => $this->country->id,
                 'name' => $this->country->name,
+                'flag'=>$this->country->flag ?  asset('storage/'.$this->country->flag) : null,
             ],
             'latitude'=>$this->latitude,
             'longitude'=>$this->longitude,

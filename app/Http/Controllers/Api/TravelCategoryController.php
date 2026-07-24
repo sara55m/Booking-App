@@ -17,6 +17,7 @@ class TravelCategoryController extends Controller
             now()->addHours(6),
             fn()=>TravelCategory::query()
             ->where('is_active', true)
+            ->withCount('cities')
             ->orderBy('sort_order')
             ->get());
 
@@ -46,7 +47,7 @@ class TravelCategoryController extends Controller
                         'properties' => fn ($query) => $query->where('is_active', true),
                     ])
                     ->orderByDesc('properties_count')
-                    ->get();
+                    ->paginate(12);
             }
         );
 
