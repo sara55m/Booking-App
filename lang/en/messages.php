@@ -287,6 +287,21 @@ return [
     'travel_categories_and_status'=>'Travel Categories and Status',
     'travel_category'=>'Travel Category',
     'is_active_and_sort_order'=>'Activity and Sort Order',
+    //property policy
+    'policy'=>'Property Policy',
+    'check_in_out'=>'Check In and Check Out Times',
+    'check_in_from'=>'Check In From',
+    'check_in_until'=>'Check In Until',
+    'check_out_from'=>'Check Out From',
+    'check_out_until'=>'Check Out Until',
+    'property_rules'=>'Property Rules',
+    'children_allowed'=>'Children Allowed',
+    'pets_allowed'=>'Pets Allowed',
+    'smoking_allowed'=>'Smoking Allowed',
+    'minimum_check_in_age'=>'Minimum Check In Age',
+    'policies'=>'Policies',
+    'cancellation_policy'=>'Cancellation Policy',
+    'important_information'=>'Important Information',
 
 
     //api messages

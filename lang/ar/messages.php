@@ -285,6 +285,34 @@ return [
     'travel_categories_and_status'=>'تصنيفات السفر و الحالة',
     'travel_category'=>'تصنيف السفر',
     'is_active_and_sort_order'=>'النشاط و الترتيب',
+    //property policy
+    'policy' => 'سياسة مكان الإقامة',
+
+    'check_in_out' => 'مواعيد تسجيل الوصول والمغادرة',
+
+    'check_in_from' => 'تسجيل الوصول من',
+
+    'check_in_until' => 'آخر موعد لتسجيل الوصول',
+
+    'check_out_from' => 'تسجيل المغادرة من',
+
+    'check_out_until' => 'آخر موعد لتسجيل المغادرة',
+
+    'property_rules' => 'قواعد مكان الإقامة',
+
+    'children_allowed' => 'يسمح بالأطفال',
+
+    'pets_allowed' => 'يسمح بالحيوانات الأليفة',
+
+    'smoking_allowed' => 'يسمح بالتدخين',
+
+    'minimum_check_in_age' => 'الحد الأدنى لعمر تسجيل الوصول',
+
+    'policies' => 'السياسات',
+
+    'cancellation_policy' => 'سياسة الإلغاء',
+
+    'important_information' => 'معلومات مهمة',
 
     //api messages
     //properties
@@ -494,5 +522,5 @@ return [
     ],
     'travel_categories_retrieved_successfully'=>'تم استرجاع تصنيفات السفر بنجاح',
     'city_retrieved_successfully'=>'تم استرجاع المدينة بنجاح',
-    
+
 ];
