@@ -15,6 +15,7 @@ use SalemAljebaly\FilamentMapPicker\MapPicker;
 use Filament\Schemas\Components\Section;
 use App\Models\City;
 use Filament\Forms\Components\TimePicker;
+use Filament\Schemas\Components\Utilities\Get;
 
 
 class PropertyForm
@@ -226,20 +227,32 @@ class PropertyForm
                         Section::make(__("messages.policies"))
                             ->schema([
 
-                                TextArea::make('cancellation_policy')
-                                    ->label(__("messages.cancellation_policy"))
-                                    ->rows(4)
-                                    ->required()
-                                    ->minLength(20)
-                                    ->maxLength(5000),
+                                Toggle::make('free_cancellation')
+                                    ->label(__("messages.free_cancellation"))
+                                    ->live(),
+
+                                TextInput::make('free_cancellation_hours')
+                                    ->label(__("messages.free_cancellation_hours"))
+                                    ->numeric()
+                                    ->visible(fn (Get $get) => $get('free_cancellation'))
+                                    ->helperText(__("messages.free_cancellation_hours_help")),
+
+                                TextInput::make('refund_percentage')
+                                    ->label(__("messages.refund_percentage"))
+                                    ->numeric()
+                                    ->minValue(0)
+                                    ->maxValue(100)
+                                    ->suffix('%')
+                                    ->visible(fn (Get $get) => $get('free_cancellation')),
 
                                 TextArea::make('important_information')
                                     ->label(__("messages.important_information"))
                                     ->rows(4)
                                     ->nullable()
-                                    ->maxLength(5000),
+                                    ->maxLength(5000)
+                                    ->columnSpanFull(),
 
-                            ])->columnSpanFull(),
+                            ])->columns(2)->columnSpanFull(),
                     ])->columns(2)->columnSpanFull(),
             ]);
     }

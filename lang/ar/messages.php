@@ -310,7 +310,12 @@ return [
 
     'policies' => 'السياسات',
 
-    'cancellation_policy' => 'سياسة الإلغاء',
+    'free_cancellation' => 'إلغاء مجاني',
+
+    'free_cancellation_hours' => 'عدد ساعات الإلغاء المجاني',
+    'free_cancellation_hours_help' => 'أدخل 0 للسماح بالإلغاء المجاني حتى موعد تسجيل الوصول.',
+
+    'refund_percentage' => 'نسبة استرداد المبلغ',
 
     'important_information' => 'معلومات مهمة',
 
@@ -327,9 +332,6 @@ return [
     'room_not_available_in_these_dates' => 'الغرفة غير متوفرة في هذه التواريخ',
     'booking_created_successfully' => 'تم إنشاء الحجز بنجاح.',
     'bookings_retrieved_successfully' => 'تم استرجاع الحجوزات بنجاح',
-    'booking_cannot_be_cancelled_as_it_has_started' => 'لا يمكن إلغاء هذا الحجز لأنه قد بدأ بالفعل',
-    'unauthorized_action' => 'إجراء غير مصرح به',
-    'booking_cancelled_successfully' => 'تم إلغاء الحجز بنجاح',
     'invalid_status_transition' => 'لا يمكن تغيير الحالة من :from إلى :to',
     'booking_already_completed_or_cancelled' => 'الحجز مكتمل أو ملغي بالفعل',
     'booking_already_paid' => 'الحجز مدفوع بالفعل',
@@ -345,8 +347,21 @@ return [
     'payment_already_processed' => 'تمت معالجة عملية الدفع مسبقاً',
     'payment_not_found' => 'عملية الدفع غير موجودة',
     'webhook_handled_successfully' => 'تمت معالجة الـ Webhook بنجاح',
+
+    //booking cancellation
+    'property_policy_not_found'=>'لا توجد سياسة لهذا العقار',
     'booking_cannot_be_cancelled'=>'لا يمكن الغاء الحجز',
-    'refund_failed'=>'فشل رد المبلغ',
+    'booking_cannot_be_cancelled_as_it_has_started' => 'لا يمكن إلغاء هذا الحجز لأنه قد بدأ بالفعل',
+    'unauthorized_action' => 'إجراء غير مصرح به',
+    'booking_cancelled_successfully' => 'تم إلغاء الحجز بنجاح',
+
+    'booking_is_non_refundable' => 'هذا الحجز غير قابل للاسترداد.',
+
+    'free_cancellation_period_has_expired' => 'انتهت فترة الإلغاء المجاني لهذا الحجز.',
+
+
+    'refund_failed' => 'تعذر إتمام عملية استرداد المبلغ. يرجى المحاولة مرة أخرى لاحقًا.',
+
     //offers
     'offer_is_not_active' => 'العرض غير نشط',
     'offer_not_started_yet' => 'العرض لم يبدأ بعد',

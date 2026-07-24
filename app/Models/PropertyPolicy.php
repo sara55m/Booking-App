@@ -20,7 +20,9 @@ class PropertyPolicy extends Model
 
         'minimum_check_in_age',
 
-        'cancellation_policy',
+        'free_cancellation',
+        'free_cancellation_hours',
+        'refund_percentage',
         'important_information',
     ];
 
@@ -30,6 +32,10 @@ class PropertyPolicy extends Model
         'smoking_allowed'=>'boolean',
 
         'minimum_check_in_age'=>'integer',
+
+        'free_cancellation'=>'boolean',
+        'free_cancellation_hours'=>'integer',
+        'refund_percentage'=>'integer',
     ];
 
     public function property(){

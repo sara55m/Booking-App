@@ -6,7 +6,6 @@ use App\Enums\BookingPaymentStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Enums\BookingStatus;
-use App\Enums\PaymentStatus;
 use App\Http\Requests\Bookings\StoreRequest;
 use App\Models\Room;
 use App\Http\Resources\BookingResource;
@@ -14,14 +13,11 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Stripe\Stripe;
+use Illuminate\Support\Facades\Gate;
 use App\Services\OfferService;
 use App\Models\Offer;
 use App\Events\BookingCreated;
-use App\Events\BookingCancelled;
-use App\Services\RewardService;
-use Illuminate\Support\Facades\Gate;
-use App\Enums\BookingCancellationReason;
+use App\Services\BookingCancellationService;
 
 class BookingController extends Controller
 {
@@ -222,83 +218,34 @@ class BookingController extends Controller
                 'data' => new BookingResource($booking)],200);
     }
 
-    public function cancel(Booking $booking,RewardService $rewardService)
+    public function cancel(Booking $booking,BookingCancellationService $cancellationService)
     {
         // Check if the booking belongs to the authenticated user
         Gate::authorize('cancel', $booking);
 
-        // Check if the booking can be cancelled (e.g., only if it's pending or confirmed)
-        if (!in_array($booking->status, [BookingStatus::PENDING, BookingStatus::CONFIRMED])) {
-            return response()->json(['message' => __('messages.booking_cannot_be_cancelled')], 422);
-        }
-
-        //check the booking did not start yet
-        if($booking->check_in->isPast()){
-            return response()->json(['message' => __('messages.booking_cannot_be_cancelled_as_it_has_started')], 422);
-        }
-
-        //handle refund
-        Stripe::setApiKey(config('services.stripe.secret'));
-
-        DB::beginTransaction();
-
         try{
-            //get all paid payments for the booking
-            $payments=$booking->payments()->where('status',PaymentStatus::PAID)->with('booking.user')->get();
-            //refund each payment amount using stripe refund or reward points refund only
-            foreach($payments as $payment)
-            {
-                if ($payment->stripe_payment_intent_id) {
-                    \Stripe\Refund::create([
-                        'payment_intent' =>
-                        $payment->stripe_payment_intent_id,
-                    ]);
-                }
 
-                //update payment status and refund data
-                $payment->update([
-                    'status'=>PaymentStatus::REFUNDED,
-                    'refunded_amount' =>$payment->amount,
-                    'refunded_at' => now(),
-                ]);
-                //handle the reward points
-                $rewardService->reverse($payment);
-            }
-
-            // Update the booking status to cancelled and booking payment status to refunded
-            $booking->update([
-                'status' => BookingStatus::CANCELLED,
-                'cancellation_reason'=>BookingCancellationReason::CUSTOMER_REQUESTED,
-                'payment_status'=>BookingPaymentStatus::REFUNDED,
-            ]);
-
-            DB::commit();
-
-            //fire booking cancellation event
-            event(new BookingCancelled($booking));
+            $cancellationService->cancel($booking);
 
             return response()->json(
                 [
                     'status_code' => 200,
                     'message' => __('messages.booking_cancelled_successfully'),
                     'data' => new BookingResource($booking)],200);
-        }catch (\Exception $e) {
-
-            DB::rollBack();
-
-            Log::error('Refund failed', [
-
-                'booking_id' => $booking->id,
-
-                'error' => $e->getMessage(),
-            ]);
+        } catch (\Exception $e) {
 
             return response()->json([
+                'message' => $e->getMessage(),
+            ], 422);
 
-                'message' =>
-                    __('messages.refund_failed'),
+        } catch (\Throwable $e) {
 
+            Log::error($e);
+
+            return response()->json([
+                'message' => __('messages.refund_failed'),
             ], 500);
+
         }
     }
 

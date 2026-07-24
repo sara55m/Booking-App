@@ -56,12 +56,29 @@ class RewardService
         });
     }
 
-    public function reverse(Payment $payment): void
+    public function reverse(Payment $payment,float $refundedAmount): void
     {
         $user = $payment->booking->user;
         $booking = $payment->booking;
-        DB::transaction(function () use ($payment,$user,$booking) {
-            if ($payment->redeemed_points > 0) {
+        DB::transaction(function () use ($payment,$user,$booking,$refundedAmount) {
+
+            if ($payment->amount == 0) {
+                // Payment was entirely made using reward points
+                $returnedPoints = $payment->redeemed_points;
+                $reversedPoints = $payment->earned_points;
+            } else {
+                $refundRatio = $refundedAmount / $payment->amount;
+
+                $returnedPoints = (int) round(
+                    $payment->redeemed_points * $refundRatio
+                );
+
+                $reversedPoints = (int) round(
+                    $payment->earned_points * $refundRatio
+                );
+            }
+
+            if ($returnedPoints > 0) {
 
                 $history = RewardPoint::firstOrCreate(
                     [
@@ -70,17 +87,17 @@ class RewardService
                     ],
                     [
                         'user_id' => $user->id,
-                        'points' => $payment->redeemed_points,
+                        'points' => $returnedPoints,
                         'description' => 'Returned redeemed points for cancelled booking #' . $booking->id,
                     ]
                 );
 
                 if ($history->wasRecentlyCreated) {
-                    $user->increment('reward_points', $payment->redeemed_points);
+                    $user->increment('reward_points', $returnedPoints);
                 }
             }
 
-            if ($payment->earned_points > 0) {
+            if ($reversedPoints > 0) {
 
                 $history = RewardPoint::firstOrCreate(
                     [
@@ -89,14 +106,14 @@ class RewardService
                     ],
                     [
                         'user_id' => $user->id,
-                        'points' => $payment->earned_points,
+                        'points' => $reversedPoints,
                         'description' => 'Reversed earned points for cancelled booking #' . $booking->id,
                     ]
                 );
 
                 if ($history->wasRecentlyCreated) {
                     //allow negative reward points value
-                    $user->decrement('reward_points', $payment->earned_points);
+                    $user->decrement('reward_points', $reversedPoints);
                 }
             }
         });

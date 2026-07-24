@@ -300,7 +300,10 @@ return [
     'smoking_allowed'=>'Smoking Allowed',
     'minimum_check_in_age'=>'Minimum Check In Age',
     'policies'=>'Policies',
-    'cancellation_policy'=>'Cancellation Policy',
+    'free_cancellation'=>'Free Cancellation',
+    'free_cancellation_hours'=>'Free Cancellation Hours',
+    'free_cancellation_hours_help' => 'Enter 0 to allow free cancellation until the check-in time.',
+    'refund_percentage'=>'Refund Percentage',
     'important_information'=>'Important Information',
 
 
@@ -317,9 +320,6 @@ return [
     'room_not_available_in_these_dates' => 'Room is not available in these dates',
     'booking_created_successfully' => 'Booking created successfully',
     'bookings_retrieved_successfully' => 'Bookings retrieved successfully',
-    'unauthorized_action' => 'Unauthorized action',
-    'booking_cannot_be_cancelled_as_it_has_started' => 'This booking cannot be cancelled as it has already started',
-    'booking_cancelled_successfully' => 'Booking cancelled successfully',
     'invalid_status_transition' => 'Invalid status transition from :from to :to',
     'checkout_session_created' => 'Checkout session created successfully',
     'booking_already_completed_or_cancelled' => 'Booking already completed or cancelled',
@@ -335,8 +335,19 @@ return [
     'payment_already_processed'=>'Payment Already Processed',
     'payment_not_found'=>'Payment is not found',
     'webhook_handled_successfully'=>'Webhook Handled Successfully',
-    'booking_cannot_be_cancelled'=>'Booking cannot be cancelled',
-    'refund_failed'=>'Refund Failed',
+    //booking cancellation
+    'property_policy_not_found'=>'Property Policy not Found',
+    'booking_cannot_be_cancelled' => 'This booking cannot be cancelled.',
+
+    'booking_is_non_refundable' => 'This booking is non-refundable.',
+
+    'free_cancellation_period_has_expired' => 'The free cancellation period has expired.',
+
+    'booking_cancelled_successfully' => 'Booking cancelled successfully.',
+
+    'refund_failed' => 'The refund could not be processed. Please try again later.',
+
+    'booking_cannot_be_cancelled_as_it_has_started' => 'This booking cannot be cancelled because the stay has already started.',
     //offers
     'offer_is_not_active' => 'Offer is not active',
     'offer_not_started_yet' => 'Offer has not started yet',
