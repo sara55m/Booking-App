@@ -82,7 +82,6 @@ class SearchRequest extends FormRequest
             'radius' => [
                 'nullable',
                 'numeric',
-                'required_with:latitude,longitude',
                 'min:1',
                 'max:100',
             ],

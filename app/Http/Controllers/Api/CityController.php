@@ -54,7 +54,8 @@ class CityController extends Controller
             'city' => $city->id,
             'search' => $validated['search'] ?? null,
             'type' => $validated['type'] ?? null,
-            'rating' => $validated['rating'] ?? null,
+            'guest_rating' => $validated['guest_rating'] ?? null,
+            'hotel_rating' => $validated['hotel_rating'] ?? null,
             'min_price'=>$validated['min_price'] ?? null,
             'max_price'=>$validated['max_price'] ?? null,
             'sort' => $validated['sort'] ?? null,
@@ -63,6 +64,9 @@ class CityController extends Controller
             'guests' => $validated['guests'] ?? null,
             'check_in' => $validated['check_in'] ?? null,
             'check_out' => $validated['check_out'] ?? null,
+            'latitude' => $validated['latitude'] ?? null,
+            'longitude' => $validated['longitude'] ?? null,
+            'radius' => $validated['radius'] ?? null,
             'page' => $validated['page'] ?? 1,
         ];
 
