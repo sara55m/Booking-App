@@ -21,17 +21,21 @@ class PropertyResource extends JsonResource
             'id' => $this->id,
             'cover_image' => $this->coverImage ? asset('storage/'.$this->coverImage->image) : null,
             'name' => $this->name,
-            'rating' => $this->rating,
+            'hotel_rating' => $this->rating,
             'address' => $this->address,
-            'average_rating' => $this->average_rating,
+            'guest_rating' => $this->average_rating,
             'city' => $this->city?->name,
             'reviews_count' => $this->reviews_count,
+
+            'distance' =>isset($this->distance) ? round($this->distance, 1) : null,
+            'distance_unit' => isset($this->distance) ? 'km' : null,
 
             'original_price' => $pricing['originalPrice'] ? round($pricing['originalPrice'], 2): null,
             'final_price'    => $pricing['finalPrice'] ? round($pricing['finalPrice'], 2) : null,
             'currency' => 'EGP',
             'nights'         => $request->nights ?? 1,
             'offer'          => $pricing['offer'] ? OfferResource::make($pricing['offer']) : null,
+            
             'is_favorite' => auth()->check()
             ? auth()->user()
                 ->favoriteProperties

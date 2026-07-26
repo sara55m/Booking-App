@@ -93,7 +93,7 @@ return [
     'review_content' => 'محتوى التقييم',
     'approve' => 'موافقة',
     'reject' => 'رفض',
-    'average_rating' => 'متوسط التقييم',
+    'average_rating' => 'متوسط تقييم النزلاء',
     'approved' => 'موافق عليه',
     'high_rating' => 'تقييم عالي',
     'low_rating' => 'تقييم منخفض',

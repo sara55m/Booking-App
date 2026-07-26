@@ -41,6 +41,12 @@ class PropertyForm
                                 ->label(__('messages.type'))
                                 ->preload()
                                 ->required(),
+                                TextInput::make('rating')
+                                ->label(__('messages.rating'))
+                                ->required()
+                                ->numeric()
+                                ->minValue(1)
+                                ->maxValue(5),
                                 TextInput::make('minimum_partial_payment_percentage')
                                     ->label(__('messages.minimum_partial_payment_percentage'))
                                     ->numeric()

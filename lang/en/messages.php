@@ -93,7 +93,7 @@ return [
     'review_content' => 'Review Content',
     'approve' => 'Approve',
     'reject' => 'Reject',
-    'average_rating' => 'Average Rating',
+    'average_rating' => 'Average Guest  Rating',
     'approved' => 'Approved',
     'high_rating' => 'High Rating',
     'low_rating' => 'Low Rating',

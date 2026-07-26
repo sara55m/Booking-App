@@ -26,7 +26,9 @@ class SearchRequest extends FormRequest
             'search' => ['nullable', 'string', 'max:255'],
             'city' => ['nullable', 'string'],
             'type' => ['nullable', 'string'],
-            'rating' => ['nullable', 'numeric', 'between:1,5'],
+            'guest_rating' => ['nullable', 'numeric', 'between:1,5'],
+
+            'hotel_rating' => ['nullable', 'numeric', 'between:1,5'],
 
             'min_price' => ['nullable', 'numeric', 'min:0'],
 
@@ -37,7 +39,7 @@ class SearchRequest extends FormRequest
             ],
             'sort' => [
             'nullable',
-            'in:newest,price_asc,price_desc,rating',
+            'in:newest,price_asc,price_desc,hotel_rating,guest_rating,nearest',
             ],
             'property_amenities' => ['nullable', 'array'],
             'property_amenities.*' => [
@@ -63,6 +65,26 @@ class SearchRequest extends FormRequest
                 'date',
                 'after:check_in',
                 'required_with:check_in',
+            ],
+            'latitude'=>[
+                'nullable',
+                'numeric',
+                'required_with:longitude,radius',
+                'between:-90,90'
+            ],
+
+            'longitude'=>[
+                'nullable',
+                'numeric',
+                'required_with:latitude,radius',
+                'between:-180,180'
+            ],
+            'radius' => [
+                'nullable',
+                'numeric',
+                'required_with:latitude,longitude',
+                'min:1',
+                'max:100',
             ],
             'page' => ['nullable', 'integer'],
         ];

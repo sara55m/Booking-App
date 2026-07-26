@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Property extends Model
 {
@@ -136,13 +137,24 @@ class Property extends Model
     }
 
     /**
-     * Filter by rating
+     * Filter by guest average rating
      */
 
-     public function scopeMinimumRating($query, ?float $rating)
+     public function scopeGuestRating($query, ?float $rating)
     {
         return $query->when($rating, function ($query) use ($rating) {
             $query->where('average_rating', '>=', $rating);
+        });
+    }
+
+    /**
+     * Filter by hotel rating
+     */
+
+    public function scopeHotelRating($query, ?float $rating)
+    {
+        return $query->when($rating, function ($query) use ($rating) {
+            $query->where('rating', '>=', $rating);
         });
     }
 
@@ -185,18 +197,58 @@ class Property extends Model
         });
     }
 
+    //filter by distance
+    public function scopeNearby(
+        $query,
+        ?float $latitude,
+        ?float $longitude
+    ) {
+        if (! $latitude || ! $longitude) {
+            return $query;
+        }
+
+        return $query->addSelect(DB::raw("
+        (
+            6371 * acos(
+                cos(radians($latitude))
+                * cos(radians(latitude))
+                * cos(radians(longitude) - radians($longitude))
+                + sin(radians($latitude))
+                * sin(radians(latitude))
+            )
+        ) AS distance
+        "));
+    }
+
+    public function scopeWithinRadius(
+        $query,
+        ?float $latitude,
+        ?float $longitude,
+        ?float $radius
+    ) {
+        if (! $latitude || ! $longitude || ! $radius) {
+            return $query;
+        }
+
+        return $query->having('distance', '<=', $radius);
+    }
+
     public function scopeSort($query, ?string $sort)
     {
-        //sort with [price_asc,price_desc,latest,rating]
+        //sort with [price_asc,price_desc,latest,hotel_rating,guest_rating,distance]
         return match ($sort) {
 
             'price_asc' => $query->orderBy('room_types_min_base_price'),
 
             'price_desc' => $query->orderByDesc('room_types_min_base_price'),
 
-            'rating' => $query
+            'guest_rating' => $query
             ->orderByDesc('average_rating')
             ->orderByDesc('reviews_count'),
+
+            'hotel_rating'=>$query->orderByDesc('rating'),
+
+            'nearest' => $query->orderBy('distance'),
 
             default => $query->latest(),
         };
@@ -272,7 +324,8 @@ class Property extends Model
             ->search($filters['search'] ?? null)
             ->city($filters['city'] ?? null)
             ->type($filters['type'] ?? null)
-            ->minimumRating($filters['rating'] ?? null)
+            ->guestRating($filters['guest_rating'] ?? null)
+            ->hotelRating($filters['hotel_rating'] ?? null)
             ->minPrice($filters['min_price'] ?? null)
             ->maxPrice($filters['max_price'] ?? null)
             ->propertyAmenities($filters['property_amenities'] ?? null)
@@ -281,6 +334,15 @@ class Property extends Model
                 $filters['check_in'] ?? null,
                 $filters['check_out'] ?? null,
                 $filters['guests'] ?? null
+            )
+            ->nearby(
+                $filters['latitude'] ?? null,
+                $filters['longitude'] ?? null,
+            )
+            ->withinRadius(
+                $filters['latitude'] ?? null,
+                $filters['longitude'] ?? null,
+                $filters['radius'] ?? null,
             )
             ->sort($filters['sort'] ?? null);
     }
