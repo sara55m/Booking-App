@@ -34,7 +34,9 @@ class PropertyPolicyResource extends JsonResource
 
             'minimum_check_in_age' => $this->minimum_check_in_age,
 
-            'cancellation_policy' => $this->cancellation_policy,
+            'free_cancellation'=>$this->free_cancellation,
+            'free_cancellation_hours'=>$this->free_cancellation_hours,
+            'refund_percentage'=>$this->refund_percentage,
 
             'important_information' => $this->important_information,
 

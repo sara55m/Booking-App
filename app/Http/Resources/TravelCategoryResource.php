@@ -18,7 +18,7 @@ class TravelCategoryResource extends JsonResource
             'id'=> $this->id,
             'name'=> $this->name,
             'slug'=> $this->slug,
-            'icon'=> $this->icon ? asset('storage/'.$this->icon) : null,
+            'icon'=> $this->icon,
             'description'=> $this->description,
             'cities_count'=>$this->cities_count
         ];

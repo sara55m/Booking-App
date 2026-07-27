@@ -37,7 +37,7 @@ class RoomResource extends JsonResource
                 return [
                     'id'=>$amenity->id,
                     'name'=>$amenity->name,
-                    'icon'=>$amenity->icon ? asset('storage/'.$amenity->icon) : null,
+                    'icon'=>$amenity->icon,
                 ];
             }),
         ];

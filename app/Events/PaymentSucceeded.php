@@ -9,20 +9,20 @@ use Illuminate\Queue\SerializesModels;
 use App\Models\Booking;
 use App\Models\Payment;
 use Illuminate\Contracts\Events\ShouldDispatchAfterCommit;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class PaymentSucceeded implements ShouldDispatchAfterCommit
+class PaymentSucceeded implements ShouldBroadcast,ShouldDispatchAfterCommit
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
      * Create a new event instance.
      */
-    public function __construct( 
+    public function __construct(
         public Booking $booking,
         public Payment $payment,)
     {
-        
+
     }
 
     /**
@@ -33,7 +33,35 @@ class PaymentSucceeded implements ShouldDispatchAfterCommit
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('channel-name'),
+           // Customer channel
+           new PrivateChannel('users.' . $this->booking->user_id),
+
+           // Admins channel
+           new PrivateChannel('admins'),
+        ];
+    }
+    public function broadcastAs(): string
+    {
+        return 'payment.succeeded';
+    }
+
+    public function broadcastWith(): array
+    {
+        return [
+            'booking' => [
+                'id' => $this->booking->id,
+                'status' => $this->booking->status->value,
+                'payment_status'=>$this->booking->payment_status->value
+            ],
+            'payment' => [
+                'id'=>$this->payment->id,
+                'status' => $this->payment->status,
+            ],
+
+            'user' => [
+                'id' => $this->booking->user_id,
+                'name' => $this->booking->user->name,
+            ],
         ];
     }
 }

@@ -36,6 +36,7 @@ class SendArrivalRemindersJob implements ShouldQueue
                         ]);
 
                         DB::afterCommit(function () use ($booking) {
+                            $booking->load(['property','user']);
                             BookingArrivalReminder::dispatch($booking);
                         });
                 });

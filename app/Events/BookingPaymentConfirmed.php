@@ -34,7 +34,11 @@ class BookingPaymentConfirmed implements ShouldBroadcast, ShouldDispatchAfterCom
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('bookings'),
+            // Customer channel
+            new PrivateChannel('users.' . $this->booking->user_id),
+
+            // Admins channel
+            new PrivateChannel('admins'),
         ];
     }
 
@@ -48,12 +52,17 @@ class BookingPaymentConfirmed implements ShouldBroadcast, ShouldDispatchAfterCom
         return [
             'booking' => [
                 'id' => $this->booking->id,
-                'status' => $this->booking->status,
-                'payment_status'=>$this->booking->payment_status
+                'status' => $this->booking->status->value,
+                'payment_status'=>$this->booking->payment_status->value
             ],
             'payment' => [
                 'id'=>$this->payment->id,
                 'status' => $this->payment->status,
+            ],
+
+            'user' => [
+                'id' => $this->booking->user_id,
+                'name' => $this->booking->user->name,
             ],
         ];
     }

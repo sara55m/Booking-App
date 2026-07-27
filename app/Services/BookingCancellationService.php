@@ -44,50 +44,52 @@ class BookingCancellationService
             );
         }
 
-        if(! $policy->free_cancellation){
-            //no refund
-            throw new DomainException(
-                __('messages.booking_is_non_refundable')
-            );
-        }
+        $isRefundable = false;
 
-        $deadline = $booking->check_in
-        ->copy()//to avoid updating the actual check in value
-        ->subHours($policy->free_cancellation_hours);
+        if ($policy->free_cancellation) {
+            $deadline = $booking->check_in
+                ->copy()
+                ->subHours($policy->free_cancellation_hours);
 
-        if(now()->greaterThan($deadline)){
-            //no refund
-            throw new DomainException(
-                __('messages.free_cancellation_period_has_expired')
-            );
+            $isRefundable = now()->lessThanOrEqualTo($deadline);
         }
 
         //handle refund
-        DB::transaction(function () use ($booking, $policy) {
-            //get all paid payments for the booking
-            $payments=$booking->payments()->where('status',PaymentStatus::PAID)->with('booking.user')->get();
-            //refund each payment amount using stripe refund or reward points refund only
-            foreach($payments as $payment)
-            {
-                //calculate the refund amount based on the property cancellation policy
-                $refundAmount = round(
-                    $payment->amount * ($policy->refund_percentage / 100),
-                    2
-                );
-                //handle amount refund
-                $this->refundService->refund($payment,$refundAmount);
-                //handle the reward points reversing(full&partial)
-                $this->rewardService->reverse($payment,$refundAmount);
+        DB::transaction(function () use ($booking, $policy,$isRefundable) {
+            //refund payments if the booking is refundable and cancel booking
+            if ($isRefundable) {
+                //get all paid payments for the booking
+                $payments=$booking->payments()->where('status',PaymentStatus::PAID)->with('booking.user')->get();
+                //refund each payment amount using stripe refund or reward points refund only
+                foreach($payments as $payment)
+                {
+                    //calculate the refund amount based on the property cancellation policy
+                    $refundAmount = round(
+                        $payment->amount * ($policy->refund_percentage / 100),
+                        2
+                    );
+                    //handle amount refund
+                    $this->refundService->refund($payment,$refundAmount);
+                    //handle the reward points reversing(full&partial)
+                    $this->rewardService->reverse($payment,$refundAmount);
+                }
+
+                $paymentStatus = BookingPaymentStatus::REFUNDED;
+
+            } else {
+                // Booking cancelled but payment is kept as it was
+                $paymentStatus = $booking->payment_status;
             }
 
-            // Update the booking status to cancelled and booking payment status to refunded
+            // Update the booking status to cancelled and booking payment status to refunded/leave it if no refund
             $booking->update([
                 'status' => BookingStatus::CANCELLED,
                 'cancellation_reason'=>BookingCancellationReason::CUSTOMER_REQUESTED,
-                'payment_status'=>BookingPaymentStatus::REFUNDED,
+                'payment_status'=>$paymentStatus,
             ]);
 
         });
+        $booking->load(['user']);
 
         //fire booking cancellation event
         event(new BookingCancelled($booking));

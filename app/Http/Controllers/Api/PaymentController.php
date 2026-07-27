@@ -59,19 +59,19 @@ class PaymentController extends Controller
         // Any Stripe exception is logged inside the service.
         try {
             $checkoutService->createStripeCustomer($user);
-        
+
         } catch (\Throwable $e) {
-        
+
             Log::error('Stripe customer creation failed', [
                 'user_id' => $user->id,
                 'error' => $e->getMessage(),
             ]);
-        
+
             return response()->json([
                 'message' => __('messages.something_went_wrong_in_stripe_customer_creation'),
             ], 500);
         }
-        
+
         try {
 
             $result = $checkoutService->createPayment(
@@ -86,15 +86,15 @@ class PaymentController extends Controller
             $payment = $result['payment'];
             $booking=$result['booking'];
             $wasConfirmed = $result['wasConfirmed'];
-        
+
         } catch (\Throwable $e) {
-        
+
             Log::error('Checkout payment creation failed', [
                 'booking_id' => $booking->id,
                 'user_id' => $user->id,
                 'error' => $e->getMessage(),
             ]);
-        
+
             return response()->json([
                 'message' => __('messages.something_went_wrong_in_checkout_payment_creation'),
             ], 500);
@@ -133,6 +133,7 @@ class PaymentController extends Controller
                 'status' => PaymentStatus::FAILED,
             ]);
 
+            $booking->load('user');
             //fire payment failed event
             event(new BookingPaymentFailed($booking, $payment));
 
@@ -140,7 +141,7 @@ class PaymentController extends Controller
                 'message' => __('messages.something_went_wrong_in_stripe_session_creation'),
             ], 500);
         }
-        
+
     }
 
     public function webhook(Request $request, StripeWebhookService $stripeWebhookService) : JsonResponse
@@ -187,6 +188,6 @@ class PaymentController extends Controller
         }
 
         //handle the event using the StripeWebhookService
-        return $stripeWebhookService->handle($event);        
-    }   
+        return $stripeWebhookService->handle($event);
+    }
 }

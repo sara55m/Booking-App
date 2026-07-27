@@ -22,18 +22,18 @@ class PropertyDetailsResource extends JsonResource
             'cover_image' => $this->coverImage ? asset('storage/'.$this->coverImage->image) : null,
             'images'=>PropertyImageResource::collection($this->images),
             'name' => $this->name,
-            'rating' => $this->rating,
+            'hotel_rating' => $this->rating,
             'city' => $this->city?->name,
             'address' => $this->address,
             'description'=>$this->description,
             'type'=>$this->propertyType?->name,
-            'average_rating' => $this->average_rating,
+            'guest_rating' => $this->average_rating,
             'reviews_count' => $this->reviews_count,
             'amenities'=>$this->amenities->map(function($amenity){
                 return [
                     'id'=>$amenity->id,
                     'name'=>$amenity->name,
-                    'icon'=>$amenity->icon ? asset('storage/'.$amenity->icon) : null,
+                    'icon'=>$amenity->icon,
                 ];
             }),
             'policy' => PropertyPolicyResource::make(

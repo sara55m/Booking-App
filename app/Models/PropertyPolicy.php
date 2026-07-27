@@ -27,6 +27,11 @@ class PropertyPolicy extends Model
     ];
 
     protected $casts=[
+        'check_in_from' => 'datetime:H:i:s',
+        'check_in_until' => 'datetime:H:i:s',
+        'check_out_from' => 'datetime:H:i:s',
+        'check_out_until' => 'datetime:H:i:s',
+        
         'pets_allowed'=>'boolean',
         'children_allowed'=>'boolean',
         'smoking_allowed'=>'boolean',

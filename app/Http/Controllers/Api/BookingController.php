@@ -166,6 +166,7 @@ class BookingController extends Controller
             'room.roomType',
             'property',
             'offer',
+            'user'
         ]);
 
         //increment offer used count

@@ -10,8 +10,9 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Booking;
+use Illuminate\Contracts\Events\ShouldDispatchAfterCommit;
 
-class BookingCancelled
+class BookingCancelled implements ShouldBroadcast, ShouldDispatchAfterCommit
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -34,7 +35,31 @@ class BookingCancelled
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('channel-name'),
+           // Customer channel
+           new PrivateChannel('users.' . $this->booking->user_id),
+
+           // Admins channel
+           new PrivateChannel('admins'),
+        ];
+    }
+    public function broadcastAs(): string
+    {
+        return 'booking.cancelled';
+    }
+
+    public function broadcastWith(): array
+    {
+        return [
+            'booking' => [
+                'id' => $this->booking->id,
+                'status' => $this->booking->status->value,
+                'payment_status'=>$this->booking->payment_status->value
+            ],
+
+            'user' => [
+                'id' => $this->booking->user_id,
+                'name' => $this->booking->user->name,
+        ],
         ];
     }
 }

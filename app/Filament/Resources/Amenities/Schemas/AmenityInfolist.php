@@ -30,7 +30,7 @@ class AmenityInfolist
                             ->label(__('messages.updated_at'))
                             ->dateTime()
                             ->placeholder('-'),
-                    ])->columns(2),
+                    ])->columns(2)->columnSpanFull(),
 
             ]);
 

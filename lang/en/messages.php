@@ -470,6 +470,9 @@ return [
 
     'refund_notice' => 'The refund has been initiated successfully. Depending on your bank or card issuer, the refunded amount may take 2–7 business days to appear on your statement.',
     'contact_support' => 'If you did not request this cancellation or have any questions, please contact our support team.',
+
+    'non_refundable_notice' => 'This booking has been cancelled successfully. According to the property cancellation policy, it is non-refundable.',
+    'payment_retained' => 'Your payment has been retained and no refund has been issued.',
     ],
 
     //booking confirmed notification

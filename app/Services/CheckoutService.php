@@ -72,7 +72,7 @@ class CheckoutService
         }
 
         return $remainingAmount;
-    }   
+    }
 
 
     public function calculateAmounts(
@@ -151,14 +151,14 @@ class CheckoutService
                     'payment_method' => PaymentMethod::CARD,
                     'idempotency_key' => $idempotencyKey,
                 ]);
-    
+
             } catch (\Illuminate\Database\QueryException $e) {
 
                 //throw the exception if it's not a duplicate entry error
                 if ($e->errorInfo[1] !== 1062) {
                     throw $e;
                 }
-    
+
                 // Another request created the payment first.
                 // Return the existing payment instead of failing.
                 $payment=Payment::where('idempotency_key', $idempotencyKey)
@@ -169,10 +169,10 @@ class CheckoutService
                     'wasConfirmed' => $wasConfirmed,
                 ];
             }
-    
+
             // Fully paid using reward points
             if ($amountToCharge <= 0) {
-    
+
                 $payment->update([
                     'payment_method' => PaymentMethod::WALLET,
                     'status' => PaymentStatus::PAID,
@@ -180,7 +180,7 @@ class CheckoutService
                 ]);
 
                 $remainingAmount=$payment->remaining;
-    
+
                 $booking->update([
                     'status' => BookingStatus::CONFIRMED,
                     'payment_status' => $remainingAmount <= 0
@@ -189,7 +189,7 @@ class CheckoutService
                     'expires_at' => null,
                 ]);
             }
-    
+
             return [
                 'payment' => $payment,
                 'booking' => $booking,
@@ -210,7 +210,7 @@ class CheckoutService
             $booking,
             $payment
         );
-
+        $booking->load('user');
         //fire the payment succeeded event
         event(new PaymentSucceeded($booking, $payment));
         //fire the booking confirmed event only if it is the first payment and the booking was not already confirmed

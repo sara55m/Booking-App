@@ -10,8 +10,9 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Offer;
+use Illuminate\Contracts\Events\ShouldDispatchAfterCommit;
 
-class OfferActivated
+class OfferActivated implements ShouldBroadcast, ShouldDispatchAfterCommit
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -31,7 +32,24 @@ class OfferActivated
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('channel-name'),
+            // Admins channel
+            new PrivateChannel('admins'),
+        ];
+    }
+    public function broadcastAs(): string
+    {
+        return 'offer.activated';
+    }
+
+    public function broadcastWith(): array
+    {
+        return [
+            'offer' => [
+                'id' => $this->offer->id,
+                'title' => $this->offer->title,
+                'status' => $this->offer->status->value,
+            ],
+
         ];
     }
 }

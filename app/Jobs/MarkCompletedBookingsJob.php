@@ -36,6 +36,8 @@ class MarkCompletedBookingsJob implements ShouldQueue
                         'status' => BookingStatus::COMPLETED,
                     ]);
 
+                    $booking->load(['property','user']);
+
                     //fire booking completed event--->send review reminder
                     event(new BookingCompleted($booking));
                 }

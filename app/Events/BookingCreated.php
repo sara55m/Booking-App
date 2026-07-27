@@ -10,12 +10,13 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Booking;
+use Illuminate\Contracts\Events\ShouldDispatchAfterCommit;
 
-class BookingCreated
+class BookingCreated implements ShouldBroadcast,ShouldDispatchAfterCommit
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    //define booking 
+    //define booking
     public Booking $booking;
 
     /**
@@ -34,7 +35,35 @@ class BookingCreated
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('channel-name'),
+            // Customer channel
+            new PrivateChannel('users.' . $this->booking->user_id),
+
+            // Admins channel
+            new PrivateChannel('admins'),
+        ];
+    }
+
+    public function broadcastAs(): string
+    {
+        return 'booking.created';
+    }
+
+    public function broadcastWith(): array
+    {
+        return [
+            'booking' => [
+                'id' => $this->booking->id,
+                'status' => $this->booking->status->value,
+                'created_at' => $this->booking->created_at->toIso8601String(),
+            ],
+            'property' => [
+                'id' => $this->booking->property_id,
+                'name' => $this->booking->property->name,
+            ],
+            'user' => [
+                'id' => $this->booking->user_id,
+                'name' => $this->booking->user->name,
+        ],
         ];
     }
 }
