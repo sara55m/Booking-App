@@ -102,11 +102,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('cities/{city:slug}/properties',[CityController::class,'properties']);
 
     //properties
+    //ai search endpoint
+    Route::post('/properties/ai_search', [PropertyController::class, 'aiSearch']);
+
     Route::get('/properties', [PropertyController::class, 'index']);
     Route::get('/properties/{property}', [PropertyController::class, 'show']);
+
     Route::post('/properties/{property}/availability', [PropertyController::class, 'availability']);
+
     Route::get('/properties/{property}/favorites', [PropertyController::class, 'addToFavorites']);
     Route::delete('/properties/{property}/favorites', [PropertyController::class, 'removeFromFavorites']);
+    
     Route::get('/properties/{property}/reviews', [PropertyController::class, 'topReviews']);
 
     //bookings

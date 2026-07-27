@@ -41,6 +41,12 @@ return [
         'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
         'success_url' => 'http://127.0.0.1:8000/payment-success',
         'cancel_url' => 'http://127.0.0.1:8000/payment-cancelled',
-    ]
+    ],
+
+    'groq' => [
+    'api_key' => env('GROQ_API_KEY'),
+    'url' => env('GROQ_BASE_URL'),
+    'model' => env('GROQ_MODEL', 'llama-3.3-70b-versatile'),
+    ],
 
 ];

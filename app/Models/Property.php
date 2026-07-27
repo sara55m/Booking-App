@@ -254,32 +254,23 @@ class Property extends Model
         };
     }
 
-    public function scopePropertyAmenities($query, ?array $amenities)
+    /*amenities filter:a filter can exist for the property or the property room type */
+
+    public function scopeAmenities($query, ?array $amenities)
     {
-        return $query->when(! empty($amenities), function ($query) use ($amenities) {
+        return $query->when(!empty($amenities), function ($query) use ($amenities) {
 
             foreach ($amenities as $amenity) {
 
-                $query->whereHas('amenities', function ($query) use ($amenity) {
+                $query->where(function ($q) use ($amenity) {
 
-                    $query->where('amenities.id', $amenity);
+                    $q->whereHas('amenities', function ($q) use ($amenity) {
+                        $q->where('amenities.id', $amenity);
+                    })
 
-                });
-
-            }
-
-        });
-    }
-
-    public function scopeRoomAmenities($query, ?array $amenities)
-    {
-        return $query->when(! empty($amenities), function ($query) use ($amenities) {
-
-            foreach ($amenities as $amenity) {
-
-                $query->whereHas('roomTypes.amenities', function ($query) use ($amenity) {
-
-                    $query->where('amenities.id', $amenity);
+                    ->orWhereHas('roomTypes.amenities', function ($q) use ($amenity) {
+                        $q->where('amenities.id', $amenity);
+                    });
 
                 });
 
@@ -328,8 +319,7 @@ class Property extends Model
             ->hotelRating($filters['hotel_rating'] ?? null)
             ->minPrice($filters['min_price'] ?? null)
             ->maxPrice($filters['max_price'] ?? null)
-            ->propertyAmenities($filters['property_amenities'] ?? null)
-            ->roomAmenities($filters['room_amenities'] ?? null)
+            ->amenities($filters['amenities'] ?? null)
             ->available(
                 $filters['check_in'] ?? null,
                 $filters['check_out'] ?? null,

@@ -45,8 +45,13 @@ class RoomType extends Model
             ->when($guests, function ($query) use ($guests) {
                 $query->where('capacity', '>=', $guests);
             })
-            ->whereHas('rooms', function ($query) use ($checkIn, $checkOut) {
-                $query->availableBetween($checkIn, $checkOut);
-            });
+            ->when(
+                $checkIn && $checkOut,
+                function ($query) use ($checkIn, $checkOut) {
+                    $query->whereHas('rooms', function ($query) use ($checkIn, $checkOut) {
+                        $query->availableBetween($checkIn, $checkOut);
+                    });
+                }
+            );
     }
 }

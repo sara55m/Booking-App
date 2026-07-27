@@ -41,17 +41,12 @@ class SearchRequest extends FormRequest
             'nullable',
             'in:newest,price_asc,price_desc,hotel_rating,guest_rating,nearest',
             ],
-            'property_amenities' => ['nullable', 'array'],
-            'property_amenities.*' => [
+            'amenities' => ['nullable', 'array'],
+            'amenities.*' => [
                 'integer',
                 'exists:amenities,id',
             ],
-
-            'room_amenities' => ['nullable', 'array'],
-            'room_amenities.*' => [
-                'integer',
-                'exists:amenities,id',
-            ],
+            
             'guests' => ['nullable', 'integer', 'min:1'],
             'check_in' => [
                 'nullable',

@@ -12,17 +12,52 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\Rooms\CheckAvailabilityRequest;
 use App\Http\Requests\Properties\SearchRequest;
+use App\Http\Requests\Properties\AISearchRequest;
+use App\Services\AISearchService;
 class PropertyController extends Controller
 {
+    public function aiSearch(
+        AISearchRequest $request,
+        AISearchService $aiSearchService
+    ) {
+        $query = $request->validated()['query'];
+
+        $filters = $aiSearchService->extractFilters($query);
+
+        $filters = $aiSearchService->normalizeFilters($filters);
+
+        $nightsCount = 1;
+
+        if (!empty($filters['check_in']) && !empty($filters['check_out'])) {
+            $nightsCount = Carbon::parse($filters['check_in'])
+                ->diffInDays(Carbon::parse($filters['check_out']));
+        }
+
+        $properties = Property::query()
+                ->where('is_active', true)
+                ->withMin('roomTypes', 'base_price')
+                ->filter($filters)
+                ->withActiveOffer($nightsCount)
+                ->with(['coverImage','city.country'])
+                ->paginate(10);
+
+            return response()->json([
+                'interpreted_filters' => $filters,
+                'properties' => PropertyResource::collection($properties),
+            ]);
+    }
+
+
     public function index(SearchRequest $request)
     {
         $validated = $request->validated();
 
-        $nightsCount =
-        isset($validated['check_in'], $validated['check_out'])
-            ? Carbon::parse($validated['check_in'])
-                ->diffInDays($validated['check_out'])
-            : 1;
+        $nightsCount = 1;
+
+        if (!empty($validated['check_in']) && !empty($validated['check_out'])) {
+            $nightsCount = Carbon::parse($validated['check_in'])
+                ->diffInDays(Carbon::parse($validated['check_out']));
+        }
 
         //make cache key based on request parameters
         $cacheData = [
@@ -34,8 +69,7 @@ class PropertyController extends Controller
             'min_price'=>$validated['min_price'] ?? null,
             'max_price'=>$validated['max_price'] ?? null,
             'sort' => $validated['sort'] ?? null,
-            'property_amenities'=>$validated['property_amenities'] ?? null,
-            'room_amenities'=>$validated['room_amenities'] ?? null,
+            'amenities'=>$validated['amenities'] ?? null,
             'guests' => $validated['guests'] ?? null,
             'check_in' => $validated['check_in'] ?? null,
             'check_out' => $validated['check_out'] ?? null,
