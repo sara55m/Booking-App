@@ -521,6 +521,19 @@ return [
     'invoice_attached' => 'Your updated invoice is attached to this email.',
     ],
 
+    //booking payment failed
+    'payment_failed_notification' => [
+        'subject' => 'Payment Failed',
+        'introduction' => 'Unfortunately, your payment could not be completed.',
+        'booking_reference' => 'Booking Reference: :reference',
+        'property' => 'Property: :property',
+        'amount' => 'Payment Amount: :amount EGP',
+        'reason' => 'Please try again or use another payment method.',
+        'complete_payment' => 'Complete Payment',
+        'expiration_notice' => 'Your booking will expire on :expires if payment is not completed.',
+        'contact_support' => 'If you continue to experience issues, please contact our support team.',
+    ],
+
     //review reminder notification
     'review_reminder' => [
     'subject' => 'How was your stay?',

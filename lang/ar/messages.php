@@ -532,6 +532,18 @@ return [
     'invoice_attached' => 'تم إرفاق الفاتورة المحدثة مع هذا البريد الإلكتروني.',
     ],
 
+    'payment_failed_notification' => [
+        'subject' => 'فشل عملية الدفع',
+        'introduction' => 'للأسف، لم تكتمل عملية الدفع الخاصة بحجزك.',
+        'booking_reference' => 'رقم الحجز: :reference',
+        'property' => 'العقار: :property',
+        'amount' => 'قيمة الدفع: :amount جنيه',
+        'reason' => 'يرجى إعادة المحاولة أو استخدام وسيلة دفع أخرى.',
+        'complete_payment' => 'إتمام الدفع',
+        'expiration_notice' => 'سينتهي الحجز تلقائيًا في :expires إذا لم يتم إتمام الدفع.',
+        'contact_support' => 'إذا استمرت المشكلة، يرجى التواصل مع فريق الدعم.',
+    ],
+
     //review reminder notification
     'review_reminder' => [
     'subject' => 'كيف كانت إقامتك؟',

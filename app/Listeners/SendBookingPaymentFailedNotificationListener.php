@@ -8,6 +8,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use App\Models\User;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\BookingPaymentFailedAdminNotification;
+use App\Notifications\BookingPaymentFailedNotification;
 
 class SendBookingPaymentFailedNotificationListener implements ShouldQueue
 {
@@ -24,6 +25,19 @@ class SendBookingPaymentFailedNotificationListener implements ShouldQueue
      */
     public function handle(BookingPaymentFailed $event): void
     {
+        $booking = $event->booking->loadMissing([
+            'user',
+            'property',
+        ]);
+
+        $payment = $event->payment;
+
+        $user=$booking->user;
+
+        $user->notify(
+            new BookingPaymentFailedNotification($booking,$payment)
+        );
+
         $admins=User::where('role','admin')->get();
 
         Notification::send(

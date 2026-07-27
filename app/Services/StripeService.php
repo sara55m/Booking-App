@@ -77,7 +77,7 @@ class StripeService
                         'currency' => 'egp',
 
                         'product_data' => [
-                            'name' => "Payment for booking #{$booking->id}",
+                            'name' => "Payment for booking #{$booking->reference}",
                         ],
 
                         'unit_amount' => (int) round($amount * 100),

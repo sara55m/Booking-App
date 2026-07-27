@@ -6,6 +6,7 @@ use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Facades\Storage;
 
 class BookingInfolist
 {
@@ -159,7 +160,10 @@ class BookingInfolist
 
                             TextEntry::make('invoice_path')
                                 ->visible(fn ($record) => $record->invoice_path !== null)
-                                ->label(__('messages.invoice_path')),
+                                ->label(__('messages.invoice_path'))
+                                ->formatStateUsing(fn ($state) => basename($state))
+                                ->url(fn ($state) => Storage::disk('public')->url($state))
+                                ->openUrlInNewTab(),
                         ]),
                 ]),
             ]);
