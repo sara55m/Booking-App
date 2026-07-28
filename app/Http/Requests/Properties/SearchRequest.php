@@ -25,6 +25,7 @@ class SearchRequest extends FormRequest
         return [
             'search' => ['nullable', 'string', 'max:255'],
             'city' => ['nullable', 'string'],
+            'country' => ['nullable', 'string'],
             'type' => ['nullable', 'string'],
             'guest_rating' => ['nullable', 'numeric', 'between:1,5'],
 
@@ -46,7 +47,7 @@ class SearchRequest extends FormRequest
                 'integer',
                 'exists:amenities,id',
             ],
-            
+
             'guests' => ['nullable', 'integer', 'min:1'],
             'check_in' => [
                 'nullable',

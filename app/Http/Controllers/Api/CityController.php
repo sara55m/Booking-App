@@ -45,12 +45,15 @@ class CityController extends Controller
     {
         $validated = $request->validated();
 
-        $nightsCount = isset($validated['check_in'], $validated['check_out'])
-            ? Carbon::parse($validated['check_in'])
-                ->diffInDays($validated['check_out'])
-            : 1;
+        $nightsCount = 1;
+
+        if (!empty($validated['check_in']) && !empty($validated['check_out'])) {
+            $nightsCount = Carbon::parse($validated['check_in'])
+                ->diffInDays(Carbon::parse($validated['check_out']));
+        }
 
        $cacheData=[
+            'country' => $city->country->id,
             'city' => $city->id,
             'search' => $validated['search'] ?? null,
             'type' => $validated['type'] ?? null,

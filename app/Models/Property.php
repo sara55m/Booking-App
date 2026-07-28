@@ -171,6 +171,18 @@ class Property extends Model
     }
 
     /**
+     * Filter by country
+     */
+    public function scopeCountry($query, ?string $country)
+    {
+        return $query->when($country, function ($query) use ($country) {
+            $query->whereHas('city.country', function ($query) use ($country) {
+                $query->where('name', $country);
+            });
+        });
+    }
+
+    /**
      * Filter by property type
      */
     public function scopeType($query, ?string $type)
@@ -305,7 +317,7 @@ class Property extends Model
     public function scopeWithActiveOffer($query,int $nights=1)
     {
         return $query->with([
-            'offers' => fn ($q) => $q->active($nights)->limit(1)]);
+            'offers' => fn ($q) => $q->active($nights)->latest('created_at'),]);
     }
 
     //all filters scope
@@ -313,6 +325,7 @@ class Property extends Model
     {
         return $query
             ->search($filters['search'] ?? null)
+            ->country($filters['country'] ?? null)
             ->city($filters['city'] ?? null)
             ->type($filters['type'] ?? null)
             ->guestRating($filters['guest_rating'] ?? null)

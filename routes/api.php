@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\RewardPointsController;
 use App\Http\Controllers\Api\TravelCategoryController;
 use App\Http\Controllers\Api\CityController;
+use App\Http\Controllers\Api\AITravelAssistantController;
 
 
 Route::middleware('throttle:3,1')->group(function(){
@@ -105,6 +106,12 @@ Route::middleware('auth:sanctum')->group(function () {
     //ai search endpoint
     Route::post('/properties/ai_search', [PropertyController::class, 'aiSearch']);
 
+    //ai search assistant endpoint
+    Route::post(
+        'assistant',
+        AITravelAssistantController::class
+    );
+
     Route::get('/properties', [PropertyController::class, 'index']);
     Route::get('/properties/{property}', [PropertyController::class, 'show']);
 
@@ -112,7 +119,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/properties/{property}/favorites', [PropertyController::class, 'addToFavorites']);
     Route::delete('/properties/{property}/favorites', [PropertyController::class, 'removeFromFavorites']);
-    
+
     Route::get('/properties/{property}/reviews', [PropertyController::class, 'topReviews']);
 
     //bookings

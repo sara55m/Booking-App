@@ -7,9 +7,16 @@ use App\Models\PropertyType;
 use Illuminate\Support\Facades\Http;
 use RuntimeException;
 use App\Models\City;
+use App\Services\GroqService;
 
 class AISearchService
 {
+
+    public function __construct(
+        protected GroqService $groq
+    ) {
+    }
+
     public function extractFilters(string $query): array
     {
         $cities = City::orderBy('name')
@@ -73,6 +80,7 @@ class AISearchService
             Return exactly this JSON structure:
 
             {
+                \"country\":null,
                 \"city\": null,
                 \"type\": null,
                 \"check_in\": null,
@@ -91,21 +99,10 @@ class AISearchService
             {$query}
             ";
 
-        $response = Http::withToken(config('services.groq.api_key'))
-            ->baseUrl(config('services.groq.url'))
-            ->post('/chat/completions', [
-                'model' => config('services.groq.model'),
-                'messages' => [
-                    [
-                        'role' => 'system',
-                        'content' => $prompt,
-                    ],
-                ],
-            ])
-            ->throw()
-            ->json();
-
-        $content = trim($response['choices'][0]['message']['content']);
+        $content = $this->groq->chat(
+            $prompt,
+            $query
+        );
 
         $filters = json_decode($content, true);
 

@@ -544,4 +544,12 @@ return [
     ],
     'travel_categories_retrieved_successfully'=>'Travel Categories Retrieved Successfully',
     'city_retrieved_successfully'=>'City Retrieved Successfully',
+
+    'ai' => [
+
+    'default_recommendation' => 'Here are the best matching hotels based on your search.',
+
+    'no_matching_properties' => 'Sorry, I couldn\'t find any properties matching your request. Try relaxing some filters such as price, amenities, destination, or travel dates.',
+
+    ],
 ];
