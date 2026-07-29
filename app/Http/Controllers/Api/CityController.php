@@ -87,13 +87,14 @@ class CityController extends Controller
                     ->paginate(10);
             });
 
+        $properties->each(function ($property) use ($nightsCount) {
+            $property->nights = $nightsCount;
+        });
+
         return response()->json([
             'status_code' => 200,
             'message' => __('messages.properties_retrieved_successfully'),
             'data' => PropertyResource::collection($properties)
-                ->additional([
-                    'nights_count' => $nightsCount,
-                ]),
         ]);
     }
 }

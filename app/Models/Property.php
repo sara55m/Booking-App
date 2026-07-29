@@ -177,7 +177,7 @@ class Property extends Model
     {
         return $query->when($country, function ($query) use ($country) {
             $query->whereHas('city.country', function ($query) use ($country) {
-                $query->where('name', $country);
+                $query->where('iso_code', $country);
             });
         });
     }

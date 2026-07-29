@@ -12,4 +12,9 @@ class TravelCategory extends Model
     {
         return $this->belongsToMany(City::class,'city_travel_category');
     }
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
 }

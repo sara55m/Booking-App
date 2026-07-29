@@ -56,7 +56,7 @@ class TravelCategoryForm
                                         'heroicon-o-paper-airplane' => '✈️ Adventure Travel',
                                         'heroicon-o-camera' => '📷 Photography',
                                         'heroicon-o-binoculars' => '🔭 Wildlife & Safari',
-                                        'heroicon-o-tree-pine' => '🌲 Nature',
+                                        'heroicon-o-photo' => '🌲 Nature',
                                         'heroicon-o-bolt' => '⚡ Extreme Sports',
                                         'heroicon-o-heart' => '💕 Romantic Getaways',
                                         'heroicon-o-users' => '👨‍👩‍👧 Family Friendly',

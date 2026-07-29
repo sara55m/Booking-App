@@ -15,7 +15,7 @@ use App\Http\Controllers\Api\RewardPointsController;
 use App\Http\Controllers\Api\TravelCategoryController;
 use App\Http\Controllers\Api\CityController;
 use App\Http\Controllers\Api\AITravelAssistantController;
-
+use App\Http\Controllers\Api\AITripPlannerController;
 
 Route::middleware('throttle:3,1')->group(function(){
     Route::post('/register', [AuthController::class, 'register']);
@@ -111,6 +111,9 @@ Route::middleware('auth:sanctum')->group(function () {
         'assistant',
         AITravelAssistantController::class
     );
+
+    //ai trip planner endpoint
+    Route::post('/trip_planner', AITripPlannerController::class);
 
     Route::get('/properties', [PropertyController::class, 'index']);
     Route::get('/properties/{property}', [PropertyController::class, 'show']);

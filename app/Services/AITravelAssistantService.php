@@ -18,15 +18,24 @@ class AITravelAssistantService
 
     ) {}
 
-    private function searchProperties(array $filters): Collection
+    private function getNightsCount(array $filters): int
     {
-        $nightsCount = 1;
+        // If exact dates are available, use them.
+        if (! empty($filters['check_in']) && ! empty($filters['check_out'])) {
 
-        if (!empty($validated['check_in']) && !empty($validated['check_out'])) {
-            $nightsCount = Carbon::parse($validated['check_in'])
-                ->diffInDays(Carbon::parse($validated['check_out']));
+            return max(
+                1,
+                Carbon::parse($filters['check_in'])
+                    ->diffInDays($filters['check_out'])
+            );
         }
 
+        // Default.
+        return 1;
+    }
+
+    private function searchProperties(array $filters,int $nightsCount): Collection
+    {
         return Property::query()
         ->where('is_active', true)
         ->withMin('roomTypes', 'base_price')
@@ -41,7 +50,7 @@ class AITravelAssistantService
         ->get();
     }
 
-    private function buildPropertyContext(Collection $properties,$nightsCount): array
+    private function buildPropertyContext(Collection $properties,int $nightsCount): array
     {
         return $properties->map(function ($property) use ($nightsCount) {
 
@@ -54,7 +63,6 @@ class AITravelAssistantService
                 'name' => $property->name,
                 'city' => $property->city->name,
                 'country' => $property->city->country->name,
-                'price_per_night' => $property->room_types_min_base_price,
                 'guest_rating' => round($property->average_rating, 1),
                 'hotel_rating' => $property->star_rating,
                 'image' => $property->coverImage ? asset('storage/'.$property->coverImage->image) : null,
@@ -80,7 +88,6 @@ class AITravelAssistantService
         You are an AI travel assistant for a hotel booking platform.
 
         Always reply in {$language}.
-
         Your job is to help users choose the best hotel from the provided search results.
 
         IMPORTANT RULES:
@@ -144,15 +151,10 @@ class AITravelAssistantService
     private function generateRecommendation(
         string $message,
         Collection $properties,
-        array $filters
+        int $nightsCount
     ): string {
 
         $systemPrompt = $this->getSystemPrompt();
-
-        $nightsCount = isset($filters['check_in'], $filters['check_out'])
-            ? Carbon::parse($filters['check_in'])
-                ->diffInDays($filters['check_out'])
-            : 1;
 
         $context = $this->buildPropertyContext(
             $properties,
@@ -175,13 +177,15 @@ class AITravelAssistantService
         // Normalize filters
         $filters = $this->aiSearchService->normalizeFilters($filters);
 
+        $nightsCount = $this->getNightsCount($filters);
+
         //search properties
-        $properties=$this->searchProperties($filters);
+        $properties=$this->searchProperties($filters,$nightsCount);
 
         if ($properties->isEmpty()) {
             return [
                 'assistant' => __('messages.ai.no_matching_properties'),
-                'properties' => PropertyResource::collection($properties),
+                'properties' =>[],
             ];
         }
 
@@ -190,13 +194,17 @@ class AITravelAssistantService
             $recommendation = $this->generateRecommendation(
                 $message,
                 $properties,
-                $filters
+                $nightsCount
             );
         } catch (\Throwable $e) {
             report($e);
 
             $recommendation = __('messages.ai.default_recommendation');
         }
+
+        $properties->each(function ($property) use ($nightsCount) {
+            $property->nights = $nightsCount;
+        });
 
         // 4. Return response
         return [

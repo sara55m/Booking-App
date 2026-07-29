@@ -547,9 +547,11 @@ return [
 
     'ai' => [
 
-    'default_recommendation' => 'Here are the best matching hotels based on your search.',
+        'default_recommendation' => 'Here are the best matching hotels based on your search.',
 
-    'no_matching_properties' => 'Sorry, I couldn\'t find any properties matching your request. Try relaxing some filters such as price, amenities, destination, or travel dates.',
+        'no_matching_properties' => 'Sorry, I couldn\'t find any properties matching your request. Try relaxing some filters such as price, amenities, destination, or travel dates.',
+
+        'trip_planner_default'=>'We found some great hotels for your trip, but I could not generate a complete itinerary at the moment.',
 
     ],
 ];

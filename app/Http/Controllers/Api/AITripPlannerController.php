@@ -3,17 +3,18 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Services\AITripPlannerService;
 use App\Http\Requests\Properties\AISearchRequest;
-use App\Services\AITravelAssistantService;
 
-class AITravelAssistantController extends Controller
+class AITripPlannerController extends Controller
 {
     public function __invoke(
         AISearchRequest $request,
-        AITravelAssistantService $assistant
+        AITripPlannerService $plannerService
     ) {
         return response()->json(
-            $assistant->reply(
+            $plannerService->reply(
                 $request->validated('query')
             )
         );

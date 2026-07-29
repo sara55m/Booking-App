@@ -15,7 +15,7 @@ class PropertyResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $pricing=app(OfferService::class)->calculatePrice($this->resource, $request->nights ?? 1);
+        $pricing=app(OfferService::class)->calculatePrice($this->resource, $this->nights ?? 1);
 
         return [
             'id' => $this->id,

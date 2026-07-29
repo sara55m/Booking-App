@@ -41,6 +41,10 @@ class PropertyController extends Controller
                 ->with(['coverImage','city.country'])
                 ->paginate(10);
 
+            $properties->each(function ($property) use ($nightsCount) {
+                $property->nights = $nightsCount;
+            });
+
             return response()->json([
                 'interpreted_filters' => $filters,
                 'properties' => PropertyResource::collection($properties),
@@ -62,6 +66,7 @@ class PropertyController extends Controller
         //make cache key based on request parameters
         $cacheData = [
             'search' => $validated['search'] ?? null,
+            'country' => $validated['country'] ?? null,
             'city' => $validated['city'] ?? null,
             'type' => $validated['type'] ?? null,
             'guest_rating' => $validated['guest_rating'] ?? null,
@@ -91,10 +96,14 @@ class PropertyController extends Controller
                 ->paginate(10);
         });
 
+        $properties->each(function ($property) use ($nightsCount) {
+            $property->nights = $nightsCount;
+        });
+
         return response()->json([
             'status_code'=>200,
             'message'=>__('messages.properties_retrieved_successfully'),
-            'data'=>PropertyResource::collection($properties)->additional(['nights_count'=>$nightsCount])
+            'data'=>PropertyResource::collection($properties)
         ]);
     }
 
