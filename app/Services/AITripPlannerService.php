@@ -562,5 +562,92 @@ class AITripPlannerService
         ];
     }
 
+    public function streamTripPlan(
+    array $trip,
+    Collection $properties,
+    Collection $travelCategories,
+    int $nightsCount,
+    callable $onChunk
+    ): void {
+
+        $systemPrompt = $this->getSystemPrompt();
+
+        $context = $this->buildPlannerContext(
+            $trip,
+            $properties,
+            $travelCategories,
+            $nightsCount
+        );
+
+        $userPrompt = $this->buildUserPrompt($context);
+
+        $this->groq->streamChat(
+            $systemPrompt,
+            $userPrompt,
+            $onChunk
+        );
+    }
+
+    public function streamReply(string $message, callable $onChunk): array
+    {
+        // 1. Extract trip information
+        $trip = $this->extractTripDetails($message);
+
+        // 2. Calculate nights
+        $nightsCount = $this->getNightsCount($trip);
+
+        // 3. Search properties
+        $properties = $this->searchProperties(
+            $trip,
+            $nightsCount
+        );
+
+        // 4. Search travel categories
+        $travelCategories = $this->searchTravelCategories($trip);
+
+        // 5. No properties
+        if ($properties->isEmpty()) {
+
+            $onChunk(
+                __('messages.ai.no_matching_properties')
+            );
+
+            return [
+                'properties' => [],
+                'nights_count' => $nightsCount,
+            ];
+        }
+
+        // 6. Stream AI itinerary
+        try {
+
+            $this->streamTripPlan(
+                $trip,
+                $properties,
+                $travelCategories,
+                $nightsCount,
+                $onChunk
+            );
+
+        } catch (\Throwable $e) {
+
+            report($e);
+
+            $onChunk(
+                __('messages.ai.trip_planner_default')
+            );
+        }
+
+        // 7. Attach nights to properties
+        $properties->each(function ($property) use ($nightsCount) {
+            $property->nights = $nightsCount;
+        });
+
+        return [
+            'properties' => $properties,
+            'nights_count' => $nightsCount,
+        ];
+    }
+
 
 }

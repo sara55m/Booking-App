@@ -113,7 +113,15 @@ Route::middleware('auth:sanctum')->group(function () {
     );
 
     //ai trip planner endpoint
-    Route::post('/trip_planner', AITripPlannerController::class);
+    Route::post(
+    '/trip_planner',
+    [AITripPlannerController::class, 'tripPlanner']
+    );
+
+    Route::post(
+        '/trip_planner/stream',
+        [AITripPlannerController::class, 'tripPlannerStream']
+    );
 
     Route::get('/properties', [PropertyController::class, 'index']);
     Route::get('/properties/{property}', [PropertyController::class, 'show']);
