@@ -81,6 +81,9 @@ Route::middleware('auth:sanctum')->group(function () {
     //user transactions(payments)
     Route::get('profile/transactions',[ProfileController::class, 'transactions']);
 
+    //user trip plans
+    Route::get('profile/trip-plans',[ProfileController::class, 'tripPlans']);
+
     //reward points
     Route::get('/rewards',[RewardPointsController::class , 'summary']);
     Route::get('/history',[RewardPointsController::class , 'history']);

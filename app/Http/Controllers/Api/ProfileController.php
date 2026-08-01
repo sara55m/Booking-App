@@ -22,6 +22,7 @@ use Illuminate\Validation\Rule;
 use App\Enums\PaymentStatus;
 use App\Http\Resources\TransactionResource;
 use Illuminate\Support\Facades\Log;
+use App\Http\Resources\TripPlanResource;
 
 class ProfileController extends Controller
 {
@@ -190,7 +191,7 @@ class ProfileController extends Controller
                     'total' => $reviews->total(),
                 ],
             ],200);
-            
+
     }
 
     public function favorites(Request $request){
@@ -248,9 +249,9 @@ class ProfileController extends Controller
             'message' => $paymentMethods->isEmpty()
                 ? __('messages.no_payment_methods_found')
                 : __('messages.payment_methods_retrieved_successfully'),
-    
+
             'data' => PaymentMethodResource::collection($paymentMethods),
-    
+
             'pagination' => [
                 'current_page' => $paymentMethods->currentPage(),
                 'last_page' => $paymentMethods->lastPage(),
@@ -276,11 +277,11 @@ class ProfileController extends Controller
 
         try {
             DB::transaction(function () use ($user, $paymentMethod) {
-    
+
                 $user->paymentMethods()->update([
                     'is_default' => false,
                 ]);
-    
+
                 $paymentMethod->update([
                     'is_default' => true,
                 ]);
@@ -296,21 +297,21 @@ class ProfileController extends Controller
                     );
                 }
             });
-    
+
             return response()->json([
                 'status_code' => 200,
                 'message' => __('messages.default_payment_method_updated_successfully'),
                 'data' => new PaymentMethodResource($paymentMethod->fresh()),
             ]);
-    
+
         } catch (\Throwable $e) {
-    
+
             Log::error('Failed to set default payment method.', [
                 'user_id' => $user->id,
                 'payment_method_id' => $paymentMethod->id,
                 'error' => $e->getMessage(),
             ]);
-    
+
             return response()->json([
                 'status_code' => 500,
                 'message' => __('messages.something_went_wrong'),
@@ -345,7 +346,7 @@ class ProfileController extends Controller
                 );
 
                 $stripePaymentMethod->detach();
-                
+
                 $paymentMethod->delete();
 
                 // If the deleted card was the default, promote another one
@@ -451,9 +452,9 @@ class ProfileController extends Controller
             'message' => $transactions->isEmpty()
                 ? __('messages.no_transactions_yet')
                 : __('messages.transactions_retrieved_successfully'),
-    
+
             'data' => TransactionResource::collection($transactions),
-    
+
             'pagination' => [
                 'current_page' => $transactions->currentPage(),
                 'last_page' => $transactions->lastPage(),
@@ -461,6 +462,28 @@ class ProfileController extends Controller
                 'total' => $transactions->total(),
             ],
         ]);
+    }
 
+    public function tripPlans(Request $request){
+
+        $user=$request->user();
+
+        $tripPlans=$user->tripPlans()->latest()->paginate(10);
+
+        return response()->json([
+            'status_code' => 200,
+            'message' => $tripPlans->isEmpty()
+                ? __('messages.no_trip_plans_yet')
+                : __('messages.trip_plans_retrieved_successfully'),
+
+            'data' => TripPlanResource::collection($tripPlans),
+
+            'pagination' => [
+                'current_page' => $tripPlans->currentPage(),
+                'last_page' => $tripPlans->lastPage(),
+                'per_page' => $tripPlans->perPage(),
+                'total' => $tripPlans->total(),
+            ],
+        ]);
     }
 }

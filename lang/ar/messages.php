@@ -570,6 +570,9 @@ return [
 
     ],
 
+    'no_trip_plans_yet'=>'لا توجد خطط رحلات حتى الآن',
+    'trip_plans_retrieved_successfully'=>'تم استرجاع خطط الرحلات بنجاح',
+
 
 
 ];

@@ -560,4 +560,8 @@ return [
         'trip_plan_saved_successfully' => 'Trip plan saved successfully.',
 
     ],
+
+
+    'no_trip_plans_yet'=>'No trip plans have been created yet.',
+    'trip_plans_retrieved_successfully'=>'Trip Plans Retrieved Successfully',
 ];
