@@ -553,5 +553,11 @@ return [
 
         'trip_planner_default'=>'We found some great hotels for your trip, but I could not generate a complete itinerary at the moment.',
 
+        'no_trip_plan_found' => 'No trip plan found for this conversation.',
+
+        'no_generated_trip_plan_found' => 'No generated trip plan was found.',
+
+        'trip_plan_saved_successfully' => 'Trip plan saved successfully.',
+
     ],
 ];

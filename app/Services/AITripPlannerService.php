@@ -644,13 +644,14 @@ class AITripPlannerService
             );
         }
 
-        // 5. Save trip information to conversation
+        // 5. calculate the nights count
+        $nightsCount = $this->getNightsCount($trip);
+
+        // 6. Save trip information to conversation
         $conversation->update([
             'trip_context' => $trip,
+            'nights_count' => $nightsCount,
         ]);
-
-        // 6. calculate the nights count
-        $nightsCount = $this->getNightsCount($trip);
 
         // 7. Search properties
         $properties = $this->searchProperties($trip,$nightsCount);
@@ -663,7 +664,8 @@ class AITripPlannerService
 
             return [
                 'conversation_id' => $conversation->id,
-                'assistant' => __('messages.ai.no_matching_properties'),
+                'trip' => $trip,
+                'plan' => __('messages.ai.no_matching_properties'),
                 'properties' => [],
             ];
         }
@@ -702,10 +704,11 @@ class AITripPlannerService
         return [
             'conversation_id' => $conversation->id,
 
+            'trip' => $trip,
+
             'assistant' => $plan,
 
             'properties' => PropertyResource::collection($properties),
-
         ];
     }
 
@@ -793,13 +796,14 @@ class AITripPlannerService
             );
         }
 
-        // 5. Save trip information to conversation
+        // 5. Calculate nights
+        $nightsCount = $this->getNightsCount($trip);
+
+        // 6. Save trip information to conversation
         $conversation->update([
             'trip_context' => $trip,
+            'nights_count' => $nightsCount,
         ]);
-
-        // 6. Calculate nights
-        $nightsCount = $this->getNightsCount($trip);
 
         // 7. Search properties
         $properties = $this->searchProperties(
@@ -819,8 +823,9 @@ class AITripPlannerService
 
             return [
                 'conversation_id' => $conversation->id,
+                'trip' => $trip,
+                'plan' => $onChunk,
                 'properties' => [],
-                'nights_count' => $nightsCount,
             ];
         }
 
@@ -871,8 +876,9 @@ class AITripPlannerService
 
         return [
             'conversation_id' => $conversation->id,
+            'trip' => $trip,
+            'plan' => $assistantResponse,
             'properties' => $properties,
-            'nights_count' => $nightsCount,
         ];
     }
 

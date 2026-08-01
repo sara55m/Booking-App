@@ -99,6 +99,11 @@ class User extends Authenticatable implements FilamentUser,MustVerifyEmail,HasLo
         return $this->hasMany(RewardPoint::class,'user_id');
     }
 
+    public function tripPlans()
+    {
+        return $this->hasMany(TripPlan::class);
+    }
+
     public function canAccessPanel(Panel $panel): bool
     {
         return $this->role === 'admin';

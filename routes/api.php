@@ -123,6 +123,12 @@ Route::middleware('auth:sanctum')->group(function () {
         [AITripPlannerController::class, 'tripPlannerStream']
     );
 
+    //save a trip plan
+    Route::post(
+        '/trip-plans',
+        [AITripPlannerController::class, 'store']
+    );
+
     Route::get('/properties', [PropertyController::class, 'index']);
     Route::get('/properties/{property}', [PropertyController::class, 'show']);
 

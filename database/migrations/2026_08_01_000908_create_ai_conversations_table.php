@@ -19,6 +19,8 @@ return new class extends Migration
             ->nullOnDelete();
 
             $table->json('trip_context')->nullable();
+
+            $table->unsignedInteger('nights_count')->nullable();
             $table->timestamps();
         });
     }
