@@ -16,9 +16,11 @@ class AITripPlannerController extends Controller
     public function tripPlanner(
         AISearchRequest $request,
     ) {
+        $conversationId = $request->validated('conversation_id');
         return response()->json(
             $this->plannerService->reply(
-                $request->validated('query')
+                $request->validated('query'),
+                $conversationId
             )
         );
     }
@@ -26,11 +28,13 @@ class AITripPlannerController extends Controller
     public function tripPlannerStream(AISearchRequest $request)
     {
         $query = $request->validated('query');
+        $conversationId = $request->validated('conversation_id');
 
-        return response()->stream(function () use ($query) {
+        return response()->stream(function () use ($query, $conversationId) {
 
             $result = $this->plannerService->streamReply(
                 $query,
+                $conversationId,
                 function (string $chunk) {
 
                     echo json_encode([

@@ -39,82 +39,108 @@ class GroqService
         );
     }
 
+    public function chatWithHistory(
+    string $systemPrompt,
+    array $messages
+    ): string {
+        $response = Http::withToken(config('services.groq.api_key'))
+            ->baseUrl(config('services.groq.url'))
+            ->post('/chat/completions', [
+
+                'model' => config('services.groq.model'),
+
+                'messages' => array_merge(
+                    [
+                        [
+                            'role' => 'system',
+                            'content' => $systemPrompt,
+                        ],
+                    ],
+                    $messages
+                ),
+
+                'temperature' => 0.3,
+            ])
+            ->throw()
+            ->json();
+
+        return trim(
+            $response['choices'][0]['message']['content']
+        );
+    }
+
     public function streamChat(
     string $systemPrompt,
-    string $userPrompt,
+    array $messages,
     callable $onChunk
     ): void {
-    $response = Http::withToken(config('services.groq.api_key'))
-        ->baseUrl(config('services.groq.url'))
-        ->withOptions([
-            'stream' => true,
-        ])
-        ->post('/chat/completions', [
+        $response = Http::withToken(config('services.groq.api_key'))
+            ->baseUrl(config('services.groq.url'))
+            ->withOptions([
+                'stream' => true,
+            ])
+            ->post('/chat/completions', [
 
-            'model' => config('services.groq.model'),
+                'model' => config('services.groq.model'),
 
-            'messages' => [
-                [
-                    'role' => 'system',
-                    'content' => $systemPrompt,
-                ],
-                [
-                    'role' => 'user',
-                    'content' => $userPrompt,
-                ],
-            ],
+                'messages' => array_merge(
+                    [
+                        [
+                            'role' => 'system',
+                            'content' => $systemPrompt,
+                        ],
+                    ],
+                    $messages
+                ),
 
-            'temperature' => 0.3,
-            'stream' => true,
-        ]);
+                'temperature' => 0.3,
+                'stream' => true,
+            ]);
 
-    $response->throw();
+        $response->throw();
 
-    $body = $response->toPsrResponse()->getBody();
+        $body = $response->toPsrResponse()->getBody();
 
-    // Keep incomplete SSE data between reads.
-    $buffer = '';
+        $buffer = '';
 
-    while (! $body->eof()) {
+        while (! $body->eof()) {
 
-        $buffer .= $body->read(1024);
+            $buffer .= $body->read(1024);
 
-        // Process only complete lines.
-        while (($position = strpos($buffer, "\n")) !== false) {
+            while (($position = strpos($buffer, "\n")) !== false) {
 
-            $line = substr($buffer, 0, $position);
+                $line = substr($buffer, 0, $position);
 
-            // Remove the processed line from the buffer.
-            $buffer = substr($buffer, $position + 1);
+                $buffer = substr($buffer, $position + 1);
 
-            $line = trim($line);
+                $line = trim($line);
 
-            if ($line === '') {
-                continue;
-            }
+                if ($line === '') {
+                    continue;
+                }
 
-            if (! str_starts_with($line, 'data:')) {
-                continue;
-            }
+                if (! str_starts_with($line, 'data:')) {
+                    continue;
+                }
 
-            $data = trim(substr($line, 5));
+                $data = trim(substr($line, 5));
 
-            if ($data === '[DONE]') {
-                return;
-            }
+                if ($data === '[DONE]') {
+                    return;
+                }
 
-            $decoded = json_decode($data, true);
+                $decoded = json_decode($data, true);
 
-            if (! is_array($decoded)) {
-                continue;
-            }
+                if (! is_array($decoded)) {
+                    continue;
+                }
 
-            $content = $decoded['choices'][0]['delta']['content'] ?? null;
+                $content = $decoded['choices'][0]['delta']['content'] ?? null;
 
-            if ($content !== null && $content !== '') {
-                $onChunk($content);
+                if ($content !== null && $content !== '') {
+                    $onChunk($content);
+                }
             }
         }
-    }
     }
 }

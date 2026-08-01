@@ -28,6 +28,10 @@ class AISearchRequest extends FormRequest
                 'string',
                 'max:1000',
             ],
+            'conversation_id' => [
+                'nullable',
+                'exists:ai_conversations,id',
+            ],
         ];
     }
 }

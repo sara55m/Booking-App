@@ -7,6 +7,7 @@ use App\Models\Property;
 use Carbon\Carbon;
 use App\Http\Resources\PropertyResource;
 use Illuminate\Support\Collection;
+use App\Models\AiConversation;
 
 class AITripPlannerService
 {
@@ -236,8 +237,6 @@ class AITripPlannerService
         Collection $categories,
         int $nightsCount
     ): array {
-
-
 
         return [
 
@@ -481,14 +480,94 @@ class AITripPlannerService
             PROMPT;
     }
 
+    private function formatTripContext(array $trip): string
+    {
+        return json_encode(
+            $trip,
+            JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE
+        );
+    }
+
+    private function updateTripContext(
+        array $currentTrip,
+        string $message
+        ): array {
+
+    $systemPrompt = <<<PROMPT
+        You update an existing travel plan.
+
+        Your job is to modify the existing trip details based ONLY on the user's latest message.
+
+        Rules:
+        - Keep every existing value unless the user explicitly changes it.
+        - Never invent information.
+        - If the user changes the budget, update only the budget.
+        - If the user changes the destination, update the destination.
+        - If the user changes the duration, update the duration.
+        - If the user adds an interest, keep the existing interests and add the new one.
+        - If the user removes an interest, remove only that interest.
+        - Return ONLY a valid JSON object.
+        - Do NOT use markdown.
+        - Do NOT use ```json.
+        - Do NOT add explanations.
+        PROMPT;
+
+        $userPrompt = <<<PROMPT
+            Current trip:
+
+            {$this->formatTripContext($currentTrip)}
+
+            User's follow-up message:
+
+            {$message}
+
+            Return the complete updated trip using exactly this structure:
+
+            {
+                "country": null,
+                "city": null,
+                "days": null,
+                "budget": null,
+                "travel_style": null,
+                "interests": [],
+                "start_date": null,
+                "end_date": null
+            }
+            PROMPT;
+
+            $content = $this->groq->chat(
+                $systemPrompt,
+                $userPrompt
+            );
+
+            // Remove possible markdown fences if the model still adds them
+            $content = trim($content);
+
+            $content = preg_replace(
+                '/^```json\s*|\s*```$/i',
+                '',
+                $content
+            );
+
+            $updatedTrip = json_decode($content, true);
+
+            if (! is_array($updatedTrip)) {
+                throw new \RuntimeException(
+                    'AI returned invalid trip context: ' . $content
+                );
+            }
+
+        return $updatedTrip;
+    }
+
     private function generateTripPlan(
         array $trip,
         Collection $properties,
         Collection $travelCategories,
-        int $nightsCount
+        int $nightsCount,
+        AiConversation $conversation
 
     ): string {
-
         $systemPrompt = $this->getSystemPrompt();
 
         $context = $this->buildPlannerContext(
@@ -500,44 +579,111 @@ class AITripPlannerService
 
         $userPrompt = $this->buildUserPrompt($context);
 
-        return $this->groq->chat(
+        //get the conversation messages
+        $messages = $conversation->messages()
+        ->latest()
+        ->take(10)
+        ->get()
+        ->reverse()
+        ->map(function ($message) {
+            return [
+                'role' => $message->role,
+                'content' => $message->content,
+            ];
+        })
+        ->values()
+        ->toArray();
+
+        $messages[] = [
+            'role' => 'user',
+            'content' => $userPrompt,
+        ];
+
+        return $this->groq->chatWithHistory(
             $systemPrompt,
-            $userPrompt
+            $messages
         );
     }
 
 
-    public function reply(string $message): array
+    public function reply(string $message,?int $conversationId = null): array
     {
-        // 1. Extract trip information
-        $trip = $this->extractTripDetails($message);
+        // 1. Get existing conversation or create a new one
+        if ($conversationId) {
 
+            $conversation = AiConversation::where('id', $conversationId)
+                ->where('user_id', auth()->id())
+                ->firstOrFail();
+
+        } else {
+
+            $conversation = AiConversation::create([
+                'user_id' => auth()->id(),
+            ]);
+        }
+
+        // 3. Save user's message
+        $conversation->messages()->create([
+            'role' => 'user',
+            'content' => $message,
+        ]);
+
+        // 4. Extract trip information
+        //if the conversation has trip context, update it
+        if ($conversation->trip_context) {
+
+            $trip = $this->updateTripContext(
+                $conversation->trip_context,
+                $message
+            );
+        //otherwise extract the trip information
+        } else {
+
+            $trip = $this->extractTripDetails(
+                $message
+            );
+        }
+
+        // 5. Save trip information to conversation
+        $conversation->update([
+            'trip_context' => $trip,
+        ]);
+
+        // 6. calculate the nights count
         $nightsCount = $this->getNightsCount($trip);
 
-        // 2. Search properties
+        // 7. Search properties
         $properties = $this->searchProperties($trip,$nightsCount);
 
-        // 3. Search travel categories
+        // 8. Search travel categories
         $travelCategories = $this->searchTravelCategories($trip);
 
-        // 4. No properties
+        // 9. No properties
         if ($properties->isEmpty()) {
 
             return [
+                'conversation_id' => $conversation->id,
                 'assistant' => __('messages.ai.no_matching_properties'),
                 'properties' => [],
             ];
         }
 
-        // 5. Generate itinerary
+        // 10. Generate itinerary
         try {
 
             $plan = $this->generateTripPlan(
                 $trip,
                 $properties,
                 $travelCategories,
-                $nightsCount
+                $nightsCount,
+                $conversation
             );
+
+            // 11. Save itinerary to conversation
+            $conversation->messages()->create([
+                'role' => 'assistant',
+                'content' => $plan,
+            ]);
 
 
         } catch (\Throwable $e) {
@@ -548,12 +694,13 @@ class AITripPlannerService
 
         }
 
-        // 6. Return response
+        // 12. Return response
         $properties->each(function ($property) use ($nightsCount) {
             $property->nights = $nightsCount;
         });
 
         return [
+            'conversation_id' => $conversation->id,
 
             'assistant' => $plan,
 
@@ -567,7 +714,8 @@ class AITripPlannerService
     Collection $properties,
     Collection $travelCategories,
     int $nightsCount,
-    callable $onChunk
+    callable $onChunk,
+    AiConversation $conversation
     ): void {
 
         $systemPrompt = $this->getSystemPrompt();
@@ -581,31 +729,88 @@ class AITripPlannerService
 
         $userPrompt = $this->buildUserPrompt($context);
 
+        //get the conversation messages
+        $messages = $conversation->messages()
+        ->latest()
+        ->take(10)
+        ->get()
+        ->reverse()
+        ->map(function ($message) {
+            return [
+                'role' => $message->role,
+                'content' => $message->content,
+            ];
+        })
+        ->values()
+        ->toArray();
+
+        $messages[] = [
+            'role' => 'user',
+            'content' => $userPrompt,
+        ];
+
         $this->groq->streamChat(
             $systemPrompt,
-            $userPrompt,
+            $messages,
             $onChunk
         );
     }
 
-    public function streamReply(string $message, callable $onChunk): array
+    public function streamReply(string $message,?int $conversationId = null,callable $onChunk): array
     {
-        // 1. Extract trip information
-        $trip = $this->extractTripDetails($message);
+        // 1. Get existing conversation or create a new one
+        if ($conversationId) {
 
-        // 2. Calculate nights
+        $conversation = AiConversation::where('id', $conversationId)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
+
+        } else {
+
+            $conversation = AiConversation::create([
+                'user_id' => auth()->id(),
+            ]);
+        }
+        // 3. Save user's message
+        $conversation->messages()->create([
+            'role' => 'user',
+            'content' => $message,
+        ]);
+
+        // 4. Extract trip information
+        //if the conversation has trip context, update it
+        if ($conversation->trip_context) {
+
+            $trip = $this->updateTripContext(
+                $conversation->trip_context,
+                $message
+            );
+        //otherwise extract the trip information
+        } else {
+
+            $trip = $this->extractTripDetails(
+                $message
+            );
+        }
+
+        // 5. Save trip information to conversation
+        $conversation->update([
+            'trip_context' => $trip,
+        ]);
+
+        // 6. Calculate nights
         $nightsCount = $this->getNightsCount($trip);
 
-        // 3. Search properties
+        // 7. Search properties
         $properties = $this->searchProperties(
             $trip,
             $nightsCount
         );
 
-        // 4. Search travel categories
+        // 8. Search travel categories
         $travelCategories = $this->searchTravelCategories($trip);
 
-        // 5. No properties
+        // 9. No properties
         if ($properties->isEmpty()) {
 
             $onChunk(
@@ -613,30 +818,51 @@ class AITripPlannerService
             );
 
             return [
+                'conversation_id' => $conversation->id,
                 'properties' => [],
                 'nights_count' => $nightsCount,
             ];
         }
 
-        // 6. Stream AI itinerary
+        $assistantResponse = '';
+
+        // 10. Stream AI itinerary
         try {
 
-            $this->streamTripPlan(
-                $trip,
-                $properties,
-                $travelCategories,
-                $nightsCount,
+        $this->streamTripPlan(
+            $trip,
+            $properties,
+            $travelCategories,
+            $nightsCount,
+            function (string $chunk) use (
+                &$assistantResponse,
                 $onChunk
-            );
+            ) {
+
+                // Keep complete response for database
+                $assistantResponse .= $chunk;
+
+                // Send chunk to controller
+                $onChunk($chunk);
+            },
+            $conversation
+        );
+
 
         } catch (\Throwable $e) {
 
             report($e);
 
-            $onChunk(
-                __('messages.ai.trip_planner_default')
-            );
+            $assistantResponse = __('messages.ai.trip_planner_default');
+
+            $onChunk($assistantResponse);
         }
+
+        // 11. Save complete assistant response
+        $conversation->messages()->create([
+            'role' => 'assistant',
+            'content' => $assistantResponse,
+        ]);
 
         // 7. Attach nights to properties
         $properties->each(function ($property) use ($nightsCount) {
@@ -644,6 +870,7 @@ class AITripPlannerService
         });
 
         return [
+            'conversation_id' => $conversation->id,
             'properties' => $properties,
             'nights_count' => $nightsCount,
         ];
