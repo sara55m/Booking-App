@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Enums\BookingStatus;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Http\Requests\Reviews\StoreRequest;
+use App\Http\Requests\Reviews\UpdateRequest;
 use App\Http\Resources\ReviewResource;
 use App\Models\Booking;
 use App\Models\Review;
@@ -18,7 +18,7 @@ class ReviewController extends Controller
 
     public function index(Property $property)
     {
-        $reviews = $property->approvedReviews()->with('user','tags','booking','property')->latest()->paginate(10);
+        $reviews = $property->approvedReviews()->with('user','categories','tags','booking','property')->latest()->paginate(10);
         return response()->json(
             [
                 'status_code' => 200,
@@ -28,7 +28,9 @@ class ReviewController extends Controller
 
     public function store(StoreRequest $request)
     {
-        $booking = Booking::where('reference', $request->booking_reference)->firstOrFail();
+        $validated=$request->validated();
+
+        $booking = Booking::where('reference', $validated['booking_reference'])->firstOrFail();
         //validate the user already has a booking to review
         Gate::authorize('create', [Review::class,$booking]);
 
@@ -42,21 +44,32 @@ class ReviewController extends Controller
             return response()->json(['message'=>__("messages.you_have_already_reviewed_this_booking")], 403);
         }
 
-        $review=DB::transaction(function () use ($request, $booking) {
+        $review=DB::transaction(function () use ($validated, $booking) {
             $review=Review::create([
                 'user_id'=>auth()->id(),
                 'property_id'=>$booking->property_id,
                 'booking_id'=>$booking->id,
-                'rating'=>$request->rating,
-                'comment'=>$request->comment,
+                'rating'=>$validated['rating'],
+                'comment'=>$validated['comment'] ?? null,
             ]);
 
-            //attach tags if provided
-            if($request->has('review_tags')){
-                $review->tags()->sync($request->review_tags ?? []);
+            //attach review categories
+            foreach ($validated['review_categories'] as $category) {
+
+                $review->categories()->attach(
+                    $category['category_id'],
+                    [
+                        'rating' => $category['rating'],
+                    ]
+                );
             }
 
-            $review->load('user','tags','property','booking');
+            // Attach tags if provided
+            if (array_key_exists('review_tags', $validated)) {
+                $review->tags()->sync($validated['review_tags']);
+            }
+
+            $review->load(['user','tags','categories','property','booking']);
 
             return $review;
         });
@@ -73,7 +86,7 @@ class ReviewController extends Controller
     {
         Gate::authorize('view', $review);
 
-        $review->load('user','tags','property','booking');
+        $review->load('user','tags','categories','property','booking');
         return response()->json(
             [
                 'status_code' => 200,
@@ -81,20 +94,41 @@ class ReviewController extends Controller
                 'data' => new ReviewResource($review)],200);
     }
 
-    public function update(Request $request, Review $review)
+    public function update(UpdateRequest $request, Review $review)
     {
+        $validated=$request->validated();
+
         Gate::authorize('update', $review);
 
-        DB::transaction(function () use ($request, $review) {
-            $review->update($request->only('rating', 'comment'));
+        DB::transaction(function () use ($validated, $review) {
+            $review->update([
+                'rating'=>$validated['rating'] ?? $review->rating,
+                'comment'=>$validated['comment'] ?? $review->comment,
+            ]);
+
+            // Update category ratings only if provided
+            if (array_key_exists('review_categories', $validated)) {
+
+            $categoryRatings = collect($validated['review_categories'])
+                ->mapWithKeys(function ($category) {
+                    return [
+                        $category['category_id'] => [
+                            'rating' => $category['rating'],
+                        ],
+                    ];
+                })
+                ->toArray();
+
+            $review->categories()->syncWithoutDetaching($categoryRatings);
+        }
 
             //update tags if provided
-            if($request->has('review_tags')){
-                $review->tags()->sync($request->review_tags ?? []);
+            if (array_key_exists('review_tags', $validated)) {
+                $review->tags()->sync($validated['review_tags']);
             }
         });
 
-        $review->load('user','tags','booking','property');
+        $review->load(['user','tags','categories','booking','property']);
 
         return response()->json(
             [
@@ -106,8 +140,11 @@ class ReviewController extends Controller
     public function destroy(Review $review)
     {
         Gate::authorize('delete', $review);
-        //delete the review and detach tags
+        //detach categories
+        $review->categories()->detach();
+        //detach tags
         $review->tags()->detach();
+        //delete the review
         $review->delete();
         return response()->json(
             [

@@ -4,8 +4,9 @@ namespace App\Http\Requests\Reviews;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class UpadteRequest extends FormRequest
+class UpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,8 +24,18 @@ class UpadteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'rating'=>'required|integer|min:1|max:5',
+            'rating'=>'sometimes|integer|min:1|max:5',
             'comment'=>'nullable|string|max:1000',
+
+            'review_categories'=>'sometimes|array',
+            'review_categories.*.category_id'=>[
+                'required',
+                'integer',
+                'distinct',
+                Rule::exists('review_categories', 'id')->where('is_active', true)
+            ],
+            'review_categories.*.rating'=>'required|integer|min:1|max:5',
+
             'review_tags'=>'nullable|array',
             'review_tags.*'=>'exists:review_tags,id',
         ];

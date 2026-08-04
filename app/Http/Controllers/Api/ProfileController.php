@@ -161,7 +161,7 @@ class ProfileController extends Controller
 
         $user=$request->user();
 
-        $reviews = $user->approvedReviews()->with('tags','booking','property')
+        $reviews = $user->approvedReviews()->with('tags','categories','booking','property')
         ->when($request->filled('search'), function ($query) use ($request) {
             $query->where(function ($query) use ($request) {
                 $query->whereHas('tags', function ($query) use ($request) {

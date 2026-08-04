@@ -43,6 +43,14 @@ class Review extends Model
         return $this->belongsToMany(ReviewTag::class, 'review_review_tags', 'review_id', 'review_tag_id')->withTimestamps();
     }
 
+    public function categories()
+    {
+        return $this->belongsToMany(ReviewCategory::class,
+        'review_category_ratings','review_id','review_category_id')
+        ->withPivot('rating')
+        ->withTimestamps();;
+    }
+
     protected static function booted()
     {
         static::saved(function ($review) {

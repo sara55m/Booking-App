@@ -38,15 +38,25 @@ class ReviewResource extends JsonResource
                     'name' => $this->user->name,
                 ];
             }),
+            'categories' => $this->whenLoaded('categories', function () {
+                return $this->categories->map(fn ($category) => [
+                    'id' => $category->id,
+                    'name' => $category->name,
+                    'slug' => $category->slug,
+                    'rating' => $category->pivot->rating,
+                ])->values();
+            }),
             'tags' => $this->whenLoaded('tags', function () {
                 return $this->tags->map(fn ($tag) => [
                     'id' => $tag->id,
                     'name' => $tag->name,
+                    'type'=>$tag->type,
                 ])->values();
             }),
             'rating'=>$this->rating,
             'comment'=>$this->comment ?? null,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
+            'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
         ];
     }
 }
