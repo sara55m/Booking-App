@@ -9,6 +9,7 @@ class ReviewTag extends Model
     protected $fillable = [
         'name',
         'type',
+        'is_active',
     ];
 
     public function reviews()

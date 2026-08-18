@@ -7,6 +7,7 @@ use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
 use App\Enums\ReviewStatus;
+use Filament\Infolists\Components\RepeatableEntry;
 
 class ReviewInfolist
 {
@@ -33,7 +34,7 @@ class ReviewInfolist
                             ])
                             ->columns(2),
 
-                        Tab::make(__('messages.review_content'))
+                            Tab::make(__('messages.review_content'))
                             ->schema([
                                 TextEntry::make('rating')
                                     ->label(__('messages.rating'))
@@ -49,13 +50,35 @@ class ReviewInfolist
                                     ->label(__('messages.comment'))
                                     ->columnSpanFull()
                                     ->placeholder('-'),
+                            ])
+                            ->columns(2),
 
+                            Tab::make(__('messages.review_categories'))
+                            ->schema([
+                                RepeatableEntry::make('categories')
+                                    ->label(__('messages.review_categories'))
+                                    ->schema([
+                                        TextEntry::make('name')
+                                            ->label(__('messages.name')),
+
+                                        TextEntry::make('pivot.rating')
+                                            ->label(__('messages.rating'))
+                                            ->formatStateUsing(fn ($state) => "{$state} / 5")
+                                            ->badge(),
+                                    ])
+                                    ->columns(2),
+                            ])
+                            ->columns(2),
+
+                            Tab::make(__('messages.review_tags'))
+                            ->schema([
                                 TextEntry::make('tags')
-                                    ->label(__('messages.tags'))
+                                    ->label(__('messages.review_tags'))
                                     ->state(fn ($record) => $record->tags->pluck('name')->toArray())
                                     ->badge(),
                             ])
                             ->columns(2),
+
                     ])
                     ->columnSpanFull(),
             ]);

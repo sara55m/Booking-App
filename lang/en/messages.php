@@ -88,7 +88,6 @@ return [
     'review' => 'Review',
     'comment' => 'Comment',
     'rejected'=>'Rejected',
-    'tags' => 'Tags',
     'review_details' => 'Review Details',
     'review_content' => 'Review Content',
     'approve' => 'Approve',
@@ -305,6 +304,15 @@ return [
     'free_cancellation_hours_help' => 'Enter 0 to allow free cancellation until the check-in time.',
     'refund_percentage'=>'Refund Percentage',
     'important_information'=>'Important Information',
+    'review_categories'=>'Review Categories',
+    'review_category'=>'Review Category',
+    'review_category_details'=>'Review Category Details',
+    'review_tags'=>'Review Tags',
+    'review_tag'=>'Review Tag',
+    'review_tag_details'=>'Review Tag Details',
+    'positive'=>'positive',
+    'negative'=>'negative',
+    'neutral'=>'neutral',
 
 
     //api messages

@@ -88,7 +88,6 @@ return [
     'reviews' => 'التقييمات',
     'comment' => 'التعليق',
     'rejected' => 'مرفوض',
-    'tags' => 'العلامات',
     'review_details' => 'تفاصيل التقييم',
     'review_content' => 'محتوى التقييم',
     'approve' => 'موافقة',
@@ -318,6 +317,15 @@ return [
     'refund_percentage' => 'نسبة استرداد المبلغ',
 
     'important_information' => 'معلومات مهمة',
+    'review_categories'=>'تصنيفات التقييم',
+    'review_category'=>'تصنيف التقييم',
+    'review_category_details'=>'تفاصيل تصنيف التقييم',
+    'review_tags'=>'وسوم التقيييم',
+    'review_tag'=>'وسم التقييم',
+    'review_tag_details'=>'تفاصيل وسم التقييم',
+    'positive'=>'إيجابى',
+    'negative'=>'سلبى',
+    'neutral'=>'محايد',
 
     //api messages
     //properties

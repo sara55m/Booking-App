@@ -15,7 +15,6 @@ class AmenityForm
         return $schema
             ->components([
                 Section::make(__('messages.amenity_details'))
-                    ->label(__('messages.amenity_details'))
                     ->components([
                         TextInput::make('name')
                             ->label(__('messages.name'))
@@ -90,7 +89,7 @@ class AmenityForm
                             ->getOptionLabelFromRecordUsing(fn ($value): string => $value)
                             ->searchable()
                             ->required(),
-                    ]),
+                    ])->columns(2)->columnSpanFull(),
 
             ]);
     }
