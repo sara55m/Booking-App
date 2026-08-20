@@ -9,7 +9,6 @@ class GroqService
     public function chat(string $systemPrompt, string $userPrompt): string
     {
         //this is where we actually talk with the ai model (groq)
-
         $response = Http::withToken(config('services.groq.api_key'))
             ->baseUrl(config('services.groq.url'))
             ->post('/chat/completions', [
@@ -36,6 +35,43 @@ class GroqService
 
         return trim(
             $response['choices'][0]['message']['content']
+        );
+    }
+
+    public function chatJson(string $systemPrompt, string $userPrompt): array
+    {
+        $response = Http::withToken(config('services.groq.api_key'))
+            ->baseUrl(config('services.groq.url'))
+            ->post('/chat/completions', [
+
+                'model' => config('services.groq.model'),
+
+                'messages' => [
+                    [
+                        'role' => 'system',
+                        'content' => $systemPrompt,
+                    ],
+
+                    [
+                        'role' => 'user',
+                        'content' => $userPrompt,
+                    ],
+                ],
+
+                'temperature' => 0.3,
+
+                'response_format' => [
+                    'type' => 'json_object',
+                ],
+            ])
+            ->throw()
+            ->json();
+
+        return json_decode(
+            $response['choices'][0]['message']['content'],
+            true,
+            512,
+            JSON_THROW_ON_ERROR
         );
     }
 

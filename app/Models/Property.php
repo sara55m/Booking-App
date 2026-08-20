@@ -21,6 +21,9 @@ class Property extends Model
         'minimum_partial_payment_percentage',
         'latitude',
         'longitude',
+        'ai_review_summary',
+        'ai_review_summary_generated_at',
+        'ai_review_summary_review_count',
     ];
 
     protected $casts = [
@@ -29,8 +32,13 @@ class Property extends Model
         'reviews_count' => 'integer',
         'average_rating' => 'decimal:2',
         'is_featured' => 'boolean',
+
         'latitude'=>'decimal:2',
-        'longitude'=>'decimal:2'
+        'longitude'=>'decimal:2',
+
+        'ai_review_summary'=>'array',
+        'ai_review_summary_generated_at'=>'datetime',
+        'ai_review_summary_review_count' => 'integer',
     ];
 
     public function city()
@@ -107,8 +115,11 @@ class Property extends Model
         $approvedReviews = $this->approvedReviews()->get();
 
         $this->update([
-            'reviews_count'=>$this->reviews_count = $approvedReviews->count(),
-            'average_rating'=>$this->average_rating = round($approvedReviews->avg('rating') ?? 0,2),
+            'reviews_count' => $approvedReviews->count(),
+            'average_rating' => round(
+                $approvedReviews->avg('rating') ?? 0,
+                2
+            ),
         ]);
     }
 

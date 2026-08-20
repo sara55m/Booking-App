@@ -14,6 +14,8 @@ use App\Http\Requests\Rooms\CheckAvailabilityRequest;
 use App\Http\Requests\Properties\SearchRequest;
 use App\Http\Requests\Properties\AISearchRequest;
 use App\Services\AISearchService;
+use App\Services\ReviewSummaryService;
+
 class PropertyController extends Controller
 {
     public function aiSearch(

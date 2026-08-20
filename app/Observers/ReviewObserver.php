@@ -2,14 +2,22 @@
 
 namespace App\Observers;
 
+use App\Enums\ReviewStatus;
 use App\Models\Review;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Notification;
 use App\Models\User;
 use App\Notifications\ReviewCreatedAdminNotification;
+use App\Jobs\GenerateReviewSummaryJob;
+use App\Services\ReviewSummaryService;
 
 class ReviewObserver
 {
+
+    public function __construct(
+            private ReviewSummaryService $reviewSummaryService
+        ) {
+        }
 
     private function recalculate(Review $review)
     {
@@ -43,6 +51,22 @@ class ReviewObserver
     public function updated(Review $review): void
     {
         $this->recalculate($review);
+
+        $shouldRegenerate = $this->reviewSummaryService
+            ->shouldRegenerateForReview($review);
+
+        logger()->info('Review updated', [
+            'review_id' => $review->id,
+            'old_status' => $review->getRawOriginal('status'),
+            'new_status' => $review->status?->value,
+            'rating_changed' => $review->wasChanged('rating'),
+            'comment_changed' => $review->wasChanged('comment'),
+            'should_regenerate' => $shouldRegenerate,
+        ]);
+
+        if ($shouldRegenerate) {
+            GenerateReviewSummaryJob::dispatch($review->property_id);
+        }
     }
 
     /**
