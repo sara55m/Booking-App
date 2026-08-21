@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Notification;
 use App\Models\User;
 use App\Notifications\ReviewCreatedAdminNotification;
+use App\Notifications\ReviewUpdatedAdminNotification;
 use App\Jobs\GenerateReviewSummaryJob;
 use App\Services\ReviewSummaryService;
 
@@ -64,6 +65,21 @@ class ReviewObserver
     public function updated(Review $review): void
     {
         $this->recalculate($review);
+
+        //send admin notification when an approved review is updated
+        $oldStatus = $review->getRawOriginal('status');
+        $newStatus = $review->status;
+
+        if (
+            $oldStatus === ReviewStatus::Approved->value &&
+            $newStatus === ReviewStatus::Pending
+        ) {
+            $admins=User::where('role','admin')->get();
+            Notification::send(
+                $admins,
+                new ReviewUpdatedAdminNotification($review)
+            );
+        }
 
         $shouldRegenerate = $this->reviewSummaryService
             ->shouldRegenerateForReview($review);

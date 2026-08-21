@@ -586,6 +586,8 @@ return [
     'you_can_only_edit_reviews_within_24_hours_from_approval' =>
     'يمكنك تعديل التقييم خلال 24 ساعة فقط من وقت الموافقة عليه.',
 
+    'review_requires_remoderation' =>'تقييم يحتاج إلى مراجعة جديدة',
 
+    'review_updated_admin_notification' =>'قام :user بتعديل تقييمه للحجز رقم :booking في :property، ويحتاج التقييم إلى المراجعة مرة أخرى.',
 
 ];

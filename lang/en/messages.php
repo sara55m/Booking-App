@@ -577,4 +577,8 @@ return [
     'you_can_not_edit_rejected_reviews' => 'You cannot edit a rejected review.',
     'you_can_only_edit_reviews_within_24_hours_from_approval' =>
     'You can only edit a review within 24 hours of its approval.',
+
+    'review_requires_remoderation' =>'Review Requires Re-moderation',
+
+    'review_updated_admin_notification' =>':user updated their review for booking :booking at :property. The review requires moderation again.',
 ];
