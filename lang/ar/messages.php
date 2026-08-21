@@ -581,6 +581,11 @@ return [
     'no_trip_plans_yet'=>'لا توجد خطط رحلات حتى الآن',
     'trip_plans_retrieved_successfully'=>'تم استرجاع خطط الرحلات بنجاح',
 
+    //edit review messages
+    'you_can_not_edit_rejected_reviews' => 'لا يمكنك تعديل تقييم تم رفضه.',
+    'you_can_only_edit_reviews_within_24_hours_from_approval' =>
+    'يمكنك تعديل التقييم خلال 24 ساعة فقط من وقت الموافقة عليه.',
+
 
 
 ];

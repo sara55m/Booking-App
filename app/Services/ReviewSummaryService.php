@@ -34,7 +34,13 @@ class ReviewSummaryService
             return true;
         }
 
-        //2.pending/rejected->approved
+        //2.approved->pending regenerate the summary if a previously approved review is pending again due to an edit
+        if ($oldStatus === ReviewStatus::Approved->value && $newStatus === ReviewStatus::Pending)
+        {
+            return true;
+        }
+
+        //3.pending/rejected->approved
         //apply the threshold logic
         if($newStatus===ReviewStatus::Approved)
         {

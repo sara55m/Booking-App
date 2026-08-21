@@ -14,12 +14,14 @@ class Review extends Model
         'rating',
         'comment',
         'status',
+        'approved_at'
     ];
 
     protected function casts(): array
     {
         return [
             'status' => ReviewStatus::class,
+            'approved_at'=>'datetime'
         ];
     }
 

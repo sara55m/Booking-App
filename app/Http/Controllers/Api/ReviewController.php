@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Enums\BookingStatus;
+use App\Enums\ReviewStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Reviews\StoreRequest;
 use App\Http\Requests\Reviews\UpdateRequest;
@@ -100,32 +101,91 @@ class ReviewController extends Controller
 
         Gate::authorize('update', $review);
 
-        DB::transaction(function () use ($validated, $review) {
-            $review->update([
-                'rating'=>$validated['rating'] ?? $review->rating,
-                'comment'=>$validated['comment'] ?? $review->comment,
-            ]);
-
-            // Update category ratings only if provided
-            if (array_key_exists('review_categories', $validated)) {
-
-            $categoryRatings = collect($validated['review_categories'])
-                ->mapWithKeys(function ($category) {
-                    return [
-                        $category['category_id'] => [
-                            'rating' => $category['rating'],
-                        ],
-                    ];
-                })
-                ->toArray();
-
-            $review->categories()->syncWithoutDetaching($categoryRatings);
+        //if review status is rejected -> can not edit
+        if($review->status===ReviewStatus::Rejected){
+            return response()->json(['message'=>__("messages.you_can_not_edit_rejected_reviews")], 403);
         }
 
-            //update tags if provided
-            if (array_key_exists('review_tags', $validated)) {
-                $review->tags()->sync($validated['review_tags']);
+        //if review status is approved the user can edit the review only within 24 hours
+        if($review->status===ReviewStatus::Approved){
+            $threshold = $review->approved_at->copy()->addHours(24);
+
+            if(now()->greaterThan($threshold)){
+                return response()->json(['message'=>__("messages.you_can_only_edit_reviews_within_24_hours_from_approval")], 403);
             }
+        }
+
+        //update pending and approved reviews
+        DB::transaction(function () use ($validated, $review) {
+            $reviewData=[];
+
+            if(array_key_exists('rating',$validated)){
+                $reviewData['rating']=$validated['rating'];
+            }
+
+            if(array_key_exists('comment',$validated)){
+                $reviewData['comment']=$validated['comment'];
+            }
+
+            //check if review content was actually changed (rating or comment)
+            $reviewChanged=
+            (
+            array_key_exists('rating',$reviewData) && $reviewData['rating'] != $review->rating)
+            ||
+            (
+                array_key_exists('comment',$reviewData) && $reviewData['comment'] != $review->comment
+            );
+
+            // Update category ratings only if provided
+            $categoriesChanged = false;
+            if (array_key_exists('review_categories', $validated)) {
+                $categoryRatings = collect($validated['review_categories'])
+                    ->mapWithKeys(function ($category) {
+                        return [
+                            $category['category_id'] => [
+                                'rating' => $category['rating'],
+                            ],
+                        ];
+                    })
+                    ->toArray();
+
+                $changes=$review->categories()->sync($categoryRatings);
+
+                $categoriesChanged =
+                ! empty($changes['attached']) ||
+                ! empty($changes['detached']) ||
+                ! empty($changes['updated']);
+            }
+
+            //update tags if provided
+            $tagsChanged = false;
+            if (array_key_exists('review_tags', $validated)) {
+                $changes=$review->tags()->sync($validated['review_tags']);
+
+                $tagsChanged =
+                ! empty($changes['attached']) ||
+                ! empty($changes['detached']) ||
+                ! empty($changes['updated']);
+            }
+
+            $hasChanges =
+            $reviewChanged
+            || $categoriesChanged
+            || $tagsChanged;
+
+            //if an approved review is edited change the status back to pending for review and moderation
+            if (
+                $review->status === ReviewStatus::Approved
+                && $hasChanges
+            ) {
+                $reviewData['status'] = ReviewStatus::Pending;
+            }
+
+            //update review
+            if (! empty($reviewData)) {
+                $review->update($reviewData);
+            }
+
         });
 
         $review->load(['user','tags','categories','booking','property']);

@@ -45,6 +45,19 @@ class ReviewObserver
 
     }
 
+    public function updating(Review $review): void
+    {
+        if (! $review->isDirty('status')) {
+            return;
+        }
+
+        if ($review->status === ReviewStatus::Approved) {
+            $review->approved_at = now();
+        } else {
+            $review->approved_at = null;
+        }
+    }
+
     /**
      * Handle the Review "updated" event.
      */
@@ -54,15 +67,6 @@ class ReviewObserver
 
         $shouldRegenerate = $this->reviewSummaryService
             ->shouldRegenerateForReview($review);
-
-        logger()->info('Review updated', [
-            'review_id' => $review->id,
-            'old_status' => $review->getRawOriginal('status'),
-            'new_status' => $review->status?->value,
-            'rating_changed' => $review->wasChanged('rating'),
-            'comment_changed' => $review->wasChanged('comment'),
-            'should_regenerate' => $shouldRegenerate,
-        ]);
 
         if ($shouldRegenerate) {
             GenerateReviewSummaryJob::dispatch($review->property_id);
