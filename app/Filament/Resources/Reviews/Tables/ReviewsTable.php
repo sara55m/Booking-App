@@ -14,6 +14,11 @@ use Filament\Tables\Filters\Filter;
 use App\Models\Review;
 use App\Filament\Resources\Bookings\BookingResource;
 use App\Enums\ReviewStatus;
+use App\Enums\ReviewRejectionReason;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Utilities\Get;
 
 class ReviewsTable
 {
@@ -107,11 +112,62 @@ class ReviewsTable
                 ->visible(fn($record) => $record->status !== ReviewStatus::Approved),
 
                 Action::make('reject')
-                ->action(fn($record) => $record->update(['status' =>ReviewStatus::Rejected]))
+                ->requiresConfirmation()
                 ->label(__('messages.reject'))
                 ->color('danger')
                 ->icon('heroicon-o-x-mark')
-                ->visible(fn($record) => $record->status !== ReviewStatus::Rejected),
+                ->visible(fn($record) => $record->status !== ReviewStatus::Rejected)
+                ->schema([
+                    Select::make('rejection_reason')
+                        ->label(__('messages.rejection_reason'))
+                        ->options([
+                            ReviewRejectionReason::InappropriateContent->value =>
+                                __('messages.inappropriate_content'),
+
+                            ReviewRejectionReason::PersonalInformation->value =>
+                                __('messages.personal_information'),
+
+                            ReviewRejectionReason::IrrelevantContent->value =>
+                                __('messages.irrelevant_content'),
+
+                            ReviewRejectionReason::SpamOrPromotionalContent->value =>
+                                __('messages.spam_or_promotional_content'),
+
+                            ReviewRejectionReason::FakeOrSuspiciousReview->value =>
+                                __('messages.fake_or_suspicious_review'),
+
+                            ReviewRejectionReason::Other->value =>
+                                __('messages.other'),
+                        ])
+                        ->required()
+                        ->live(),
+
+                    Textarea::make('rejection_note')
+                        ->label(__('messages.rejection_note'))
+                        ->visible(
+                            fn (Get $get) =>
+                                $get('rejection_reason') === ReviewRejectionReason::Other->value
+                        )
+                        ->required(
+                            fn (Get $get) =>
+                                $get('rejection_reason') === ReviewRejectionReason::Other->value
+                        ),
+
+                    Toggle::make('can_resubmit')
+                        ->label(__('messages.allow_review_resubmission'))
+                        ->helperText(
+                            __('messages.allow_review_resubmission_description')
+                        )
+                        ->default(true),
+                ])
+                ->action(fn(Review $record,array $data) => $record->update(
+                    [
+                        'status' =>ReviewStatus::Rejected,
+                        'rejection_reason'=> $data['rejection_reason'],
+                        'rejection_note'=> $data['rejection_note'] ?? null,
+                        'can_resubmit'=>$data['can_resubmit'],
+                    ])
+                    ),
 
                 ViewAction::make(),
                 EditAction::make(),

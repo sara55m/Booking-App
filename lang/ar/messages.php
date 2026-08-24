@@ -327,6 +327,30 @@ return [
     'negative'=>'سلبى',
     'neutral'=>'محايد',
 
+    //review rejection messages
+    'reject' => 'رفض',
+
+    'rejection_reason' => 'سبب الرفض',
+
+    'inappropriate_content' => 'محتوى غير مناسب',
+
+    'personal_information' => 'يحتوي على معلومات شخصية',
+
+    'irrelevant_content' => 'محتوى غير متعلق بالإقامة',
+
+    'spam_or_promotional_content' => 'محتوى مزعج أو ترويجي',
+
+    'fake_or_suspicious_review' => 'تقييم مزيف أو مشبوه',
+
+    'other' => 'سبب آخر',
+
+    'rejection_note' => 'ملاحظة إضافية',
+
+    'allow_review_resubmission' => 'السماح بإعادة إرسال التقييم',
+
+    'allow_review_resubmission_description' =>
+        'السماح للمستخدم بتعديل التقييم وإعادة إرساله للمراجعة مرة أخرى.',
+
     //api messages
     //properties
     'properties_retrieved_successfully' => 'تم استرجاع العقارات بنجاح',
@@ -590,6 +614,8 @@ return [
 
     'review_updated_admin_notification' =>'قام :user بتعديل تقييمه للحجز رقم :booking في :property، ويحتاج التقييم إلى المراجعة مرة أخرى.',
 
+    //review approved mail notification messages
+
     'review_approved_subject' => 'تمت الموافقة على تقييمك',
 
     'review_approved_message' =>
@@ -597,5 +623,18 @@ return [
 
     'thank_you_for_your_feedback' =>
         'شكرًا لمشاركتنا تجربتك.',
+
+    //review rejected mail notification messages
+
+    'review_rejected_subject' => 'لم يتم نشر تقييمك',
+
+    'review_rejected_message' =>
+        'تعذر نشر تقييمك الخاص بـ :property.',
+
+    'review_can_be_resubmitted' =>
+        'يمكنك تعديل تقييمك وإعادة إرساله للمراجعة مرة أخرى.',
+
+    'review_can_not_be_resubmitted' =>
+        'لا يمكن تعديل هذا التقييم أو إعادة إرساله مرة أخرى.',
 
 ];

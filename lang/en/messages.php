@@ -313,6 +313,29 @@ return [
     'positive'=>'positive',
     'negative'=>'negative',
     'neutral'=>'neutral',
+    //review rejection messages
+    'reject' => 'Reject',
+
+    'rejection_reason' => 'Rejection Reason',
+
+    'inappropriate_content' => 'Inappropriate Content',
+
+    'personal_information' => 'Contains Personal Information',
+
+    'irrelevant_content' => 'Irrelevant Content',
+
+    'spam_or_promotional_content' => 'Spam or Promotional Content',
+
+    'fake_or_suspicious_review' => 'Fake or Suspicious Review',
+
+    'other' => 'Other',
+
+    'rejection_note' => 'Additional Note',
+
+    'allow_review_resubmission' => 'Allow Review Resubmission',
+
+    'allow_review_resubmission_description' =>
+        'Allow the user to edit and resubmit this review for moderation.',
 
 
     //api messages
@@ -582,6 +605,8 @@ return [
 
     'review_updated_admin_notification' =>':user updated their review for booking :booking at :property. The review requires moderation again.',
 
+    //review approved mail notification messages
+
     'review_approved_subject' => 'Your Review Has Been Approved',
 
     'review_approved_message' =>
@@ -589,4 +614,17 @@ return [
 
     'thank_you_for_your_feedback' =>
         'Thank you for sharing your experience with us.',
+
+        'review_rejected_subject' => 'Your Review Was Not Published',
+
+    //review rejected mail notification messages
+
+    'review_rejected_message' =>
+        'Your review for :property could not be published.',
+
+    'review_can_be_resubmitted' =>
+        'You can edit your review and submit it again for moderation.',
+
+    'review_can_not_be_resubmitted' =>
+        'This review cannot be edited or submitted again.',
 ];

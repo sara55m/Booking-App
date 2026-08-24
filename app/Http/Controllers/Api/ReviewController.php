@@ -101,8 +101,8 @@ class ReviewController extends Controller
 
         Gate::authorize('update', $review);
 
-        //if review status is rejected -> can not edit
-        if($review->status===ReviewStatus::Rejected){
+        //if review status is rejected and can not be resubmitted
+        if($review->status===ReviewStatus::Rejected && !$review->can_resubmit){
             return response()->json(['message'=>__("messages.you_can_not_edit_rejected_reviews")], 403);
         }
 
@@ -115,7 +115,7 @@ class ReviewController extends Controller
             }
         }
 
-        //update pending and approved reviews
+        //update pending , approved and rejected (can resubmit) reviews
         DB::transaction(function () use ($validated, $review) {
             $reviewData=[];
 
@@ -173,10 +173,14 @@ class ReviewController extends Controller
             || $categoriesChanged
             || $tagsChanged;
 
-            //if an approved review is edited change the status back to pending for review and moderation
+            //if an approved/rejected review is edited change the status back to pending for review and moderation
             if (
-                $review->status === ReviewStatus::Approved
-                && $hasChanges
+                $hasChanges &&
+                (
+                    $review->status===ReviewStatus::Approved
+                    ||
+                    ($review->status===ReviewStatus::Rejected && $review->can_resubmit)
+                )
             ) {
                 $reviewData['status'] = ReviewStatus::Pending;
             }

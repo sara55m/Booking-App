@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Enums\ReviewStatus;
+use App\Enums\ReviewRejectionReason;
 
 class Review extends Model
 {
@@ -14,14 +15,19 @@ class Review extends Model
         'rating',
         'comment',
         'status',
-        'approved_at'
+        'approved_at',
+        'rejection_reason',
+        'rejection_note',
+        'can_resubmit',
     ];
 
     protected function casts(): array
     {
         return [
             'status' => ReviewStatus::class,
-            'approved_at'=>'datetime'
+            'approved_at'=>'datetime',
+            'rejection_reason' => ReviewRejectionReason::class,
+            'can_resubmit'=>'boolean',
         ];
     }
 

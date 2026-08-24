@@ -12,6 +12,7 @@ use App\Notifications\ReviewUpdatedAdminNotification;
 use App\Jobs\GenerateReviewSummaryJob;
 use App\Services\ReviewSummaryService;
 use App\Notifications\ReviewApprovedNotification;
+use App\Notifications\ReviewRejectedNotification;
 
 class ReviewObserver
 {
@@ -55,6 +56,9 @@ class ReviewObserver
 
         if ($review->status === ReviewStatus::Approved) {
             $review->approved_at = now();
+            $review->rejection_reason = null;
+            $review->rejection_note = null;
+            $review->can_resubmit = false;
         } else {
             $review->approved_at = null;
         }
@@ -72,7 +76,7 @@ class ReviewObserver
         $newStatus = $review->status;
 
         if (
-            $oldStatus === ReviewStatus::Approved->value &&
+            ($oldStatus === ReviewStatus::Approved->value || $oldStatus === ReviewStatus::Rejected->value ) &&
             $newStatus === ReviewStatus::Pending
         ) {
             $admins=User::where('role','admin')->get();
@@ -88,6 +92,14 @@ class ReviewObserver
             $newStatus === ReviewStatus::Approved
         ) {
             $review->user->notify(new ReviewApprovedNotification($review));
+        }
+
+        //send mail notification to the user when a review is rejected mentioning the rejection reason
+        if (
+            $oldStatus !== ReviewStatus::Rejected->value &&
+            $newStatus === ReviewStatus::Rejected
+        ) {
+            $review->user->notify(new ReviewRejectedNotification($review));
         }
 
         $shouldRegenerate = $this->reviewSummaryService
