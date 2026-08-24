@@ -11,6 +11,7 @@ use App\Notifications\ReviewCreatedAdminNotification;
 use App\Notifications\ReviewUpdatedAdminNotification;
 use App\Jobs\GenerateReviewSummaryJob;
 use App\Services\ReviewSummaryService;
+use App\Notifications\ReviewApprovedNotification;
 
 class ReviewObserver
 {
@@ -79,6 +80,14 @@ class ReviewObserver
                 $admins,
                 new ReviewUpdatedAdminNotification($review)
             );
+        }
+
+        //send mail notification to the user when a review is approved
+        if (
+            $oldStatus !== ReviewStatus::Approved->value &&
+            $newStatus === ReviewStatus::Approved
+        ) {
+            $review->user->notify(new ReviewApprovedNotification($review));
         }
 
         $shouldRegenerate = $this->reviewSummaryService

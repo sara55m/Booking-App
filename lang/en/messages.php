@@ -581,4 +581,12 @@ return [
     'review_requires_remoderation' =>'Review Requires Re-moderation',
 
     'review_updated_admin_notification' =>':user updated their review for booking :booking at :property. The review requires moderation again.',
+
+    'review_approved_subject' => 'Your Review Has Been Approved',
+
+    'review_approved_message' =>
+        'Your review for :property has been approved and is now published.',
+
+    'thank_you_for_your_feedback' =>
+        'Thank you for sharing your experience with us.',
 ];

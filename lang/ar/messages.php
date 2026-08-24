@@ -590,4 +590,12 @@ return [
 
     'review_updated_admin_notification' =>'قام :user بتعديل تقييمه للحجز رقم :booking في :property، ويحتاج التقييم إلى المراجعة مرة أخرى.',
 
+    'review_approved_subject' => 'تمت الموافقة على تقييمك',
+
+    'review_approved_message' =>
+        'تمت الموافقة على تقييمك لـ :property وأصبح الآن منشورًا.',
+
+    'thank_you_for_your_feedback' =>
+        'شكرًا لمشاركتنا تجربتك.',
+
 ];
