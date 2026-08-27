@@ -21,7 +21,10 @@ class DatabaseSeeder extends Seeder
         ]);*/
 
         $this->call([
-            ReviewCategorySeeder::class,
+            CountrySeeder::class,
+            CitySeeder::class,
+            CityImageSeeder::class,
+            //ReviewCategorySeeder::class,
         ]);
     }
 }
