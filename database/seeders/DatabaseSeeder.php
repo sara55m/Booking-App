@@ -24,6 +24,10 @@ class DatabaseSeeder extends Seeder
             CountrySeeder::class,
             CitySeeder::class,
             CityImageSeeder::class,
+            PropertyTypeSeeder::class,
+            AmenitySeeder::class,
+            PropertySeeder::class,
+            PropertyImageSeeder::class,
             //ReviewCategorySeeder::class,
         ]);
     }
