@@ -31,6 +31,8 @@ class DatabaseSeeder extends Seeder
             RoomTypeSeeder::class,
             RoomSeeder::class,
             RoomImageSeeder::class,
+            PropertyAmenitySeeder::class,
+            RoomTypeAmenitySeeder::class,
             //ReviewCategorySeeder::class,
         ]);
     }
