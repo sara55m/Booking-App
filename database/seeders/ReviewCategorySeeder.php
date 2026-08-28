@@ -3,57 +3,33 @@
 namespace Database\Seeders;
 
 use App\Models\ReviewCategory;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class ReviewCategorySeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        $categories=[
-            [
-                'name' => 'Cleanliness',
-                'slug' => 'cleanliness',
-                'sort_order' => 1,
-            ],
-            [
-                'name' => 'Location',
-                'slug' => 'location',
-                'sort_order' => 2,
-            ],
-            [
-                'name' => 'Staff',
-                'slug' => 'staff',
-                'sort_order' => 3,
-            ],
-            [
-                'name' => 'Comfort',
-                'slug' => 'comfort',
-                'sort_order' => 4,
-            ],
-            [
-                'name' => 'Facilities',
-                'slug' => 'facilities',
-                'sort_order' => 5,
-            ],
-            [
-                'name' => 'Value for Money',
-                'slug' => 'value',
-                'sort_order' => 6,
-            ],
-            [
-                'name' => 'Wi-Fi',
-                'slug' => 'wifi',
-                'sort_order' => 7,
-            ],
+        $categories = [
+            'Cleanliness',
+            'Comfort',
+            'Location',
+            'Facilities',
+            'Staff',
+            'Value for Money',
         ];
 
-        //create categories with these database
-        foreach($categories as $category){
-            ReviewCategory::create($category);
+        foreach ($categories as $index => $category) {
+            ReviewCategory::updateOrCreate(
+                [
+                    'slug' => Str::slug($category),
+                ],
+                [
+                    'name' => $category,
+                    'is_active' => true,
+                    'sort_order' => $index + 1,
+                ]
+            );
         }
     }
 }
