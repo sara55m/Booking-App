@@ -33,6 +33,8 @@ class DatabaseSeeder extends Seeder
             RoomImageSeeder::class,
             PropertyAmenitySeeder::class,
             RoomTypeAmenitySeeder::class,
+            TravelCategorySeeder::class,
+            CityTravelCategorySeeder::class,
             //ReviewCategorySeeder::class,
         ]);
     }
