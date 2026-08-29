@@ -111,7 +111,4 @@ class Offer extends Model
             }
         );
     }
-
-
-
 }

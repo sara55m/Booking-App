@@ -35,7 +35,9 @@ class DatabaseSeeder extends Seeder
             RoomTypeAmenitySeeder::class,
             TravelCategorySeeder::class,
             CityTravelCategorySeeder::class,
-            //ReviewCategorySeeder::class,
+            ReviewTagSeeder::class,
+            ReviewCategorySeeder::class,
+            OfferSeeder::class,
         ]);
     }
 }
