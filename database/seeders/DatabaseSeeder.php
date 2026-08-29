@@ -35,6 +35,7 @@ class DatabaseSeeder extends Seeder
             AmenitySeeder::class,
             PropertySeeder::class,
             PropertyImageSeeder::class,
+            PropertyPolicySeeder::class,
             RoomTypeSeeder::class,
             RoomSeeder::class,
             RoomImageSeeder::class,
