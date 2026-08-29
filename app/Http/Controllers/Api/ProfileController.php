@@ -43,7 +43,7 @@ class ProfileController extends Controller
 
         DB::transaction(function () use ($request, $user, $oldImage) {
 
-            $user->update($request->safe()->only(['name', 'email', 'phone']));
+            $user->update($request->safe()->only(['name', 'email','locale','phone']));
 
             // Handle image upload if provided
             if($request->hasFile('image')){

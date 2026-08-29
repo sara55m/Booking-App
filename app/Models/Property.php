@@ -209,14 +209,18 @@ class Property extends Model
     public function scopeMinPrice($query, ?float $price)
     {
         return $query->when($price, function ($query) use ($price) {
-            $query->having('room_types_min_base_price', '>=', $price);
+            $query->whereHas('roomTypes', function ($query) use ($price) {
+                $query->where('base_price', '>=', $price);
+            });
         });
     }
 
     public function scopeMaxPrice($query, ?float $price)
     {
         return $query->when($price, function ($query) use ($price) {
-            $query->having('room_types_min_base_price', '<=', $price);
+            $query->whereHas('roomTypes', function ($query) use ($price) {
+                $query->where('base_price', '<=', $price);
+            });
         });
     }
 

@@ -18,6 +18,7 @@ class AuthController extends Controller
             'email'=>'required|email|unique:users,email',
             'password'=>'required|string|min:6',
             'phone'=>'nullable|string',
+            'locale'=>'nullable|string|in:en,ar'
         ]);
 
         //hash password
@@ -37,7 +38,7 @@ class AuthController extends Controller
         MailService::sendOtpEmail($user, $otp);
 
         //send email verification
-        $user->sendEmailVerificationNotification();
+        //$user->sendEmailVerificationNotification();
 
         return response()->json([
             'user'=>$user,
@@ -130,7 +131,8 @@ class AuthController extends Controller
         ]);
     }
 
-    public function resend(Request $request)
+    //resend verification mail
+    /*public function resend(Request $request)
     {
         $user = $request->user();
 
@@ -141,7 +143,7 @@ class AuthController extends Controller
         $user->sendEmailVerificationNotification();
 
         return response()->json(['message' => 'Verification email sent']);
-    }
+    }*/
 
     public function resendOtp(Request $request)
     {

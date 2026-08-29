@@ -68,7 +68,7 @@ class User extends Authenticatable implements FilamentUser,MustVerifyEmail,HasLo
 
     public function preferredLocale(): string
     {
-        return $this->locale;
+        return $this->locale ?? config('app.locale', 'en');
     }
 
     public function bookings()

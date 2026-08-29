@@ -22,6 +22,7 @@ class UserResource extends JsonResource
             'image'=>$this->image ? asset('storage/'.$this->image) : null,
             'reward_points'=>$this->reward_points,
             'email_verified'=>true,
+            'locale'=>$this->locale ?? config('app.locale', 'en'),
         ];
     }
 }

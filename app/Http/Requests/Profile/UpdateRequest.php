@@ -26,6 +26,7 @@ class UpdateRequest extends FormRequest
             'name' => ['sometimes', 'string', 'max:255'],
             'email' => ['sometimes', 'string', 'email', 'max:255', 'unique:users,email,' . $this->user()->id],
             'phone'=> ['nullable', 'string', 'max:20'],
+            'locale' => ['sometimes', 'in:en,ar'],
             'image'=>['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
         ];
     }
