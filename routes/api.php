@@ -94,6 +94,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/home/property-types', [HomeController::class, 'propertyTypes']);
     Route::get('/home/featured-properties', [HomeController::class, 'featuredProperties']);
     Route::get('/home/top-rated-properties', [HomeController::class, 'topRatedProperties']);
+    Route::get('/home/general_offers', [HomeController::class, 'generalOffers']);
     Route::get('/home/deals-and-offers', [HomeController::class, 'dealsAndOffers']);
 
     //travel categories

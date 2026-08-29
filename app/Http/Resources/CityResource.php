@@ -29,6 +29,7 @@ class CityResource extends JsonResource
                 TravelCategoryResource::collection(
                     $this->whenLoaded('travelCategories')
                 ),
+            'properties_count'=>$this->properties_count,
         ];
     }
 }

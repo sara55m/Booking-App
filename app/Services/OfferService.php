@@ -9,7 +9,7 @@ use App\Models\Property;
 class OfferService
 {
 
-    public function validateOffer($userId,Offer $offer,$propertyId,$totalPrice,$nights) : array{
+    public function validateOffer($userId,Offer $offer,$propertyId,$totalPrice,?int $nights = null) : array{
 
         //check usage limit
         if($offer->usage_limit && $offer->used_count >= $offer->usage_limit){
@@ -22,13 +22,15 @@ class OfferService
 
         //check per user limit
         //get the number of bookings with this offer and the same user
-        $userUsageCount=$offer->bookings()->where('user_id',$userId)->count();
-        if($offer->per_user_limit && $userUsageCount >= $offer->per_user_limit){
-            return [
-                'valid' => false,
-                'message' =>
-                    __('messages.user_offer_limit_reached'),
-            ];
+        if($userId && $offer->per_user_limit){
+            $userUsageCount=$offer->bookings()->where('user_id',$userId)->count();
+            if($userUsageCount >= $offer->per_user_limit){
+                return [
+                    'valid' => false,
+                    'message' =>
+                        __('messages.user_offer_limit_reached'),
+                ];
+            }
         }
 
         //check property
@@ -72,12 +74,15 @@ class OfferService
             ];
         }
 
-        //check minimum nights
-        if($offer->minimum_nights && $nights < $offer->minimum_nights){
+        //check minimum nights only if dates is provided
+        if (
+            $nights !== null &&
+            $offer->minimum_nights &&
+            $nights < $offer->minimum_nights
+        ) {
             return [
                 'valid' => false,
-                'message' =>
-                    __('messages.minimum_nights_not_met'),
+                'message' => __('messages.minimum_nights_not_met'),
             ];
         }
 
@@ -103,47 +108,67 @@ class OfferService
         return 0;
     }
 
-    public function calculatePrice(Property $property,int $nights=1) : array{
-
-        $offer = $property->offers->first();
+    public function calculatePrice(Property $property,?int $nights=null, ?int $userId = null) : array{
 
         $pricePerNight = $property->room_types_min_base_price;
 
-        $originalPrice = $pricePerNight * $nights;
+        // No dates selected yet.
+        // Return the per-night price without applying the discount.
+        if ($nights === null) {
+            $offer = $property->offers
+            ->where('is_active', true)
+            ->first();
 
-        if(!$offer){
             return [
-                'originalPrice' => $originalPrice,
-                'finalPrice' => $originalPrice,
-                'offer' => null
+                'original_price' => $pricePerNight,
+                'final_price' => $pricePerNight,
+                'discount' => 0,
+                'offer' => $offer,
+                'offer_applicable' => false,
             ];
         }
 
+        $originalPrice = $pricePerNight * $nights;
+
+        //find the first valid offer
+        $offer=$property->offers
+        ->filter(function($offer) use ($property,$originalPrice,$nights ,$userId){
             $validation = $this->validateOffer(
-                userId:      auth()->id(),
-                offer:       $offer,
-                propertyId:  $property->id,
-                totalPrice:  $originalPrice,
-                nights:      $nights,
+                userId: $userId,
+                offer: $offer,
+                propertyId: $property->id,
+                totalPrice: $originalPrice,
+                nights: $nights,
             );
 
-            if(! $validation['valid']){
-                return [
-                    'originalPrice' => $originalPrice,
-                    'finalPrice' => $originalPrice,
-                    'offer' => null
-                ];
-            }
+            return $validation['valid'];
+        })//sort desc by calculated discount value and return the best offer
+        ->sortByDesc(function ($offer) use ($originalPrice) {
+            return $this->calculateDiscount($offer, $originalPrice);
+        })
+        ->first();
 
-            $discount = $this->calculateDiscount($offer,$originalPrice);
-            $finalPrice = max(0, $originalPrice - $discount);
-
+        //no applicable offer
+        if(!$offer){
             return [
-                'originalPrice' => $originalPrice,
-                'finalPrice' => $finalPrice,
-                'discount' => $discount,
-                'offer' => $offer,
+                'original_price' => $originalPrice,
+                'final_price' => $originalPrice,
+                'discount' => 0,
+                'offer' => null,
+                'offer_applicable' => false,
             ];
+        }
+
+        $discount = $this->calculateDiscount($offer,$originalPrice);
+        $finalPrice = max(0, $originalPrice - $discount);
+
+        return [
+            'original_price' => $originalPrice,
+            'final_price' => $finalPrice,
+            'discount' => $discount,
+            'offer' => $offer,
+            'offer_applicable' => true,
+        ];
 
     }
 

@@ -4,15 +4,14 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\City;
-use Illuminate\Http\Request;
+use App\Models\Offer;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\CityResource;
 use App\Models\Property;
 use App\Http\Resources\PropertyResource;
 use App\Models\PropertyType;
 use App\Http\Resources\PropertyTypeResource;
-use App\Http\Resources\TravelCategoryResource;
-use App\Models\TravelCategory;
+use App\Http\Resources\OfferResource;
 
 class HomeController extends Controller
 {
@@ -98,6 +97,28 @@ class HomeController extends Controller
             'status_code'=>200,
             'message'=>__('messages.top_rated_properties_retrieved_successfully'),
             'data'=>PropertyResource::collection($properties)
+        ]);
+    }
+
+    public function generalOffers()
+    {
+        $offers = Cache::tags(['home'])->remember(
+            'home:general-offers',
+            now()->addHours(6),
+            function () {
+                return Offer::query()
+                    ->global()
+                    ->active()
+                    ->latest('created_at')
+                    ->limit(8)
+                    ->get();
+            }
+        );
+
+        return response()->json([
+            'status_code' => 200,
+            'message' => __('messages.general_offers_retrieved_successfully'),
+            'data' => OfferResource::collection($offers),
         ]);
     }
 

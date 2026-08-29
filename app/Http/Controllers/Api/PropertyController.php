@@ -58,7 +58,7 @@ class PropertyController extends Controller
     {
         $validated = $request->validated();
 
-        $nightsCount = 1;
+        $nightsCount = null;
 
         if (!empty($validated['check_in']) && !empty($validated['check_out'])) {
             $nightsCount = Carbon::parse($validated['check_in'])

@@ -380,6 +380,7 @@ return [
 
     'booking_cannot_be_cancelled_as_it_has_started' => 'This booking cannot be cancelled because the stay has already started.',
     //offers
+    'general_offers_retrieved_successfully'=>'General Offers Retrieved Successfully',
     'offer_is_not_active' => 'Offer is not active',
     'offer_not_started_yet' => 'Offer has not started yet',
     'offer_has_expired' => 'Offer has expired',

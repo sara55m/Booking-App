@@ -329,7 +329,7 @@ class Property extends Model
         );
     }
 
-    public function scopeWithActiveOffer($query,int $nights=1)
+    public function scopeWithActiveOffer($query , ?int $nights = null)
     {
         return $query->with([
             'offers' => fn ($q) => $q->active($nights)->latest('created_at'),]);

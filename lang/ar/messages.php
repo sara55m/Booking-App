@@ -394,6 +394,7 @@ return [
     'refund_failed' => 'تعذر إتمام عملية استرداد المبلغ. يرجى المحاولة مرة أخرى لاحقًا.',
 
     //offers
+    'general_offers_retrieved_successfully'=>'تم استرجاع العروض العامة بنجاح',
     'offer_is_not_active' => 'العرض غير نشط',
     'offer_not_started_yet' => 'العرض لم يبدأ بعد',
     'offer_has_expired' => 'انتهت صلاحية العرض',

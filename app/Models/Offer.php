@@ -61,12 +61,22 @@ class Offer extends Model
         };
     }
 
-    public function scopeActive(Builder $query, $nights=1)
+    //return only global offers
+    public function scopeGlobal(Builder $query): Builder
+    {
+        return $query->whereNull('property_id');
+    }
+
+    public function scopeActive(Builder $query, ?int $nights = null)
     {
         return $query
         ->where('is_active', 1)
-        ->where('requires_coupon_code', 0)
-        ->where(fn($q) => $q->whereNull('minimum_nights')->orWhere('minimum_nights', '<=', $nights))
+        ->when($nights !== null, function ($query) use ($nights) {
+            $query->where(function ($q) use ($nights) {
+                $q->whereNull('minimum_nights')
+                  ->orWhere('minimum_nights', '<=', $nights);
+            });
+        })
         ->where(fn($q) => $q->whereNull('starts_at')->orWhere('starts_at', '<=', now()))
         ->where(fn($q) => $q->whereNull('ends_at')->orWhere('ends_at', '>=', now()))
         ->where(fn($q) => $q->whereNull('usage_limit')->orWhereColumn('used_count', '<', 'usage_limit'));
