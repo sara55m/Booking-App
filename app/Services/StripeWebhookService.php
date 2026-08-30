@@ -48,23 +48,41 @@ class StripeWebhookService
         //set stripe api key
         Stripe::setApiKey(config('services.stripe.secret'));
         try {
+            $session = $event->data->object;
 
-            DB::transaction(function () use ($event) {
+            $paymentId =
+                $session->metadata->payment_id ?? null;
 
-                $session = $event->data->object;
+            if (! $paymentId) {
+                throw ValidationException::withMessages([
+                    'message' => __('messages.payment_id_not_found_in_metadata'),
+                ]);
+            }
 
-                    $paymentId =
-                        $session->metadata->payment_id ?? null;
+            if (! $session->payment_intent) {
+                throw ValidationException::withMessages([
+                    'message' => __('messages.payment_intent_not_found'),
+                ]);
+            }
 
-                    if (! $paymentId) {
-                        throw ValidationException::withMessages([
-                            'message' => __('messages.payment_id_not_found_in_metadata'),
-                        ]);
-                    }
+            $paymentIntent = \Stripe\PaymentIntent::retrieve(
+                $session->payment_intent
+            );
 
-                    $payment = Payment::with('booking.user', 'booking.property')
-                        ->lockForUpdate()
-                        ->find($paymentId);
+            if (! $paymentIntent->payment_method) {
+                throw ValidationException::withMessages([
+                    'message' => __('messages.payment_method_not_found'),
+                ]);
+            }
+
+            $stripePaymentMethod = \Stripe\PaymentMethod::retrieve(
+                $paymentIntent->payment_method
+            );
+
+            DB::transaction(function () use ($paymentId,$session,$stripePaymentMethod) {
+                    $payment = Payment::whereKey($paymentId)
+                    ->lockForUpdate()
+                    ->first();
 
                     if (! $payment) {
                         throw ValidationException::withMessages([
@@ -101,9 +119,10 @@ class StripeWebhookService
                     ]);
 
                     //Update booking payment status
-                    $booking = Booking::whereKey($payment->booking_id)
+                    $booking = Booking::with(['user', 'property', 'offer'])
+                        ->whereKey($payment->booking_id)
                         ->lockForUpdate()
-                        ->first();
+                        ->firstOrFail();
 
                     //consider adding the amount paid through reward points discount
                     $totalPaid = $booking->payments()
@@ -124,39 +143,33 @@ class StripeWebhookService
                             : BookingPaymentStatus::PARTIAL,
                     ]);
 
-                    $booking->refresh();
+                    // Increment offer usage only once,
+                    // when the booking is confirmed for the first time.
+                    if (! $wasConfirmed && $booking->offer) {
+                        $booking->offer->increment('used_count');
+                    }
 
-                    $paymentIntent =
-                        \Stripe\PaymentIntent::retrieve(
-                            $session->payment_intent
-                        );
+                    $isFirstPaymentMethod = ! UserPaymentMethod::where(
+                        'user_id',
+                        $booking->user_id
+                    )->exists();
 
-                    $stripePaymentMethod =
-                        \Stripe\PaymentMethod::retrieve(
-                            $paymentIntent->payment_method
-                        );
+                    UserPaymentMethod::firstOrCreate(
+                        [
+                            'user_id' => $booking->user_id,
+                            'fingerprint' => $stripePaymentMethod->card->fingerprint,
+                        ],
+                        [
+                            'stripe_payment_method_id' => $stripePaymentMethod->id,
+                            'brand' => $stripePaymentMethod->card->brand,
+                            'last_four' => $stripePaymentMethod->card->last4,
+                            'exp_month' => $stripePaymentMethod->card->exp_month,
+                            'exp_year' => $stripePaymentMethod->card->exp_year,
+                            'is_default' => $isFirstPaymentMethod,
+                        ]
+                    );
 
-                        $isFirstPaymentMethod = ! UserPaymentMethod::where(
-                            'user_id',
-                            $booking->user_id
-                        )->exists();
-
-                        UserPaymentMethod::firstOrCreate(
-                            [
-                                'user_id' => $booking->user_id,
-                                'fingerprint' => $stripePaymentMethod->card->fingerprint,
-                            ],
-                            [
-                                'stripe_payment_method_id' => $stripePaymentMethod->id,
-                                'brand' => $stripePaymentMethod->card->brand,
-                                'last_four' => $stripePaymentMethod->card->last4,
-                                'exp_month' => $stripePaymentMethod->card->exp_month,
-                                'exp_year' => $stripePaymentMethod->card->exp_year,
-                                'is_default' => $isFirstPaymentMethod,
-                            ]
-                        );
-
-                        // Process rewards
+                    // Process rewards
                     $this->rewardService->process(
                         $booking->user,
                         $booking,
@@ -195,26 +208,26 @@ class StripeWebhookService
             DB::transaction(function () use ($event) {
 
                 $paymentIntent = $event->data->object;
-            
+
                 $payment = Payment::where(
                     'stripe_payment_intent_id',
                     $paymentIntent->id
                 )
                 ->lockForUpdate()
                 ->first();
-            
+
                 if (! $payment) {
                     return;
                 }
-            
+
                 if ($payment->status === PaymentStatus::FAILED) {
                     return;
                 }
-            
+
                 if ($payment->status === PaymentStatus::PAID) {
                     return;
                 }
-            
+
                 $payment->update([
                     'status' => PaymentStatus::FAILED,
                 ]);

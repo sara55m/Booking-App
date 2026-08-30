@@ -127,14 +127,25 @@
         </tr>
 
         <tr>
-            <th>Check-in</th>
-            <td>{{ $booking->check_in->format('d F Y h:i A') }}</td>
-        </tr>
+            <tr>
+                <th>Check-in</th>
+                <td>
+                    {{ $booking->check_in->format('d F Y') }}
+                    ({{ $checkInFrom }}
+                    -
+                    {{ $checkInUntil }})
+                </td>
+            </tr>
 
-        <tr>
-            <th>Check-out</th>
-            <td>{{ $booking->check_out->format('d F Y h:i A') }}</td>
-        </tr>
+            <tr>
+                <th>Check-out</th>
+                <td>
+                    {{ $booking->check_out->format('d F Y') }}
+                    ({{ $checkOutFrom }}
+                    -
+                    {{ $checkOutUntil }})
+                </td>
+            </tr>
 
         <tr>
             <th>Number of Nights</th>
@@ -174,7 +185,7 @@
                 <th>Total Refunded</th>
                 <td>{{ number_format($totalRefunded,2) }} EGP</td>
             </tr>
-            
+
             <tr>
                 <th>Final Balance</th>
                 <td>0.00 EGP</td>
@@ -229,7 +240,7 @@
                 <th>Refund Status</th>
                 <td>Refunded</td>
             </tr>
-            
+
             <tr>
                 <th>Refund Date</th>
                 <td>{{ $payment->refunded_at?->format('d M Y h:i A') }}</td>

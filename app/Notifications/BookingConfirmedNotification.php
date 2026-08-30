@@ -70,17 +70,25 @@ class BookingConfirmedNotification extends Notification implements ShouldQueue
             ]))
 
             ->line(__('messages.booking_confirmed.check_in', [
-                'date' => $this->booking->check_in->format('d F Y \a\t h:i a'),
+                'date' => $this->booking->check_in->format('d F Y')
+                    . ' '
+                    . \Carbon\Carbon::parse($this->booking->property->policy->check_in_from)->format('h:i A')
+                    . ' - '
+                    . \Carbon\Carbon::parse($this->booking->property->policy->check_in_until)->format('h:i A'),
             ]))
 
             ->line(__('messages.booking_confirmed.check_out', [
-                'date' => $this->booking->check_out->format('d F Y \a\t h:i a'),
+                'date' => $this->booking->check_out->format('d F Y')
+                    . ' '
+                    . \Carbon\Carbon::parse($this->booking->property->policy->check_out_from)->format('h:i A')
+                    . ' - '
+                    . \Carbon\Carbon::parse($this->booking->property->policy->check_out_until)->format('h:i A'),
             ]))
 
             ->line(__('messages.booking_confirmed.invoice_attached'))
 
             ->line(__('messages.booking_confirmed.thank_you'))
-            
+
             ->attach($path,[
                 'as' => 'invoice.pdf',
                 'mime' => 'application/pdf',

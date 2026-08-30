@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Offer;
 use App\Models\Property;
+use App\Enums\BookingStatus;
 
 
 class OfferService
@@ -23,7 +24,15 @@ class OfferService
         //check per user limit
         //get the number of bookings with this offer and the same user
         if($userId && $offer->per_user_limit){
-            $userUsageCount=$offer->bookings()->where('user_id',$userId)->count();
+            $userUsageCount=$offer->bookings()
+            ->where('user_id',$userId)
+                ->whereIn('status', [
+                BookingStatus::CONFIRMED,
+                BookingStatus::CHECKED_IN,
+                BookingStatus::CHECKED_OUT,
+                BookingStatus::COMPLETED,
+            ])
+            ->count();
             if($userUsageCount >= $offer->per_user_limit){
                 return [
                     'valid' => false,
@@ -130,23 +139,12 @@ class OfferService
 
         $originalPrice = $pricePerNight * $nights;
 
-        //find the first valid offer
-        $offer=$property->offers
-        ->filter(function($offer) use ($property,$originalPrice,$nights ,$userId){
-            $validation = $this->validateOffer(
-                userId: $userId,
-                offer: $offer,
-                propertyId: $property->id,
-                totalPrice: $originalPrice,
-                nights: $nights,
-            );
-
-            return $validation['valid'];
-        })//sort desc by calculated discount value and return the best offer
-        ->sortByDesc(function ($offer) use ($originalPrice) {
-            return $this->calculateDiscount($offer, $originalPrice);
-        })
-        ->first();
+        //find the best applicable property-specific offer.
+        $offer = $this->findBestPropertyOffer(
+            propertyId: $property->id,
+            originalPrice: $originalPrice,
+            nights: $nights
+        );
 
         //no applicable offer
         if(!$offer){
@@ -170,6 +168,42 @@ class OfferService
             'offer_applicable' => true,
         ];
 
+    }
+
+    public function findBestPropertyOffer(
+    int $propertyId,
+    float $originalPrice,
+    int $nights
+    ): ?Offer {
+
+        $offers = Offer::where('property_id', $propertyId)
+            ->active($nights)
+            ->lockForUpdate()
+            ->get();
+
+        return $offers
+            ->filter(function (Offer $offer) use (
+                $propertyId,
+                $originalPrice,
+                $nights
+            ) {
+                $validation = $this->validateOffer(
+                    userId: auth()->id(),
+                    offer: $offer,
+                    propertyId: $propertyId,
+                    totalPrice: $originalPrice,
+                    nights: $nights
+                );
+
+                return $validation['valid'];
+            })
+            ->sortByDesc(function (Offer $offer) use ($originalPrice) {
+                return $this->calculateDiscount(
+                    $offer,
+                    $originalPrice
+                );
+            })
+            ->first();
     }
 
 }

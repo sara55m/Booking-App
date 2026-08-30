@@ -100,16 +100,19 @@ class BookingController extends Controller
         $totalPrice=$originalPrice;
         $discountAmount=0;
         $offer=null;
-        //validate offer
+        $userId=auth()->id();
+        //general offer -->requires coupon code
         if (!empty(trim($data['code'] ?? ''))){
             $offer=Offer::where('code',$data['code'])->lockForUpdate()->first(); //lock offer to prevent double usage
+
             if (!$offer) {
                 return response()->json([
                     'status_code' => 422,
                     'message' => __('messages.invalid_coupon_code'),
                 ], 422);
             }
-            $validation=$offerService->validateOffer(auth()->id(),$offer,$data['property_id'],$originalPrice,$numberOfNights);
+
+            $validation=$offerService->validateOffer($userId,$offer,$data['property_id'],$originalPrice,$numberOfNights);
             //if validation is false
             if (!$validation['valid']) {
                 return response()->json([
@@ -117,6 +120,17 @@ class BookingController extends Controller
                     'message' => $validation['message']
                 ], 422);
             }
+        }else{
+            // No coupon code was provided --> Automatically find the best applicable property-specific offer.
+            $offer = $offerService->findBestPropertyOffer(
+                propertyId: $data['property_id'],
+                originalPrice: $originalPrice,
+                nights: $numberOfNights
+            );
+        }
+
+        if($offer){
+            //calculate discount amount
             $discountAmount=$offerService->calculateDiscount($offer,$originalPrice);
             //apply the discount amount
             //prevent negative total
@@ -125,11 +139,10 @@ class BookingController extends Controller
                 $originalPrice - $discountAmount
             );
         }
-
         //save booking
         $booking->fill([
 
-            'user_id' => auth()->id(),
+            'user_id' => $userId,
 
             'property_id' => $data['property_id'],
 
@@ -168,11 +181,6 @@ class BookingController extends Controller
             'offer',
             'user'
         ]);
-
-        //increment offer used count
-        if($offer){
-            $offer->increment('used_count');
-        }
 
         //fire booking creation event
         event(new BookingCreated($booking));
