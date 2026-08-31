@@ -116,6 +116,11 @@ class ReviewObserver
     public function deleted(Review $review): void
     {
         $this->recalculate($review);
+
+        //if the deleted review was an approved review -->regenerate the ai summary
+        if ($review->status === ReviewStatus::Approved) {
+            GenerateReviewSummaryJob::dispatch($review->property_id);
+        }
     }
 
     /**
