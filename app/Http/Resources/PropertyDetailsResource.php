@@ -42,6 +42,7 @@ class PropertyDetailsResource extends JsonResource
             'minimum_partial_payment_percentage'=>$this->minimum_partial_payment_percentage ?? config('booking.minimum_partial_payment_percentage'),
             'rooms'=>RoomResource::collection($this->rooms),
             'reviews'=>ReviewResource::collection($this->approvedReviews),
+            'ai_review_summary' => $this->ai_review_summary,
         ];
     }
 }

@@ -351,6 +351,15 @@ return [
     'allow_review_resubmission_description' =>
         'السماح للمستخدم بتعديل التقييم وإعادة إرساله للمراجعة مرة أخرى.',
 
+    // ai review summary
+    'ai_review_summary' => 'ملخص تقييمات الذكاء الاصطناعي',
+    'summary' => 'الملخص',
+    'positive_points' => 'النقاط الإيجابية',
+    'negative_points' => 'النقاط السلبية',
+    'notable_features' => 'أبرز المميزات',
+    'generated_at' => 'تاريخ الإنشاء',
+    'review_count_in_summary'=>'عدد التقييمات فى الملخص',
+
     //api messages
     //properties
     'properties_retrieved_successfully' => 'تم استرجاع العقارات بنجاح',

@@ -51,19 +51,26 @@ class ReviewSummaryService
     }
 
     public function shouldRegenerate(Property $property): bool{
+
+        $aiReviewsCount=$property->ai_review_summary_review_count ?? 0;
+
+        $currentReviewsCount=$property->reviews()
+            ->where('status',ReviewStatus::Approved)
+            ->count();
+
+        // Nothing to summarize
+        if ($currentReviewsCount === 0) {
+            return false;
+        }
         // No summary exists yet
-        if (! $property->ai_review_summary_generated_at) {
-            return $property->reviews()
-                ->where('status', ReviewStatus::Approved)
-                ->exists();
+        if (
+            ! $property->ai_review_summary_generated_at ||
+            $aiReviewsCount === 0
+        ) {
+            return true;
         }
 
         //threshold logic->regenerate the ai summary after 5 or more reviews are approved
-        $aiReviewsCount=$property->ai_review_summary_review_count;
-        $currentReviewsCount=$property->reviews()
-        ->where('status',ReviewStatus::Approved)
-        ->count();
-
         return ($currentReviewsCount - $aiReviewsCount) >= self::REVIEW_THRESHOLD;
     }
 
@@ -75,20 +82,13 @@ class ReviewSummaryService
         $reviewsCount=$context['total_reviews'];
 
         if ($reviewsCount === 0) {
-            $emptySummary = [
-                'summary' => null,
-                'positive_points' => [],
-                'negative_points' => [],
-                'notable_features' => [],
-            ];
-
             $property->update([
-                'ai_review_summary' => $emptySummary,
-                'ai_review_summary_generated_at' => now(),
-                'ai_review_summary_review_count'=>$reviewsCount
+            'ai_review_summary' => null,
+            'ai_review_summary_generated_at' => null,
+            'ai_review_summary_review_count' => 0,
             ]);
 
-            return $emptySummary;
+            return [];
         }
 
         $systemPrompt = $this->buildSystemPrompt();

@@ -16,6 +16,9 @@ use Filament\Schemas\Components\Section;
 use App\Models\City;
 use Filament\Forms\Components\TimePicker;
 use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Grid;
+use Filament\Forms\Components\TagsInput;
+use Filament\Forms\Components\DateTimePicker;
 
 
 class PropertyForm
@@ -132,6 +135,44 @@ class PropertyForm
                                 Toggle::make('is_active')
                                     ->label(__('messages.active'))
                                     ->default(true),
+                            ]),
+                        Tab::make('AI Review Summary')
+                            ->label(__("messages.ai_review_summary"))
+                            ->icon('heroicon-o-sparkles')
+                            ->schema([
+                                Section::make()
+                                    ->schema([
+                                        TextArea::make('ai_review_summary.summary')
+                                            ->label(__("messages.summary"))
+                                            ->disabled()
+                                            ->rows(5),
+
+                                        Grid::make(3)
+                                            ->schema([
+                                                TagsInput::make('ai_review_summary.positive_points')
+                                                    ->label(__("messages.positive_points"))
+                                                    ->disabled(),
+
+                                                TagsInput::make('ai_review_summary.negative_points')
+                                                    ->label(__("messages.negative_points"))
+                                                    ->disabled(),
+
+                                                TagsInput::make('ai_review_summary.notable_features')
+                                                    ->label(__("messages.notable_features"))
+                                                    ->disabled(),
+                                            ]),
+
+                                        Grid::make(2)
+                                            ->schema([
+                                                DateTimePicker::make('ai_review_summary_generated_at')
+                                                    ->label(__("messages.generated_at"))
+                                                    ->disabled(),
+
+                                                TextInput::make('ai_review_summary_review_count')
+                                                    ->label(__("messages.review_count_in_summary"))
+                                                    ->disabled(),
+                                            ]),
+                                    ])->columns(2)->columnSpanFull(),
                             ]),
                     ])->columns(2)->columnSpanFull(),
 

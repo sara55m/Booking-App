@@ -337,6 +337,15 @@ return [
     'allow_review_resubmission_description' =>
         'Allow the user to edit and resubmit this review for moderation.',
 
+    //ai review summary
+    'ai_review_summary'=>'AI Review Summary',
+    'summary'=>'Summary',
+    'positive_points'=>'Positive Points',
+    'negative_points'=>'Negative Points',
+    'notable_features'=>'Notable Features',
+    'generated_at'=>'Generated At',
+    'review_count_in_summary'=>'Reviews Count In Summary',
+
 
     //api messages
     //properties
