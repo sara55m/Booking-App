@@ -8,6 +8,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Booking;
+use Carbon\Carbon;
 
 class ArrivalReminderNotification extends Notification implements ShouldQueue
 {
@@ -46,7 +47,12 @@ class ArrivalReminderNotification extends Notification implements ShouldQueue
                 'property' => $this->booking->property->name,
             ]))
             ->line(__('messages.booking_reminder_check_in', [
-                'date' => $this->booking->check_in->toFormattedDateString(),
+                'date' =>
+                    $this->booking->check_in->format('d F Y')
+                    . ' '
+                    . Carbon::parse($this->booking->property->policy->check_in_from)->format('h:i A')
+                    . ' - '
+                    . Carbon::parse($this->booking->property->policy->check_in_until)->format('h:i A'),
             ]))
             ->line(__('messages.booking_reminder_guests', [
                 'guests' => $this->booking->guests_count,

@@ -76,17 +76,20 @@ class Booking extends Model
     public function getAmountPaidAttribute(): float
     {
         return round(
-            $this->payments->where('status',PaymentStatus::PAID)->sum(DB::raw('amount + discount_amount')),
-            2
-        );
+            $this->payments
+            ->where('status',PaymentStatus::PAID)
+            ->sum(fn ($payment) =>
+                $payment->amount + $payment->discount_amount
+            ),
+            2);
     }
 
     public function getRemainingBalanceAttribute(): float
     {
-        return round($this->total_price - $this->amount_paid, 2);
+        return round(max(0,$this->total_price - $this->amount_paid), 2);
     }
 
-    // Check if the booking has not been fully paid yet 
+    // Check if the booking has not been fully paid yet
     public function hasOutstandingBalance(): bool
     {
         return $this->remaining_balance > 0;

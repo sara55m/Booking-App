@@ -473,6 +473,14 @@ return [
 
     'booking_auto_cancelled_subject' => 'تم إلغاء حجزك',
 
+    'booking_auto_cancelled_line1' => 'تم إلغاء حجزك :reference في :property تلقائيًا لعدم سداد المبلغ المستحق في الموعد المحدد.',
+    'booking_auto_cancelled_line2' => 'إذا كانت لديك أي استفسارات، يرجى التواصل مع فريق الدعم لدينا.',
+
+    'booking_auto_cancelled_admin_title' => 'تم إلغاء الحجز تلقائيًا (عدم سداد الرصيد)',
+
+    'booking_auto_cancelled_admin_body' =>
+        'تم إلغاء الحجز :reference الخاص بالعميل :customer في :property تلقائيًا بسبب عدم سداد الرصيد المستحق. تم فقدان مبلغ العربون.',
+
     'booking_expired_1' => 'انتهت صلاحية الحجز',
     'booking_expired_admin_notification' => 'انتهت صلاحية الحجز :booking بسبب عدم الدفع وتم إلغاؤه تلقائياً.',
 

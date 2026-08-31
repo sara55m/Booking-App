@@ -15,20 +15,31 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 //schedule bookings expiration job to run every minute
-Schedule::job(new ProcessExpiredBookingsJob)->everyMinute();
+Schedule::job(new ProcessExpiredBookingsJob)
+    ->everyMinute()
+    ->withoutOverlapping();
 
 //schedule bookings balance due check job to run daily
-Schedule::job(new CheckBookingBalanceDueJob)->daily();
+Schedule::job(new CheckBookingBalanceDueJob)
+    ->dailyAt('08:00')
+    ->withoutOverlapping();
 
-//schedule bookings cancellation job to run daily
-Schedule::job(new CancelUnpaidOverdueBookingsJob)->daily();
+//schedule bookings cancellation job to run every minute
+Schedule::job(new CancelUnpaidOverdueBookingsJob)
+    ->everyMinute()
+    ->withoutOverlapping();
 
 //schedule mark bookings as completed job to run every hour
 Schedule::job(new MarkCompletedBookingsJob)
-    ->hourly();
+    ->hourly()
+    ->withoutOverlapping();
 
-//schedule active offers notification job to run daily
-Schedule::job(new ProcessOfferNotificationsJob)->hourly();
+//schedule active offers notification job to run every 5 minutes
+Schedule::job(new ProcessOfferNotificationsJob)
+    ->everyFiveMinutes()
+    ->withoutOverlapping();
 
+//schedule arrival reminder notification job to run daily
 Schedule::job(new SendArrivalRemindersJob())
-    ->dailyAt('08:00');
+    ->dailyAt('08:00')
+    ->withoutOverlapping();

@@ -34,7 +34,7 @@ class CancelUnpaidOverdueBookingsJob implements ShouldQueue
                         continue;
                     }
 
-                    //if the booking is not paid and the balance due date is past the grace period, cancel it and mark payments as forfeited
+                    //if the booking is not fully paid and the balance due date is past the grace period, cancel it and mark payments as forfeited
                     DB::transaction(function () use ($booking) {
                         $booking->payments()
                             ->where('status', PaymentStatus::PAID)

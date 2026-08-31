@@ -28,6 +28,7 @@ class SendOfferNotificationListener implements ShouldQueue
 
         //send all users active offer notification
         User::query()
+        ->where('role','user')
         ->where('receive_marketing_emails', true)
         ->chunkById(500,function($users)use ($offer){
             foreach($users as $user){
