@@ -655,4 +655,8 @@ return [
     'review_can_not_be_resubmitted' =>
         'لا يمكن تعديل هذا التقييم أو إعادة إرساله مرة أخرى.',
 
+    //review deleted admin notifications
+    'review_deleted'=>'تم حذف تقييم',
+    'review_deleted_admin_notification'=>'تم حذف تقييم للحجز :booking بواسطة المستخدم :user لعقار :property',
+
 ];

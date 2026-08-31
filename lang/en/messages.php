@@ -637,4 +637,8 @@ return [
 
     'review_can_not_be_resubmitted' =>
         'This review cannot be edited or submitted again.',
+
+    //review deleted admin notifications
+    'review_deleted'=>'Review Deleted',
+    'review_deleted_admin_notification'=>'Review Deleted for booking :booking at property :property by user :user',
 ];

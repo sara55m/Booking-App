@@ -13,6 +13,9 @@ use App\Models\Review;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\DB;
 use App\Models\Property;
+use App\Models\User;
+use App\Notifications\ReviewDeletedAdminNotification;
+use Illuminate\Support\Facades\Notification;
 
 class ReviewController extends Controller
 {
@@ -204,12 +207,34 @@ class ReviewController extends Controller
     public function destroy(Review $review)
     {
         Gate::authorize('delete', $review);
-        //detach categories
-        $review->categories()->detach();
-        //detach tags
-        $review->tags()->detach();
-        //delete the review
-        $review->delete();
+
+        DB::transaction(function () use ($review) {
+            //capture review data
+            $userName=$review->user->name;
+            $propertyName=$review->property->name;
+            $bookingReference=$review->booking->reference;
+
+            //detach categories
+            $review->categories()->detach();
+            //detach tags
+            $review->tags()->detach();
+
+            //delete the review
+            $review->delete();
+
+            // Notify admins
+            $admins = User::where('role', 'admin')->get();
+
+            Notification::send(
+                $admins,
+                new ReviewDeletedAdminNotification(
+                    $bookingReference,
+                    $userName,
+                    $propertyName
+                )
+            );
+        });
+        
         return response()->json(
             [
                 'status_code' => 200,

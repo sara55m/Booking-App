@@ -14,6 +14,7 @@ use App\Services\ReviewSummaryService;
 use App\Notifications\ReviewApprovedNotification;
 use App\Notifications\ReviewRejectedNotification;
 
+
 class ReviewObserver
 {
 
@@ -119,7 +120,13 @@ class ReviewObserver
 
         //if the deleted review was an approved review -->regenerate the ai summary
         if ($review->status === ReviewStatus::Approved) {
-            GenerateReviewSummaryJob::dispatch($review->property_id);
+            //regenerate ai summary
+            $shouldRegenerate = $this->reviewSummaryService
+            ->shouldRegenerateForReview($review);
+
+            if ($shouldRegenerate) {
+                GenerateReviewSummaryJob::dispatch($review->property_id);
+            }
         }
     }
 
