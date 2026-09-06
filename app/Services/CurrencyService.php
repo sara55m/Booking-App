@@ -3,6 +3,7 @@
 namespace App\Services;
 use Illuminate\Support\Facades\Http;
 use RuntimeException;
+use Illuminate\Support\Facades\Cache;
 
 class CurrencyService
 {
@@ -25,33 +26,39 @@ class CurrencyService
         $from = strtoupper($from);
         $to = strtoupper($to);
 
-        // Same currency = no conversion needed
         if ($from === $to) {
             return 1.0;
         }
 
-        $response = Http::timeout(5)
-            ->get(
-                'https://v6.exchangerate-api.com/v6/'
-                . config('services.exchange_rate.key')
-                . "/pair/{$from}/{$to}"
-            );
+        return Cache::remember(
+            "exchange_rate:{$from}:{$to}",
+            now()->addHours(12),
+            function () use ($from, $to) {
 
-        if ($response->failed()) {
-            throw new RuntimeException(
-                'Unable to retrieve exchange rate.'
-            );
-        }
+                $response = Http::timeout(5)
+                    ->get(
+                        'https://v6.exchangerate-api.com/v6/'
+                        . config('services.exchange_rate.key')
+                        . "/pair/{$from}/{$to}"
+                    );
 
-        $data = $response->json();
+                if ($response->failed()) {
+                    throw new RuntimeException(
+                        'Unable to retrieve exchange rate.'
+                    );
+                }
 
-        if (($data['result'] ?? null) !== 'success') {
-            throw new RuntimeException(
-                'Currency conversion failed: '
-                . ($data['error-type'] ?? 'unknown error')
-            );
-        }
+                $data = $response->json();
 
-        return (float) $data['conversion_rate'];
+                if (($data['result'] ?? null) !== 'success') {
+                    throw new RuntimeException(
+                        'Currency conversion failed: '
+                        . ($data['error-type'] ?? 'unknown error')
+                    );
+                }
+
+                return (float) $data['conversion_rate'];
+            }
+        );
     }
 }

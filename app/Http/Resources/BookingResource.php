@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Enums\BookingStatus;
+use App\Services\CurrencyService;
 
 class BookingResource extends JsonResource
 {
@@ -15,6 +16,8 @@ class BookingResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $currency = auth()->user()?->currency ?? config('app.currency', 'USD');
+
         return [
             'id' => $this->id,
             'reference'=>$this->reference,
@@ -38,9 +41,10 @@ class BookingResource extends JsonResource
                 'discount_type'=>$this->offer->discount_type,
                 'code'=>$this->offer->code ?? null
             ] : null,
-            'original_price'=>$this->original_price.' EGP',
-            'discount_amount'=>$this->discount_amount,
-            'total_price' => $this->total_price.' EGP',
+            'original_price'=>app(CurrencyService::class)->convert($this->original_price,config('app.currency', 'USD'),$currency),
+            'discount_amount'=>app(CurrencyService::class)->convert($this->discount_amount,config('app.currency', 'USD'),$currency),
+            'total_price' => app(CurrencyService::class)->convert($this->total_price,config('app.currency', 'USD'),$currency),
+            'currency' => $currency,
             'expires_at' => $this->status === BookingStatus::PENDING
                 ? $this->expires_at?->toIso8601String()
                 : null,

@@ -74,7 +74,7 @@ class StripeService
 
                 'line_items' => [[
                     'price_data' => [
-                        'currency' => 'egp',
+                        'currency' => config('app.currency', 'USD'),
 
                         'product_data' => [
                             'name' => "Payment for booking #{$booking->reference}",
