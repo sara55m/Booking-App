@@ -64,6 +64,10 @@ Route::middleware('auth:sanctum')->group(function () {
     //profile
     Route::get('/profile', [ProfileController::class, 'show']);
     Route::put('/profile', [ProfileController::class, 'update']);
+    Route::patch('/profile/preferences', [
+        ProfileController::class,
+        'userPreferences'
+    ]);
     Route::put('/profile/password', [ProfileController::class, 'updatePassword']);
     Route::delete('/profile/image', [ProfileController::class, 'deleteImage']);
     Route::delete('/profile',[ProfileController::class, 'destroy']);

@@ -23,6 +23,7 @@ use App\Enums\PaymentStatus;
 use App\Http\Resources\TransactionResource;
 use Illuminate\Support\Facades\Log;
 use App\Http\Resources\TripPlanResource;
+use App\Http\Requests\Profile\UpdateUserPreferencesRequest;
 
 class ProfileController extends Controller
 {
@@ -43,7 +44,7 @@ class ProfileController extends Controller
 
         DB::transaction(function () use ($request, $user, $oldImage) {
 
-            $user->update($request->safe()->only(['name', 'email','locale','phone']));
+            $user->update($request->safe()->only(['name', 'email','phone']));
 
             // Handle image upload if provided
             if($request->hasFile('image')){
@@ -66,6 +67,18 @@ class ProfileController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => __('messages.user_profile_updated_successfully'),
+            'data' => UserResource::make($user->fresh())
+        ]);
+    }
+
+    public function userPreferences(UpdateUserPreferencesRequest $request){
+        $user = $request->user();
+
+        $user->update($request->safe()->only(['locale','currency']));
+
+        return response()->json([
+            'status' => 'success',
+            'message' => __('messages.user_preferences_updated_successfully'),
             'data' => UserResource::make($user->fresh())
         ]);
     }

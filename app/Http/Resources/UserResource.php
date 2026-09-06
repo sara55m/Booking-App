@@ -23,6 +23,7 @@ class UserResource extends JsonResource
             'reward_points'=>$this->reward_points,
             'email_verified'=>true,
             'locale'=>$this->locale ?? config('app.locale', 'en'),
+            'currency'=>$this->currency ?? config('app.currency', 'USD'),
         ];
     }
 }

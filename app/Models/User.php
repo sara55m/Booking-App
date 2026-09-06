@@ -39,6 +39,7 @@ class User extends Authenticatable implements FilamentUser,MustVerifyEmail,HasLo
         'reward_points',
         'receive_marketing_emails',
         'locale',
+        'currency',
     ];
 
     /**

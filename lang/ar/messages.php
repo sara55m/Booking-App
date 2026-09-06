@@ -659,4 +659,6 @@ return [
     'review_deleted'=>'تم حذف تقييم',
     'review_deleted_admin_notification'=>'تم حذف تقييم للحجز :booking بواسطة المستخدم :user لعقار :property',
 
+    'user_preferences_updated_successfully'=>'تم تحديث تفضيلات المستخدم بنجاح',
+
 ];
