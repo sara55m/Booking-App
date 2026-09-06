@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Offer;
 use App\Models\Property;
 use App\Enums\BookingStatus;
+use App\Models\User;
 
 
 class OfferService
@@ -121,6 +122,10 @@ class OfferService
 
         $pricePerNight = $property->room_types_min_base_price;
 
+        $user = $userId ? User::findOrFail($userId) : auth()->user();
+
+        $currency = $user->currency ?? config('app.currency', 'USD');
+
         // No dates selected yet.
         // Return the per-night price without applying the discount.
         if ($nights === null) {
@@ -129,9 +134,10 @@ class OfferService
             ->first();
 
             return [
-                'original_price' => $pricePerNight,
-                'final_price' => $pricePerNight,
+                'original_price' => app(CurrencyService::class)->convert($pricePerNight, config('app.currency', 'USD'), $currency),
+                'final_price' => app(CurrencyService::class)->convert($pricePerNight, config('app.currency', 'USD'), $currency),
                 'discount' => 0,
+                'currency' => strtoupper($currency),
                 'offer' => $offer,
                 'offer_applicable' => false,
             ];
@@ -149,8 +155,9 @@ class OfferService
         //no applicable offer
         if(!$offer){
             return [
-                'original_price' => $originalPrice,
-                'final_price' => $originalPrice,
+                'original_price' => app(CurrencyService::class)->convert($originalPrice, config('app.currency', 'USD'), $currency),
+                'final_price' => app(CurrencyService::class)->convert($originalPrice, config('app.currency', 'USD'), $currency),
+                'currency' => strtoupper($currency),
                 'discount' => 0,
                 'offer' => null,
                 'offer_applicable' => false,
@@ -161,9 +168,10 @@ class OfferService
         $finalPrice = max(0, $originalPrice - $discount);
 
         return [
-            'original_price' => $originalPrice,
-            'final_price' => $finalPrice,
-            'discount' => $discount,
+            'original_price' => app(CurrencyService::class)->convert($originalPrice, config('app.currency', 'USD'), $currency),
+            'final_price' => app(CurrencyService::class)->convert($finalPrice, config('app.currency', 'USD'), $currency),
+            'currency' => strtoupper($currency),
+            'discount' => app(CurrencyService::class)->convert($discount, config('app.currency', 'USD'), $currency),
             'offer' => $offer,
             'offer_applicable' => true,
         ];

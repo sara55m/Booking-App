@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use App\Services\CurrencyService;
 
 class Property extends Model
 {
@@ -206,18 +207,32 @@ class Property extends Model
     }
 
 
-    public function scopeMinPrice($query, ?float $price)
+    public function scopeMinPrice($query, ?float $price, ?string $currency)
     {
-        return $query->when($price, function ($query) use ($price) {
+        return $query->when($price !== null, function ($query) use ($price, $currency) {
+
+            $price = app(CurrencyService::class)->convert(
+                $price,
+                $currency ?? config('app.currency', 'USD'),
+                config('app.currency', 'USD')
+            );
+
             $query->whereHas('roomTypes', function ($query) use ($price) {
                 $query->where('base_price', '>=', $price);
             });
         });
     }
 
-    public function scopeMaxPrice($query, ?float $price)
+    public function scopeMaxPrice($query, ?float $price, ?string $currency)
     {
-        return $query->when($price, function ($query) use ($price) {
+        return $query->when($price !== null, function ($query) use ($price, $currency) {
+
+            $price = app(CurrencyService::class)->convert(
+                $price,
+                $currency ?? config('app.currency', 'USD'),
+                config('app.currency', 'USD')
+            );
+
             $query->whereHas('roomTypes', function ($query) use ($price) {
                 $query->where('base_price', '<=', $price);
             });
@@ -345,8 +360,8 @@ class Property extends Model
             ->type($filters['type'] ?? null)
             ->guestRating($filters['guest_rating'] ?? null)
             ->hotelRating($filters['hotel_rating'] ?? null)
-            ->minPrice($filters['min_price'] ?? null)
-            ->maxPrice($filters['max_price'] ?? null)
+            ->minPrice($filters['min_price'] ?? null, $filters['currency'] ?? null)
+            ->maxPrice($filters['max_price'] ?? null, $filters['currency'] ?? null)
             ->amenities($filters['amenities'] ?? null)
             ->available(
                 $filters['check_in'] ?? null,

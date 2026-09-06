@@ -49,4 +49,8 @@ return [
     'model' => env('GROQ_MODEL', 'llama-3.3-70b-versatile'),
     ],
 
+    'exchange_rate' => [
+        'key' => env('EXCHANGE_RATE_API_KEY'),
+    ],
+
 ];

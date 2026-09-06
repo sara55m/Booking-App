@@ -65,6 +65,9 @@ class PropertyController extends Controller
                 ->diffInDays(Carbon::parse($validated['check_out']));
         }
 
+        //get user preferred currency
+        $currency = auth()->user()?->currency ?? config('app.currency', 'USD');
+
         //make cache key based on request parameters
         $cacheData = [
             'search' => $validated['search'] ?? null,
@@ -84,15 +87,17 @@ class PropertyController extends Controller
             'longitude' => $validated['longitude'] ?? null,
             'radius' => $validated['radius'] ?? null,
             'page' => $validated['page'] ?? 1,
+
+            'currency' => strtoupper($currency),
         ];
         $key = 'properties:' . md5(json_encode($cacheData));
 
         $properties=Cache::tags(['properties'])
-        ->remember($key, now()->addMinutes(15), function () use ($validated,$nightsCount) {
+        ->remember($key, now()->addMinutes(15), function () use ($validated,$nightsCount,$currency) {
             return Property::query()
                 ->where('is_active', true)
                 ->withMin('roomTypes', 'base_price')
-                ->filter($validated)
+                ->filter($validated, $currency)
                 ->withActiveOffer($nightsCount)
                 ->with(['coverImage','city.country'])
                 ->paginate(10);

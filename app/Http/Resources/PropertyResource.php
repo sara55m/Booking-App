@@ -32,7 +32,7 @@ class PropertyResource extends JsonResource
 
             'original_price' => isset($pricing['original_price']) ? round($pricing['original_price'], 2): null,
             'final_price'    => isset($pricing['final_price']) ? round($pricing['final_price'], 2) : null,
-            'currency' => 'EGP',
+            'currency' => $pricing['currency'] ?? config('app.currency', 'USD'),
             'nights'         => $request->nights,
             'offer'          => $pricing['offer'] ? OfferResource::make($pricing['offer']) : null,
             'offer_applicable'=>$pricing['offer_applicable'],
