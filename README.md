@@ -24,6 +24,7 @@ The project also includes a Filament-based administration dashboard for managing
 - Room availability checking
 - Hotel/property search
 - Booking management
+- Policy-based booking cancellation according to property cancellation rules
 - Booking expiration handling
 - Booking payment management
 - Database transactions and locking to prevent double bookings
@@ -35,6 +36,8 @@ The project also includes a Filament-based administration dashboard for managing
 - Partial and remaining booking payments
 - Automatic stripe refund amount calculation
 - Reward points conversion and handling during refunds
+- Invoice generation for payments and cancellations
+- Invoices attached to email notifications
 - Secure payment webhook handling
 
 ### Offers & Rewards
