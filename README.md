@@ -164,6 +164,7 @@ routes/
 ├── console.php         # Console routes
 └── web.php             # Web routes
 
+
 storage/                # Logs, cache, and generated files
 tests/                  # Automated tests
 
