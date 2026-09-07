@@ -338,8 +338,6 @@ Interactive API documentation will be added using OpenAPI and Scramble.
 
 ## Testing
 
-## Testing
-
 Automated tests will be added using PHPUnit, including unit and feature tests for the application's core functionality and business logic.
 
 ## Security
