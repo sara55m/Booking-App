@@ -11,8 +11,12 @@ The project also includes a Filament-based administration dashboard for managing
 - Email OTP-based authentication
 - User authentication and authorization
 - Role and permission management
-- User favorites
-- Rewards and points system
+- User profile management
+- Favorite properties
+- Saved trip plans
+- Payment method management
+- Transaction history
+- Reward points and points history
 
 ### Properties & Bookings
 
