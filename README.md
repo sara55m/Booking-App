@@ -66,9 +66,15 @@ The project also includes a Filament-based administration dashboard for managing
 
 ### Notifications & Background Processing
 
-- Email notifications
-- Booking reminders
-- Review Reminders
+- User Email notifications for booking, payment, review, offer, and arrival events
+- Booking confirmation and cancellation notifications
+- Booking expiration notifications
+- Booking payment and balance due reminders
+- Payment success and failure notifications
+- Booking arrival reminders
+- Offer notifications
+- Review approval, rejection, reminder, and update notifications
+- Admin notifications for booking, payment, and review events
 - Queued jobs for background processing
 - Scheduled tasks
 - Event-driven application workflows
