@@ -177,6 +177,7 @@ Composer
 Node.js and npm
 MySQL
 Redis
+
 Clone the repository
 git clone https://github.com/sara55m/Booking-App.git
 
@@ -227,16 +228,22 @@ php artisan serve
 The application will be available at:
 
 http://127.0.0.1:8000
+
+
 Queue Worker
 
 Run the queue worker with:
 
 php artisan queue:work
+
+
 Scheduler
 
 Run the Laravel scheduler with:
 
 php artisan schedule:work
+
+
 Integrations
 Stripe
 
