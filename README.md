@@ -1,66 +1,300 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Booking App
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A booking backend built with Laravel, providing a RESTful API for managing properties, rooms, bookings, payments, reviews, offers, rewards, and user interactions.
 
-## About Laravel
+The project also includes a Filament-based administration dashboard for managing the application's resources and operations.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Features
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Authentication & Users
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Email OTP-based authentication
+- User authentication and authorization
+- Role and permission management
+- User favorites
+- Rewards and points system
 
-## Learning Laravel
+### Properties & Bookings
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- Property and room management
+- Room availability checking
+- Hotel/property search
+- Booking management
+- Booking expiration handling
+- Booking payment management
+- Database transactions and locking to prevent double bookings
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### Payments & Refunds
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- Stripe payment integration
+- Idempotent payment processing using idempotency keys
+- Partial and remaining booking payments
+- Automatic stripe refund amount calculation
+- Reward points conversion and handling during refunds
+- Secure payment webhook handling
 
-## Laravel Sponsors
+### Offers & Rewards
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- Offers and discount management
+- Offer validation based on booking conditions
+- Rewards points earning and redemption
+- Reward points conversion during payments and refunds
 
-### Premium Partners
+### Reviews & Ratings
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+- Reviews and ratings
+- Review categories and tags
+- Review approval and rejection workflow
+- Review editing restrictions
+- AI-powered review summaries using Groq AI
+- Automatic review summary regeneration based on review changes
 
-## Contributing
+### AI Features
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- AI-powered property search using Groq AI
+- AI travel assistant using Groq AI
+- AI-powered travel planner that generates personalized trip plans based on users' interests , travel style , destination and travel dates using Groq AI
+- Conversation history storage to support follow-up interactions and refinement of generated trip plans
+- AI-powered review summaries using Groq AI
 
-## Code of Conduct
+### Notifications & Background Processing
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+- Email notifications
+- Booking reminders
+- Review Reminders
+- Queued jobs for background processing
+- Scheduled tasks
+- Event-driven application workflows
 
-## Security Vulnerabilities
+### Administration
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- Filament admin dashboard
+- Property management
+- Room management
+- Booking management
+- Payment management
+- Review management
+- Offer management
+- User management
+- Country and city management
+- Amenity management
+- Room type management
+- Travel category management
+- Review tag and category management
+- Property type management
 
-## License
+### API
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- RESTful API
+- Request validation
+- Authorization policies
+- Pagination and filtering
+- Search functionality
+
+## Tech Stack
+
+- PHP
+- Laravel
+- MySQL
+- Filament
+- Redis
+- Laravel Sanctum
+- Spatie Laravel Permission
+- Stripe
+- Groq AI
+- Blade
+- Vite
+
+## Project Structure
+
+```text
+app/
+├── Console/            # Artisan commands and scheduled tasks
+├── Enums/              # Application enums
+├── Events/             # Application events
+├── Filament/           # Filament resources, pages, and widgets
+├── Http/
+│   ├── Controllers/    # API and web controllers
+│   ├── Middleware/     # HTTP middleware
+│   ├── Requests/       # Form request validation
+│   └── Resources/      # API resources
+├── Jobs/               # Queued background jobs
+├── Listeners/          # Event listeners
+├── Livewire/           # Livewire components
+├── Models/             # Eloquent models
+├── Notifications/      # Application notifications
+├── Observers/          # Model observers
+├── Policies/           # Authorization policies
+└── Services/           # Business logic and integrations
+
+bootstrap/              # Framework bootstrapping
+config/                 # Application configuration
+
+database/
+├── factories/          # Model factories
+├── migrations/         # Database migrations
+└── seeders/            # Database seeders
+
+lang/                   # Localization files
+public/                 # Public assets and application entry point
+
+resources/
+├── css/                # CSS assets
+├── js/                 # JavaScript assets
+└── views/
+    ├── filament/       # Filament-related views
+    └── invoices/       # Invoice templates
+
+routes/
+├── api.php             # API routes
+├── channels.php        # Broadcast channel authorization
+├── console.php         # Console routes
+└── web.php             # Web routes
+
+storage/                # Logs, cache, and generated files
+tests/                  # Automated tests
+
+Installation
+Requirements
+PHP 8.2+
+Composer
+Node.js and npm
+MySQL
+Redis
+Clone the repository
+git clone https://github.com/sara55m/Booking-App.git
+
+cd Booking-App
+Install PHP dependencies
+composer install
+Install frontend dependencies
+npm install
+Environment configuration
+
+Create your environment file:
+
+cp .env.example .env
+
+On Windows:
+
+copy .env.example .env
+
+Generate the application key:
+
+php artisan key:generate
+
+Configure your database and other services in .env.
+
+Database
+
+Run the migrations:
+
+php artisan migrate
+
+seed the database:
+
+php artisan db:seed
+
+Storage
+
+Create the public storage link:
+
+php artisan storage:link
+Frontend assets
+
+Build the frontend assets:
+
+npm run build
+Run the application
+php artisan serve
+
+The application will be available at:
+
+http://127.0.0.1:8000
+Queue Worker
+
+Run the queue worker with:
+
+php artisan queue:work
+Scheduler
+
+Run the Laravel scheduler with:
+
+php artisan schedule:work
+Integrations
+Stripe
+
+The application uses Stripe for booking payments.
+
+Stripe credentials and webhook secrets must be configured through environment variables.
+
+Groq AI
+
+The application uses Groq AI to generate summaries of approved property reviews.
+
+The API credentials must be configured through environment variables.
+
+Admin Dashboard
+
+The project includes a Filament administration dashboard for managing application resources such as:
+
+Countries
+Cities
+Amenities
+Travel Categories
+Property Types
+Properties
+Room Types
+Rooms
+Bookings
+Reviews
+Offers
+Users
+Users Reward Points Hitory
+Payments
+API Documentation
+
+## API Documentation
+
+This project provides a RESTful API for authentication, properties, rooms,
+bookings, payments, reviews, offers, rewards, favorites, and AI-powered features.
+
+Interactive API documentation is generated using OpenAPI and Scramble.
+
+### API Documentation
+
+[View API Documentation](...)
+
+## Testing
+
+Run the test suite with:
+
+```bash
+php artisan test
+Security
+
+Never commit the .env file or expose sensitive credentials, including:
+
+Database credentials
+API keys
+Stripe secrets
+Webhook secrets
+AI API keys
+Mail credentials
+
+Use .env.example to document the required environment variables without exposing sensitive values.
+
+Project Status
+
+🚧 This project is currently under development.
+
+Author
+
+Sara Mohamed
+Junior Backend PHP/Laravel Developer
+
+GitHub: https://github.com/sara55m
+
+License
+
+This project is currently intended for portfolio and educational purposes.
