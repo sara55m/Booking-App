@@ -170,123 +170,171 @@ tests/                  # Automated tests
 
 ```
 
-Installation
-Requirements
-PHP 8.2+
-Composer
-Node.js and npm
-MySQL
-Redis
+## Installation
 
-Clone the repository
+### Requirements
+
+Make sure you have the following installed:
+
+- PHP 8.2+
+- Composer
+- Node.js and npm
+- MySQL
+- Redis
+
+### Clone the Repository
+
+```bash
 git clone https://github.com/sara55m/Booking-App.git
-
 cd Booking-App
-Install PHP dependencies
+```
+
+### Install PHP Dependencies
+
+```bash
 composer install
-Install frontend dependencies
+```
+
+### Install Frontend Dependencies
+
+```bash
 npm install
-Environment configuration
+```
+
+### Environment Configuration
 
 Create your environment file:
 
+```bash
 cp .env.example .env
+```
 
 On Windows:
 
+```cmd
 copy .env.example .env
+```
 
 Generate the application key:
 
+```bash
 php artisan key:generate
+```
 
-Configure your database and other services in .env.
+Configure your database and other required services in the `.env` file.
 
-Database
+### Database
 
-Run the migrations:
+Run the database migrations:
 
+```bash
 php artisan migrate
+```
 
-seed the database:
+Seed the database:
 
+```bash
 php artisan db:seed
+```
 
-Storage
+### Storage
 
 Create the public storage link:
 
+```bash
 php artisan storage:link
-Frontend assets
+```
+
+### Frontend Assets
 
 Build the frontend assets:
 
+```bash
 npm run build
-Run the application
+```
+
+### Run the Application
+
+Start the Laravel development server:
+
+```bash
 php artisan serve
+```
 
 The application will be available at:
 
+```text
 http://127.0.0.1:8000
+```
 
+### Queue Worker
 
-Queue Worker
+Start the queue worker:
 
-Run the queue worker with:
-
+```bash
 php artisan queue:work
+```
 
+### Scheduler
 
-Scheduler
+Start the Laravel scheduler:
 
-Run the Laravel scheduler with:
-
+```bash
 php artisan schedule:work
+```
 
+---
 
-Integrations
-Stripe
+## Integrations
 
-The application uses Stripe for booking payments.
+### Stripe
+
+The application uses Stripe for booking payments and refund processing.
 
 Stripe credentials and webhook secrets must be configured through environment variables.
 
-Groq AI
+### Groq AI
 
-The application uses Groq AI to generate summaries of approved property reviews.
+The application uses Groq AI for AI-powered features including:
 
-The API credentials must be configured through environment variables.
+- Property search
+- Travel assistant
+- Personalized travel planning
+- Property review summaries
 
-Admin Dashboard
+Groq API credentials must be configured through environment variables.
 
-The project includes a Filament administration dashboard for managing application resources such as:
+---
 
-Countries
-Cities
-Amenities
-Travel Categories
-Property Types
-Properties
-Room Types
-Rooms
-Bookings
-Reviews
-Offers
-Users
-Users Reward Points Hitory
-Payments
-API Documentation
+## Admin Dashboard
+
+The project includes a Filament administration dashboard for managing:
+
+- Countries
+- Cities
+- Amenities
+- Travel Categories
+- Property Types
+- Properties
+- Room Types
+- Rooms
+- Bookings
+- Reviews
+- Review Tags and Categories
+- Offers
+- Users
+- User Reward Points History
+- Payments
+
+---
 
 ## API Documentation
 
-This project provides a RESTful API for authentication, properties, rooms,
-bookings, payments, reviews, offers, rewards, favorites, and AI-powered features.
+This project provides a RESTful API for authentication, properties, rooms, bookings, payments, reviews, offers, rewards, favorites, and AI-powered features.
 
-Interactive API documentation is generated using OpenAPI and Scramble.
+Interactive API documentation will be added using OpenAPI and Scramble.
 
-### API Documentation
-
-[View API Documentation](...)
+---
 
 ## Testing
 
@@ -294,30 +342,40 @@ Run the test suite with:
 
 ```bash
 php artisan test
-Security
+```
 
-Never commit the .env file or expose sensitive credentials, including:
+---
 
-Database credentials
-API keys
-Stripe secrets
-Webhook secrets
-AI API keys
-Mail credentials
+## Security
 
-Use .env.example to document the required environment variables without exposing sensitive values.
+Never commit the `.env` file or expose sensitive credentials, including:
 
-Project Status
+- Database credentials
+- API keys
+- Stripe secrets
+- Webhook secrets
+- AI API keys
+- Mail credentials
+
+Use `.env.example` to document the required environment variables without exposing sensitive values.
+
+---
+
+## Project Status
 
 🚧 This project is currently under development.
 
-Author
+---
 
-Sara Mohamed
+## Author
+
+**Sara Mohamed**  
 Junior Backend PHP/Laravel Developer
 
 GitHub: https://github.com/sara55m
 
-License
+---
+
+## License
 
 This project is currently intended for portfolio and educational purposes.
