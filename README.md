@@ -13,7 +13,7 @@ The project also includes a Filament-based administration dashboard for managing
 - Role and permission management
 - User profile management
 - Favorite properties
-- Saved trip plans
+- Saved and managed AI-generated trip plans
 - Payment method management
 - Transaction history
 - Reward points and points history
