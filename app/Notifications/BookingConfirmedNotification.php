@@ -7,6 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use App\Models\Booking;
+use App\Services\CurrencyService;
 
 class BookingConfirmedNotification extends Notification implements ShouldQueue
 {
@@ -17,7 +18,10 @@ class BookingConfirmedNotification extends Notification implements ShouldQueue
      */
     public function __construct(public Booking $booking)
     {
-        //
+        $this->booking->loadMissing([
+            'user',
+            'property.policy',
+        ]);
     }
 
     /**
@@ -37,8 +41,27 @@ class BookingConfirmedNotification extends Notification implements ShouldQueue
     {
         $this->booking->refresh();
 
+        $this->booking->load([
+            'user',
+            'property.policy',
+        ]);
+
         $path = storage_path(
             'app/public/' . $this->booking->invoice_path
+        );
+
+        $currency = strtoupper(
+            $this->booking->user->currency
+            ?? config('app.currency', 'USD')
+        );
+
+        $currencyService = app(CurrencyService::class);
+        $baseCurrency = config('app.currency', 'USD');
+
+        $totalPrice = $currencyService->convert(
+            $this->booking->total_price,
+            $baseCurrency,
+            $currency
         );
 
         return (new MailMessage)
@@ -58,7 +81,7 @@ class BookingConfirmedNotification extends Notification implements ShouldQueue
             ]))
 
             ->line(__('messages.booking_confirmed.total_price', [
-                'amount' => number_format($this->booking->total_price, 2),
+                'amount' => number_format( $totalPrice, 2) . ' ' . $currency,
             ]))
 
             ->line(__('messages.booking_confirmed.booking_status', [

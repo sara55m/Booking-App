@@ -165,58 +165,58 @@
 
         <tr>
             <th>Original Booking Price</th>
-            <td>{{ number_format($booking->original_price,2) }} EGP</td>
+            <td>{{ number_format($originalPrice,2) }} {{ $currency }}</td>
         </tr>
 
         @if($booking->discount_amount > 0)
         <tr>
             <th>Offer Discount</th>
-            <td>- {{ number_format($booking->discount_amount,2) }} EGP</td>
+            <td>- {{ number_format($discountAmount,2) }} {{ $currency }}</td>
         </tr>
         @endif
 
         <tr>
             <th>Final Booking Price</th>
-            <td>{{ number_format($booking->total_price,2) }} EGP</td>
+            <td>{{ number_format($bookingTotal,2) }} {{ $currency }}</td>
         </tr>
 
         @if($isRefund)
             <tr>
                 <th>Total Refunded</th>
-                <td>{{ number_format($totalRefunded,2) }} EGP</td>
+                <td>{{ number_format($totalRefunded,2) }} {{ $currency }}</td>
             </tr>
 
             <tr>
                 <th>Final Balance</th>
-                <td>0.00 EGP</td>
+                <td>0.00 {{ $currency }}</td>
             </tr>
         @else
 
             <tr>
                 <th>Payment Portion</th>
-                <td>{{ number_format($portion,2) }} EGP</td>
+                <td>{{ number_format($portion,2) }} {{ $currency }}</td>
             </tr>
 
             @if($payment->discount_amount > 0)
             <tr>
                 <th>Reward Points Discount</th>
-                <td>- {{ number_format($payment->discount_amount,2) }} EGP</td>
+                <td>- {{ number_format($paymentDiscountAmount,2) }} {{ $currency }}</td>
             </tr>
             @endif
 
             <tr>
                 <th>Amount Charged</th>
-                <td>{{ number_format($payment->amount,2) }} EGP</td>
+                <td>{{ number_format($paymentAmount,2) }} {{ $currency }}</td>
             </tr>
 
             <tr>
                 <th>Total Paid So Far</th>
-                <td>{{ number_format($totalPaid,2) }} EGP</td>
+                <td>{{ number_format($totalPaid,2) }} {{ $currency }}</td>
             </tr>
 
             <tr>
                 <th>Remaining Balance</th>
-                <td>{{ number_format($payment->remaining,2) }} EGP</td>
+                <td>{{ number_format($paymentRemaining,2) }} {{ $currency }}</td>
             </tr>
         @endif
 

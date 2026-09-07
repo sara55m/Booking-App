@@ -36,57 +36,85 @@ class PaymentSucceededNotification extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): MailMessage
     {
-        //get the invoice path from the booking model and attach it to the email
+        // Get the latest booking data
         $this->booking->refresh();
 
+        // Get the invoice path from the booking model and attach it to the email
         $path = storage_path(
             'app/public/' . $this->booking->invoice_path
         );
-        
+
         $status = $this->booking->total_price === $this->payment->amount
             ? 'Full Payment'
             : 'Partial Payment';
-        
-        $currency = strtoupper($this->booking->currency);
+
+        // User's preferred display currency
+        $currency = $this->booking->user->currency
+            ?? config('app.currency', 'USD');
+
+        $currency = strtoupper($currency);
+
+        $currencyService = app(\App\Services\CurrencyService::class);
+
+        // Convert stored USD amounts only for display
+        $bookingTotal = $currencyService->convert(
+            $this->booking->total_price,
+            config('app.currency', 'USD'),
+            $currency
+        );
+
+        $paymentAmount = $currencyService->convert(
+            $this->payment->amount,
+            config('app.currency', 'USD'),
+            $currency
+        );
+
+        $remainingAmount = $currencyService->convert(
+            $this->payment->remaining,
+            config('app.currency', 'USD'),
+            $currency
+        );
 
         return (new MailMessage)
-        ->subject(__('messages.payment_received.subject'))
-        ->greeting(__('messages.greeting', [
-            'name' => $notifiable->name,
-        ]))
-    
-        ->line(__('messages.payment_received.introduction'))
-    
-        ->line(__('messages.payment_received.booking_reference', [
-            'reference' => $this->booking->reference,
-        ]))
-    
-        ->line(__('messages.payment_received.booking_total', [
-            'amount' => number_format($this->booking->total_price, 2),
-        ]))
-    
-        ->line(__('messages.payment_received.payment_amount', [
-            'currency' => $currency,
-            'amount' => number_format($this->payment->amount, 2),
-        ]))
-    
-        ->line(__('messages.payment_received.remaining_amount', [
-            'currency' => $currency,
-            'amount' => number_format($this->payment->remaining, 2),
-        ]))
-    
-        ->line(__('messages.payment_received.payment_type', [
-            'type' => $status,
-        ]))
-    
-        ->line(__('messages.payment_received.thank_you'))
-    
-        ->attach($path, [
-            'as' => 'invoice.pdf',
-            'mime' => 'application/pdf',
-        ])
-    
-        ->line(__('messages.payment_received.invoice_attached'));
+            ->subject(__('messages.payment_received.subject'))
+
+            ->greeting(__('messages.greeting', [
+                'name' => $notifiable->name,
+            ]))
+
+            ->line(__('messages.payment_received.introduction'))
+
+            ->line(__('messages.payment_received.booking_reference', [
+                'reference' => $this->booking->reference,
+            ]))
+
+            ->line(__('messages.payment_received.booking_total', [
+                'currency' => $currency,
+                'amount' => number_format($bookingTotal, 2),
+            ]))
+
+            ->line(__('messages.payment_received.payment_amount', [
+                'currency' => $currency,
+                'amount' => number_format($paymentAmount, 2),
+            ]))
+
+            ->line(__('messages.payment_received.remaining_amount', [
+                'currency' => $currency,
+                'amount' => number_format($remainingAmount, 2),
+            ]))
+
+            ->line(__('messages.payment_received.payment_type', [
+                'type' => $status,
+            ]))
+
+            ->line(__('messages.payment_received.thank_you'))
+
+            ->attach($path, [
+                'as' => 'invoice.pdf',
+                'mime' => 'application/pdf',
+            ])
+
+            ->line(__('messages.payment_received.invoice_attached'));
     }
 
     /**

@@ -8,6 +8,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use App\Models\Booking;
 use App\Models\Payment;
+use App\Services\CurrencyService;
 
 class BookingPaymentFailedNotification extends Notification implements ShouldQueue
 {
@@ -18,7 +19,7 @@ class BookingPaymentFailedNotification extends Notification implements ShouldQue
      */
     public function __construct(public Booking $booking,public Payment $payment,)
     {
-        //
+        $this->booking->loadMissing('user', 'property');
     }
 
     /**
@@ -36,6 +37,16 @@ class BookingPaymentFailedNotification extends Notification implements ShouldQue
      */
     public function toMail(object $notifiable): MailMessage
     {
+        $currency = strtoupper(
+            $this->booking->user->currency
+            ?? config('app.currency', 'USD')
+        );
+
+        $currencyService = app(CurrencyService::class);
+        $baseCurrency = config('app.currency', 'USD');
+
+        $paymentAmount=$currencyService->convert($this->payment->amount,$baseCurrency,$currency);
+
         return (new MailMessage)
             ->subject(__('messages.payment_failed_notification.subject'))
             ->greeting(__('messages.greeting', [
@@ -49,7 +60,7 @@ class BookingPaymentFailedNotification extends Notification implements ShouldQue
                 'property' => $this->booking->property->name,
             ]))
             ->line(__('messages.payment_failed_notification.amount', [
-                'amount' => number_format($this->payment->amount, 2),
+                'amount' => number_format($paymentAmount, 2) . ' ' . $currency,
             ]))
             ->line(__('messages.payment_failed_notification.reason'))
             ->action(

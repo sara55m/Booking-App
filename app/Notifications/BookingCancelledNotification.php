@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notification;
 use App\Models\Booking;
 use App\Enums\PaymentStatus;
 use App\Enums\BookingPaymentStatus;
+use App\Services\CurrencyService;
 
 class BookingCancelledNotification extends Notification implements ShouldQueue
 {
@@ -19,7 +20,10 @@ class BookingCancelledNotification extends Notification implements ShouldQueue
      */
     public function __construct(public Booking $booking)
     {
-        //
+        $this->booking->loadMissing([
+            'user',
+            'property',
+        ]);
     }
 
     /**
@@ -37,6 +41,24 @@ class BookingCancelledNotification extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): MailMessage
     {
+        $this->booking->refresh();
+
+        $this->booking->load([
+            'user',
+            'property',
+        ]);
+
+        //currency data
+        $currency = strtoupper(
+            $this->booking->user->currency
+            ?? config('app.currency', 'USD')
+        );
+
+        $baseCurrency = config('app.currency', 'USD');
+
+        $currencyService = app(CurrencyService::class);
+
+        //Refund & Rewards
         $wasRefunded = $this->booking->payment_status === BookingPaymentStatus::REFUNDED;
 
         $refundedAmount=$this->booking->payments()->where('status',PaymentStatus::REFUNDED)->sum('amount');
@@ -45,7 +67,12 @@ class BookingCancelledNotification extends Notification implements ShouldQueue
 
         $returnedPoints=$this->booking->payments()->where('status',PaymentStatus::REFUNDED)->sum('redeemed_points');
 
-        $this->booking->refresh();
+        //Convert refunded amount from the default currency to user's currency
+        $displayRefundedAmount = $currencyService->convert(
+            $refundedAmount,
+            $baseCurrency,
+            $currency
+        );
 
         $path = storage_path(
             'app/public/' . $this->booking->invoice_path
@@ -78,7 +105,7 @@ class BookingCancelledNotification extends Notification implements ShouldQueue
                 ->line('')
                 ->line(__('messages.booking_cancelled.refund_summary'))
                 ->line(__('messages.booking_cancelled.refunded_amount', [
-                    'amount' => number_format($refundedAmount, 2),
+                    'amount' => number_format($displayRefundedAmount, 2) . ' ' . $currency,
                 ]))
                 ->line(__('messages.booking_cancelled.returned_reward_points', [
                     'points' => $returnedPoints,

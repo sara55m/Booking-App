@@ -16,7 +16,6 @@ use App\Services\RewardService;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Support\Facades\Log;
 
 class CheckoutService
 {

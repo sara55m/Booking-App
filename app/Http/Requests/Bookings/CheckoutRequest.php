@@ -4,6 +4,7 @@ namespace App\Http\Requests\Bookings;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Enums\PaymentStatus;
 
 class CheckoutRequest extends FormRequest
 {
@@ -25,8 +26,19 @@ class CheckoutRequest extends FormRequest
         //access booking via route model binding
         $booking = $this->route('booking');
 
+        $isFirstPayment = ! $booking->payments()
+            ->where('status', PaymentStatus::PAID)
+            ->exists();
+
         return [
-            'amount' => ['required', 'numeric', 'min:' . $booking->getMinimumPaymentAmount(),],
+            'amount' => array_filter([
+            'required',
+            'numeric',
+            $isFirstPayment
+                ? 'min:' . $booking->getMinimumPaymentAmount()
+                : null,
+        ]),
+        
             'redeem_points' => ['nullable', 'integer', 'min:0', 'multiple_of:100'],
         ];
     }
