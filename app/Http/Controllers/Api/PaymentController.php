@@ -15,6 +15,7 @@ use Illuminate\Http\JsonResponse;
 use App\Enums\PaymentStatus;
 use App\Http\Requests\Bookings\CheckoutRequest;
 
+
 class PaymentController extends Controller
 {
     public function checkout(
@@ -32,11 +33,17 @@ class PaymentController extends Controller
             ], 400);
         }
 
-        //validate checkout
-        $requestedAmount = (float) $validated['amount'];
-        $redeemPoints = (int) ($validated['redeem_points'] ?? 0);
         $user = $booking->user;
 
+        //convert currency from the user preferred currency to the base app currency
+        $requestedAmount = $checkoutService->convertToBaseCurrency(
+            (float) $validated['amount'],
+            $user
+        );
+
+        $redeemPoints = (int) ($validated['redeem_points'] ?? 0);
+
+        //validate checkout
         $remainingAmount = $checkoutService->validateCheckout(
             $booking,
             $user,

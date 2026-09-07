@@ -16,7 +16,9 @@ class BookingResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $currency = auth()->user()?->currency ?? config('app.currency', 'USD');
+        $currency = strtoupper(
+            auth()->user()?->currency ?? config('app.currency', 'USD')
+        );
 
         return [
             'id' => $this->id,

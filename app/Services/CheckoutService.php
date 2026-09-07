@@ -6,7 +6,6 @@ use App\Models\Booking;
 use App\Models\Payment;
 use App\Enums\BookingStatus;
 use App\Enums\PaymentStatus;
-use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use App\Enums\PaymentMethod;
 use App\Enums\BookingPaymentStatus;
@@ -16,6 +15,8 @@ use App\Services\RewardService;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Auth\Access\AuthorizationException;
+use App\Models\User;
+use App\Services\CurrencyService;
 
 class CheckoutService
 {
@@ -268,6 +269,23 @@ class CheckoutService
         User $user
     ): void {
         $this->stripeService->createCustomer($user);
+    }
+
+    public function convertToBaseCurrency(
+    float $amount,
+    User $user
+    ): float {
+        $currency = strtoupper(
+            $user->currency ?? config('app.currency', 'USD')
+        );
+
+        $baseCurrency = strtoupper(config('app.currency', 'USD'));
+
+        return app(CurrencyService::class)->convert(
+            $amount,
+            $currency,
+            $baseCurrency
+        );
     }
 
 }

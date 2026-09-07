@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\RoomImageResource;
+use App\Services\CurrencyService;
 
 class RoomResource extends JsonResource
 {
@@ -15,6 +16,19 @@ class RoomResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $currency = strtoupper(
+            auth()->user()?->currency ?? config('app.currency', 'USD')
+        );
+
+        $baseCurrency = strtoupper(config('app.currency', 'USD'));
+
+        $currencyService = app(CurrencyService::class);
+
+        $pricePerNight = $currencyService->convert(
+            $this->roomType->base_price,
+            $baseCurrency,
+            $currency
+        );
         return [
             'id'=>$this->id,
             'room_number'=>$this->number,
@@ -28,7 +42,8 @@ class RoomResource extends JsonResource
                 'name' => $this->roomType->name,
                 'description' => $this->roomType->description,
                 'capacity' => $this->roomType->capacity,
-                'price_per_night' => $this->roomType->base_price.' EGP',
+                'price_per_night' => number_format($pricePerNight, 2)
+                . ' ' . $currency,
             ],
             'cover_image' => $this->coverImage ? asset('storage/'.$this->coverImage->image) : null,
             'images'=>RoomImageResource::collection($this->images),

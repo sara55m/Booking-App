@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Services\CurrencyService;
 
 class TransactionResource extends JsonResource
 {
@@ -14,6 +15,14 @@ class TransactionResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        //get user preferred currency
+        $currency = strtoupper(
+            auth()->user()?->currency ?? config('app.currency', 'USD')
+        );
+
+        $baseCurrency = strtoupper(config('app.currency', 'USD'));
+
+        $currencyService = app(CurrencyService::class);
         return [
             'id'=>$this->id,
 
@@ -25,13 +34,25 @@ class TransactionResource extends JsonResource
                 'id'=>$this->booking->property->id,
                 'name'=>$this->booking->property->name,
             ],
-            'amount' => $this->amount,
+            'amount' => $currencyService->convert(
+                $this->amount,
+                $baseCurrency,
+                $currency
+            ),
 
-            'remaining' => $this->remaining,
+            'remaining' => $currencyService->convert(
+                $this->remaining,
+                $baseCurrency,
+                $currency
+            ),
 
-            'currency'=>$this->currency,
+            'currency'=>$currency,
 
-            'refunded_amount'=>$this->refunded_amount,
+            'refunded_amount' => $currencyService->convert(
+                $this->refunded_amount,
+                $baseCurrency,
+                $currency
+            ),
 
             'status' => $this->status,
 
