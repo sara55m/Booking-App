@@ -167,6 +167,8 @@ routes/
 storage/                # Logs, cache, and generated files
 tests/                  # Automated tests
 
+```
+
 Installation
 Requirements
 PHP 8.2+
