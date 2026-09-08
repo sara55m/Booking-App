@@ -349,7 +349,7 @@ The API provides endpoints for:
 
 [View the API Collection on Postman]
 
-(https://www.postman.com/workspace/ecfe5cf3-d4c9-4356-ac23-d733b54bed95/collection/40720729-c222a21c-43ff-42a7-b7a8-7e1e8b3d1287?action=share&source=copy-link&creator=40720729)
+(https://www.postman.com/red-shuttle-2874393/workspace/booking-app/collection/50798855-372dd1c8-4657-4a99-bc56-d08966045ef6?action=share&source=copy-link&creator=50798855)
 
 ---
 
