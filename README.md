@@ -330,9 +330,26 @@ The project includes a Filament administration dashboard for managing:
 
 ## API Documentation
 
-This project provides a RESTful API for authentication, properties, rooms, bookings, payments, reviews, offers, rewards, favorites, and AI-powered features.
+The API is tested and documented using Postman.
 
-Interactive API documentation will be added using OpenAPI and Scramble.
+The API provides endpoints for:
+
+- Authentication
+- Properties and rooms
+- Bookings
+- Payments and refunds
+- Reviews and ratings
+- Offers
+- Favorites
+- Reward points
+- User profile and account management
+- AI-powered features
+
+### Postman Collection
+
+[View the API Collection on Postman]
+
+(https://www.postman.com/workspace/ecfe5cf3-d4c9-4356-ac23-d733b54bed95/collection/40720729-c222a21c-43ff-42a7-b7a8-7e1e8b3d1287?action=share&source=copy-link&creator=40720729)
 
 ---
 
