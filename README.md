@@ -73,6 +73,7 @@ The project also includes a Filament-based administration dashboard for managing
 - Booking payment and balance due reminders
 - Payment success and failure notifications
 - Booking arrival reminders
+- Real-time event broadcasting using Pusher and Laravel Echo
 - Offer notifications
 - Review approval, rejection, reminder, and update notifications
 - Admin notifications for booking, payment, and review events
