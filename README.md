@@ -116,6 +116,7 @@ The project also includes a Filament-based administration dashboard for managing
 - Laravel Sanctum
 - Spatie Laravel Permission
 - Stripe
+- Pusher
 - Groq AI
 - Blade
 - Vite
