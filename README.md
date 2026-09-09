@@ -9,6 +9,7 @@ The project also includes a Filament-based administration dashboard for managing
 ### Authentication & Users
 
 - Email OTP-based authentication
+- API authentication using Laravel Sanctum
 - User authentication and authorization
 - Role and permission management
 - User profile management
