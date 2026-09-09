@@ -81,6 +81,12 @@ The project also includes a Filament-based administration dashboard for managing
 - Scheduled tasks
 - Event-driven application workflows
 
+### Performance & Caching
+
+- Redis-compatible caching using Memurai
+- Database query and performance optimization
+- Database transactions and locking to prevent double bookings
+
 ### Administration
 
 - Filament admin dashboard
@@ -112,11 +118,11 @@ The project also includes a Filament-based administration dashboard for managing
 - Laravel
 - MySQL
 - Filament
-- Redis
 - Laravel Sanctum
 - Spatie Laravel Permission
 - Stripe
 - Pusher
+- Memurai (Redis-compatible)
 - Groq AI
 - Blade
 - Vite
