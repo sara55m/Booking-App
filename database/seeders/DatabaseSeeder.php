@@ -18,12 +18,12 @@ class DatabaseSeeder extends Seeder
 
         User::updateOrCreate(
             [
-                'email' => 'admin@example.com',
+                'email' => config('admin.email'),
             ],
             [
-                'name' => 'admin',
-                'password'=>Hash::make('123456'),
-                'role'=>'admin'
+                'name' => config('admin.name'),
+                'password' => Hash::make(config('admin.password')),
+                'role' => 'super_admin',
             ]
         );
 

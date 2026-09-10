@@ -360,6 +360,9 @@ return [
     'generated_at' => 'تاريخ الإنشاء',
     'review_count_in_summary'=>'عدد التقييمات فى الملخص',
 
+    'account'=>'الحساب',
+    'preferences'=>'التفضيلات',
+
     //api messages
     //properties
     'properties_retrieved_successfully' => 'تم استرجاع العقارات بنجاح',

@@ -8,10 +8,10 @@ use Filament\Schemas\Schema;
 use Filament\Forms\Components\Select;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
-use Filament\Forms\Get;
-use Illuminate\Support\Facades\Hash;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Forms\Components\Toggle;
+use App\Models\User;
+use Filament\Schemas\Components\Utilities\Get;
 
 class UserForm
 {
@@ -40,25 +40,24 @@ class UserForm
 
                             Select::make('role')
                                 ->label(__("messages.role"))
-                                ->options([
-                                    'user' => 'User',
-                                    'admin' => 'Admin',
-                                ])
-                                ->required(),
+                                //only super admin can edit role
+                                ->options(fn () => auth()->user()->role === 'super_admin'
+                                    ? [
+                                        'user' => 'User',
+                                        'admin' => 'Admin',
+                                        'super_admin' => 'Super Admin',
+                                    ]
+                                    : [
+                                        'user' => 'User',
+                                    ])
+                                ->default('user')
+                                ->required()
+                                ->disabled(fn (?User $record) => $record?->is(auth()->user())),
 
                             Toggle::make('receive_marketing_emails')
                                 ->label(__("messages.receive_marketing_emails"))
                                 ->required()
                                 ->default(true),
-
-                            Select::make('locale')
-                                ->label(__('messages.language'))
-                                ->options([
-                                    'en' => __('messages.english'),
-                                    'ar' => __('messages.arabic'),
-                                ])
-                                ->default('en')
-                                ->required(),
 
                             FileUpload::make('image')
                                 ->label(__("messages.image"))
@@ -67,6 +66,7 @@ class UserForm
                                 ->directory('profile_images')
                                 ->imageEditor(),
                         ])->columns(2)->columnSpanFull(),
+
                     Tab::make(__('messages.security'))
                         ->icon('heroicon-o-lock-closed')
                         ->hidden(fn ($livewire) => $livewire instanceof ViewRecord)
@@ -78,7 +78,6 @@ class UserForm
                                 ->required(fn (string $operation) => $operation === 'create')
                                 ->minLength(8)
                                 ->dehydrated(fn (?string $state) => filled($state))
-                                ->dehydrateStateUsing(fn (string $state) => Hash::make($state))
                                 ->autocomplete('new-password'),
 
                             TextInput::make('password_confirmation')
@@ -90,6 +89,30 @@ class UserForm
                                 ->dehydrated(false)
                                 ->autocomplete('new-password'),
                         ])->columns(2)->columnSpanFull(),
+
+                    Tab::make(__('messages.preferences'))
+                        ->schema([
+                            Select::make('locale')
+                                ->label(__('messages.language'))
+                                ->options([
+                                    'en' => __('messages.english'),
+                                    'ar' => __('messages.arabic'),
+                                ])
+                                ->default('en')
+                                ->required(),
+
+                            Select::make('currency')
+                                ->label(__('messages.currency'))
+                                ->options([
+                                    'USD' => 'USD',
+                                    'EGP' => 'EGP',
+                                    'EUR' => 'EUR',
+                                ])
+                                ->required(),
+                        ])
+                        ->columns(2)
+                        ->columnSpanFull()
+                        ->visible(fn (Get $get): bool => $get('role') === 'user'),
                     ])->columns(2)->columnSpanFull(),
             ]);
     }

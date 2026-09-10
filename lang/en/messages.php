@@ -346,6 +346,9 @@ return [
     'generated_at'=>'Generated At',
     'review_count_in_summary'=>'Reviews Count In Summary',
 
+    'account'=>'Account',
+    'preferences'=>'Preferences',
+
 
     //api messages
     //properties
