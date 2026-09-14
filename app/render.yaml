@@ -1,0 +1,97 @@
+services:
+  - type: web
+    name: booking-api
+    env: docker
+    plan: free
+    region: virginia
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    dockerBuildArgs:
+      VITE_PUSHER_APP_KEY: ${VITE_PUSHER_APP_KEY}
+      VITE_PUSHER_APP_CLUSTER: ${VITE_PUSHER_APP_CLUSTER}
+      VITE_PUSHER_HOST: ${VITE_PUSHER_HOST}
+      VITE_PUSHER_PORT: ${VITE_PUSHER_PORT}
+      VITE_PUSHER_SCHEME: ${VITE_PUSHER_SCHEME}
+    envVars:
+      # App
+      - key: APP_NAME
+        value: booking-api
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: APP_KEY
+        sync: false        # set manually in Render dashboard (php artisan key:generate --show)
+      - key: APP_URL
+        sync: false        # set to your Render URL once known, e.g. https://booking-api.onrender.com
+
+      # Queue / Cache / Session
+      - key: QUEUE_CONNECTION
+        value: sync
+      - key: CACHE_STORE
+        value: redis
+      - key: REDIS_CACHE_DB
+        value: "0"
+      - key: SESSION_DRIVER
+        value: database
+      - key: REDIS_CLIENT
+        value: predis
+
+      # Redis (Upstash) — set actual values in Render dashboard, not committed here
+      - key: REDIS_HOST
+        sync: false
+      - key: REDIS_PORT
+        value: "6379"
+      - key: REDIS_PASSWORD
+        sync: false
+
+      # Stripe (test mode) — set actual values in Render dashboard
+      - key: STRIPE_KEY
+        sync: false
+      - key: STRIPE_SECRET
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+
+      # Pusher (runtime, server-side)
+      - key: BROADCAST_CONNECTION
+        value: pusher
+      - key: PUSHER_APP_ID
+        sync: false
+      - key: PUSHER_APP_KEY
+        sync: false
+      - key: PUSHER_APP_SECRET
+        sync: false
+      - key: PUSHER_APP_CLUSTER
+        sync: false
+      - key: PUSHER_PORT
+        value: "443"
+      - key: PUSHER_SCHEME
+        value: https
+
+      # Pusher (build-time, for Vite — duplicated here so Render also has
+      # them available as plain env vars if you reference process.env directly)
+      - key: VITE_PUSHER_APP_KEY
+        sync: false
+      - key: VITE_PUSHER_APP_CLUSTER
+        sync: false
+      - key: VITE_PUSHER_HOST
+        sync: false
+      - key: VITE_PUSHER_PORT
+        value: "443"
+      - key: VITE_PUSHER_SCHEME
+        value: https
+
+      # Database — set actual values in Render dashboard
+      - key: DB_CONNECTION
+        value: mysql
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        value: "3306"
+      - key: DB_DATABASE
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
