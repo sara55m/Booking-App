@@ -32,23 +32,25 @@
 
     # System dependencies
     RUN apt-get update && apt-get install -y \
-        git \
-        unzip \
-        libzip-dev \
-        libpng-dev \
-        libonig-dev \
-        libxml2-dev \
-        libpq-dev \
-        && docker-php-ext-install \
-            pdo \
-            pdo_mysql \
-            mbstring \
-            exif \
-            pcntl \
-            bcmath \
-            gd \
-            zip \
-        && rm -rf /var/lib/apt/lists/*
+    git \
+    unzip \
+    libzip-dev \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    libpq-dev \
+    libicu-dev \
+    && docker-php-ext-install \
+        pdo \
+        pdo_mysql \
+        mbstring \
+        exif \
+        pcntl \
+        bcmath \
+        gd \
+        intl \
+        zip \
+    && rm -rf /var/lib/apt/lists/*
 
     # Composer
     COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
