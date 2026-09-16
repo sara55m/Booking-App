@@ -64,7 +64,8 @@
     COPY --from=node-build /app/public/build ./public/build
 
     # Install PHP dependencies
-    RUN composer install --no-dev --optimize-autoloader --no-interaction
+    RUN composer install --no-dev --optimize-autoloader --no-interaction \
+    && php artisan filament:assets
 
     # Laravel storage/cache permissions
     RUN mkdir -p storage/framework/{sessions,views,cache} \
