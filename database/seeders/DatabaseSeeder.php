@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
                 'name' => config('admin.name'),
                 'password' => Hash::make(config('admin.password')),
                 'role' => 'super_admin',
+                'receive_marketing_emails'=>0,
             ]
         );
 
