@@ -34,6 +34,7 @@ class AISearchService
                 'slug' => $type->slug,
             ])
             ->values();
+            
 
         $amenities = Amenity::orderBy('name')
             ->pluck('name')
