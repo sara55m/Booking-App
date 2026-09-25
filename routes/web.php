@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 Route::get('/', function () {
     return view('welcome');
@@ -18,4 +19,16 @@ Route::get('/payment-cancelled', function () {
 
 Route::get('/test-pusher', function () {
     return view('test');
+});
+
+
+use Illuminate\Support\Facades\Log;
+
+Route::get('/debug-log', function () {
+    Log::error('Wasmer file-log write test');
+    return response()->json([
+        'path' => storage_path('logs/laravel.log'),
+        'exists' => file_exists(storage_path('logs/laravel.log')),
+        'writable' => is_writable(storage_path('logs')),
+    ]);
 });
