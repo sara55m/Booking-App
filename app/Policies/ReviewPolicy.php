@@ -13,7 +13,7 @@ class ReviewPolicy
     //admins can do everything
     public function before(User $user, string $ability): ?bool
     {
-        if ($user->role === 'admin') {
+        if ($user->role === 'admin'||$user->role === 'super_admin') {
             return true;
         }
 

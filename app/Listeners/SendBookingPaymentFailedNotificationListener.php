@@ -38,7 +38,7 @@ class SendBookingPaymentFailedNotificationListener implements ShouldQueue
             new BookingPaymentFailedNotification($booking,$payment)
         );
 
-        $admins=User::where('role','admin')->get();
+        $admins = User::whereIn('role', ['admin', 'super_admin'])->get();
 
         Notification::send(
             $admins,

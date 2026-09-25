@@ -37,7 +37,7 @@ class SendPaymentReceiptEmailListener implements ShouldQueue
         $user=$booking->user;
 
         //send database notifications to all admins
-        $admins=User::where('role','admin')->get();
+        $admins = User::whereIn('role', ['admin', 'super_admin'])->get();
 
         Notification::send(
             $admins,

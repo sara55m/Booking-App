@@ -35,7 +35,7 @@ class SendBookingPaymentReminderListener implements ShouldQueue
         $booking->user->notify(new BookingPaymentReminderNotification($booking));
 
         //send booking expiry reminder to admins
-        $admins=User::where('role','admin')->get();
+        $admins = User::whereIn('role', ['admin', 'super_admin'])->get();
 
         Notification::send(
             $admins,
