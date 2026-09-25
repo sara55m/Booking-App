@@ -22,8 +22,6 @@ Route::get('/test-pusher', function () {
 });
 
 
-use Illuminate\Support\Facades\Log;
-
 Route::get('/debug-log', function () {
     Log::error('Wasmer file-log write test');
     return response()->json([
