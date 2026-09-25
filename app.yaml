@@ -5,4 +5,4 @@ package: sha256:a3a9ee160131782ac94cfe9cd5cbce9adc58ddb6e2176dea47060be912790a62
 
 volumes:
   - name: booking-logs
-    mount: /var/www/html/storage/logs
+    mount: /app/storage/logs
