@@ -29,7 +29,7 @@ class PaymentsTable
                     ->searchable(),
                 TextColumn::make('amount')
                     ->label(__('messages.amount'))
-                    ->money('EGP')
+                    ->money(fn (Payment $record) => strtoupper($record->currency ?? 'USD'))
                     ->sortable(),
                 TextColumn::make('status')
                     ->label(__('messages.payment_status'))
