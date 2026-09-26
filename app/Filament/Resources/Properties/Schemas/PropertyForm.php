@@ -6,7 +6,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextArea;
+use Filament\Forms\Components\Textarea;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Forms\Components\Repeater;
@@ -36,7 +36,7 @@ class PropertyForm
                                 TextInput::make('name')
                                 ->label(__('messages.name'))
                                 ->required(),
-                                TextArea::make('description')
+                                Textarea::make('description')
                                 ->label(__('messages.description'))
                                 ->rows(3),
                                 Select::make('property_type_id')
@@ -98,7 +98,7 @@ class PropertyForm
                                     ->numeric()
                                     ->default(0),
 
-                                TextArea::make('caption')
+                                Textarea::make('caption')
                                 ->label(__("messages.description"))
                                 ->nullable(),
                             ])
@@ -142,7 +142,7 @@ class PropertyForm
                             ->schema([
                                 Section::make()
                                     ->schema([
-                                        TextArea::make('ai_review_summary.summary')
+                                        Textarea::make('ai_review_summary.summary')
                                             ->label(__("messages.summary"))
                                             ->disabled()
                                             ->rows(5),
@@ -292,7 +292,7 @@ class PropertyForm
                                     ->suffix('%')
                                     ->visible(fn (Get $get) => $get('free_cancellation')),
 
-                                TextArea::make('important_information')
+                                Textarea::make('important_information')
                                     ->label(__("messages.important_information"))
                                     ->rows(4)
                                     ->nullable()

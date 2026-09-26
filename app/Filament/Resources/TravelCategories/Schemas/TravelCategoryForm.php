@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\TravelCategories\Schemas;
 
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\TextArea;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Tabs;
@@ -33,7 +33,7 @@ class TravelCategoryForm
                                     ->label(__('messages.slug'))
                                     ->required()
                                     ->unique(ignoreRecord: true),
-                                TextArea::make('description')
+                                Textarea::make('description')
                                     ->label(__("messages.description"))
                                     ->nullable(),
                             ]),

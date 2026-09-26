@@ -4,7 +4,7 @@ namespace App\Filament\Resources\Rooms\Schemas;
 
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
-use Filament\Forms\Components\TextArea;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Select;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
@@ -69,7 +69,7 @@ class RoomForm
                             Tab::make('Room Details')
                             ->label(__('messages.room_details'))
                             ->components([
-                                TextArea::make('description')
+                                Textarea::make('description')
                                     ->label(__('messages.description'))
                                     ->required(),
                             ]),
@@ -101,7 +101,7 @@ class RoomForm
                                         ->label(__('messages.sort_order'))
                                         ->numeric()
                                         ->default(0),
-                                    TextArea::make('caption')
+                                    Textarea::make('caption')
                                         ->label(__("messages.description"))
                                         ->nullable(),
                                 ])

@@ -4,7 +4,7 @@ namespace App\Filament\Resources\Cities\Schemas;
 
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\TextArea;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Tabs;
@@ -44,7 +44,7 @@ class CityForm
                                     ->required()
                                     ->unique(ignoreRecord: true),
 
-                                TextArea::make('description')
+                                Textarea::make('description')
                                     ->label(__("messages.description"))
                                     ->nullable(),
                             ]),
@@ -76,7 +76,7 @@ class CityForm
                                         ->label(__('messages.sort_order'))
                                         ->numeric()
                                         ->default(0),
-                                    TextArea::make('caption')
+                                    Textarea::make('caption')
                                         ->label(__("messages.description"))
                                         ->nullable(),
                                 ])
