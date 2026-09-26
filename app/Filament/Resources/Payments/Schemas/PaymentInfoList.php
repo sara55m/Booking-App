@@ -23,7 +23,7 @@ class PaymentInfolist
 
                         TextEntry::make('amount')
                             ->label(__("messages.amount"))
-                            ->money('EGP'),
+                            ->money(fn ($record) => strtoupper($record->currency ?? 'USD')),
 
                         TextEntry::make('currency')
                         ->label(__("messages.currency"))
@@ -38,7 +38,7 @@ class PaymentInfolist
 
                         TextEntry::make('remaining')
                             ->label(__("messages.remaining_amount"))
-                            ->money('EGP'),
+                            ->money(fn ($record) => strtoupper($record->currency ?? 'USD')),
 
                         TextEntry::make('paid_at')
                             ->label(__("messages.paid_at"))
@@ -70,7 +70,7 @@ class PaymentInfolist
                         ->label(__("messages.redeemed_points")),
                         TextEntry::make('discount_amount')
                             ->label(__("messages.discount_amount"))
-                            ->money('EGP'),
+                            ->money(fn ($record) => strtoupper($record->currency ?? 'USD')),
                     ]),
 
                 Section::make(__("messages.refund_information"))
@@ -78,7 +78,7 @@ class PaymentInfolist
                     ->schema([
                         TextEntry::make('refunded_amount')
                             ->label(__("messages.refunded_amount"))
-                            ->money('EGP'),
+                            ->money(fn ($record) => strtoupper($record->currency ?? 'USD')),
 
                         TextEntry::make('refunded_at')
                             ->label(__("messages.refunded_at"))
@@ -86,9 +86,8 @@ class PaymentInfolist
                             ->dateTime(),
                     ]),
             ]);
-        
+
     }
 }
 
 
-                
