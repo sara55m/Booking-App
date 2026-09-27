@@ -39,7 +39,7 @@ class RoomInfolist
 
                                 TextEntry::make('roomType.base_price')
                                     ->label(__('messages.price_per_night'))
-                                    ->money('EGP'),
+                                    ->money(strtoupper(config('app.currency', 'USD'))),
 
                             ]),
                     ]),

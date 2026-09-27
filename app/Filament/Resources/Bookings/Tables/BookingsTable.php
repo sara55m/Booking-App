@@ -38,7 +38,7 @@ class BookingsTable
                     ->sortable(),
                 TextColumn::make('total_price')
                     ->label(__('messages.total_price'))
-                    ->money('EGP')
+                    ->money(strtoupper(config('app.currency', 'USD')))
                     ->sortable(),
                 TextColumn::make('status')
                     ->label(__('messages.status'))

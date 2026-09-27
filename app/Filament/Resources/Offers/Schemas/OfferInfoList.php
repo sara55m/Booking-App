@@ -121,7 +121,7 @@ class OfferInfolist
 
                                         TextEntry::make('minimum_booking_amount')
                                             ->label(__('messages.minimum_booking_amount'))
-                                            ->money('USD')
+                                            ->money(strtoupper(config('app.currency', 'USD')))
                                             ->placeholder('-'),
 
                                         TextEntry::make('minimum_nights')

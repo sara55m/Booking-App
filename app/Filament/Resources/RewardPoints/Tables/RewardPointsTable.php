@@ -43,14 +43,14 @@ class RewardPointsTable
                     ->formatStateUsing(fn ($state, $record) => match ($record->type) {
                         RewardPointType::EARNED,
                         RewardPointType::RETURNED => "+{$state}",
-                
+
                         RewardPointType::REDEEMED,
                         RewardPointType::REVERSED => "-{$state}",
                     })
                     ->color(fn ($record) => match ($record->type) {
                         RewardPointType::EARNED,
                         RewardPointType::RETURNED => 'success',
-                
+
                         RewardPointType::REDEEMED,
                         RewardPointType::REVERSED => 'danger',
                     }),
@@ -61,7 +61,7 @@ class RewardPointsTable
 
                 TextColumn::make('payment.amount')
                     ->label(__('messages.payment_amount'))
-                    ->money('EGP')
+                    ->money(strtoupper(config('app.currency', 'USD')))
                     ->sortable(),
 
                 TextColumn::make('description')

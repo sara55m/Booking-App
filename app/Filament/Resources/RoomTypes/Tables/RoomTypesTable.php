@@ -35,7 +35,7 @@ class RoomTypesTable
                     ->sortable(),
                 TextColumn::make('base_price')
                     ->label(__("messages.price_per_night"))
-                    ->money()
+                    ->money(strtoupper(config('app.currency', 'USD')))
                     ->sortable(),
                 TextColumn::make('rooms_count')
                     ->label(__("messages.rooms_count"))

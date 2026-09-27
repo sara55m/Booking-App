@@ -48,7 +48,7 @@ class BookingInfolist
 
                                 TextEntry::make('total_price')
                                     ->label(__('messages.total_price'))
-                                    ->money('EGP'),
+                                    ->money(strtoupper(config('app.currency', 'USD'))),
                             ]),
                     ]),
 
@@ -140,11 +140,11 @@ class BookingInfolist
                             ->label(__('messages.discount_value')),
 
                             TextEntry::make('original_price')
-                                ->money('EGP')
+                                ->money(strtoupper(config('app.currency', 'USD')))
                                 ->label(__('messages.original_price')),
 
                             TextEntry::make('discount_amount')
-                                ->money('EGP')
+                                ->money(strtoupper(config('app.currency', 'USD')))
                                 ->label(__('messages.booking_discount_amount')),
                         ]),
                 ]),
