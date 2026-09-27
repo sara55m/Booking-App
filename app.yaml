@@ -1,7 +1,43 @@
+annotations:
+  anybuild.run/config:
+    commands:
+      start: >-
+        bash -c "mkdir -p storage/framework/cache/data
+        storage/framework/sessions storage/framework/testing
+        storage/framework/views storage/logs bootstrap/cache
+        && php -S 0.0.0.0:8080 -t public"
+      after_deploy: 'bash -c "php artisan migrate --force"'
+    composer_build_script: post-update-cmd
+    composer_enable: true
+    name: out
+    node_build_command: npm run build
+    node_install_inputs:
+      - package.json
+    node_package_manager: npm
+    npm_version: '11'
+    php_framework: laravel
+    php_public_dir: public
+    phpix: true
+  anybuild.run/provider: laravel
+  anybuild.run/version: 0.29.0
+  wasmer.io/version: 7.4.2
+
+app_id: da_R4qIGtmU9klA
+
+env:
+  PHPIX_PHP_THREADS: '4'
+
+jobs:
+  - name: after_deploy
+    trigger: pre-deployment
+    action:
+      execute:
+        command: after_deploy
+
 kind: wasmer.io/App.v0
 name: booking-app
 owner: sara55m
-package: sha256:a3a9ee160131782ac94cfe9cd5cbce9adc58ddb6e2176dea47060be912790a62
+package: sha256:37f711ec1a27a70242784e86a9df0e67ea660ef99bd157c73daff24872af898c
 
 volumes:
   - name: booking-logs
