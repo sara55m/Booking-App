@@ -41,25 +41,28 @@ class PaymentController extends Controller
             $user
         );
 
+        //convert requested amount to cents to avoid calculations inaccuracy
+        $requestedAmountCents=(int) round($requestedAmount*100);
+
         $redeemPoints = (int) ($validated['redeem_points'] ?? 0);
 
         //validate checkout
-        $remainingAmount = $checkoutService->validateCheckout(
+        $remainingAmountCents = $checkoutService->validateCheckout(
             $booking,
             $user,
-            $requestedAmount,
+            $requestedAmountCents,
             $redeemPoints
         );
 
         //calculate amounts
         [
-            'discountAmount' => $discountAmount,
-            'amountToCharge' => $amountToCharge,
-            'remainingAfterPayment' => $remainingAfterPayment,
-        ] = $checkoutService->calculateAmounts(
-            $requestedAmount,
+            'discountCents' => $discountCents,
+            'amountToChargeCents' => $amountToChargeCents,
+            'remainingAfterPaymentCents' => $remainingAfterPaymentCents,
+                ] = $checkoutService->calculateAmounts(
+            $requestedAmountCents,
             $redeemPoints,
-            $remainingAmount
+            $remainingAmountCents
         );
 
         // Creates customer only if needed.
@@ -83,10 +86,10 @@ class PaymentController extends Controller
 
             $result = $checkoutService->createPayment(
                 $booking,
-                $amountToCharge,
-                $remainingAfterPayment,
+                $amountToChargeCents,
+                $remainingAfterPaymentCents,
                 $redeemPoints,
-                $discountAmount,
+                $discountCents,
                 $idempotencyKey
             );
 
@@ -108,7 +111,7 @@ class PaymentController extends Controller
         }
 
         //if the amount to charge is zero or less, complete the payment using reward points
-        if ($amountToCharge <= 0) {
+        if ($amountToChargeCents <= 0) {
             return $checkoutService->completeRewardPayment(
                 $user,
                 $booking,
@@ -119,6 +122,7 @@ class PaymentController extends Controller
 
         //otherwise create Stripe checkout session
         try {
+            $amountToCharge=$amountToChargeCents / 100;
 
             return $checkoutService->createCheckoutSession(
                 $user,

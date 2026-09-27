@@ -21,6 +21,28 @@ class CurrencyService
         return round($amount * $rate, 2);
     }
 
+    public function convertToBaseUsingDisplayRate(
+    float $amount,
+    string $displayCurrency,
+    string $baseCurrency
+    ): float {
+        $displayCurrency = strtoupper($displayCurrency);
+        $baseCurrency = strtoupper($baseCurrency);
+
+        if ($displayCurrency === $baseCurrency) {
+            return round($amount, 2);
+        }
+
+        // Reuse the rate used to display USD as EGP, for example.
+        $baseToDisplayRate = $this->getRate($baseCurrency, $displayCurrency);
+
+        if ($baseToDisplayRate <= 0) {
+            throw new RuntimeException('Invalid exchange rate.');
+        }
+
+        return round($amount / $baseToDisplayRate, 2);
+    }
+
     public function getRate(string $from, string $to): float
     {
         $from = strtoupper($from);

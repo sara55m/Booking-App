@@ -28,7 +28,7 @@ class CheckoutService
     public function validateCheckout(
         Booking $booking,
         User $user,
-        float $requestedAmount,
+        int $requestedAmountCents,
         int $redeemPoints
     ) : float {
 
@@ -51,15 +51,18 @@ class CheckoutService
             ->where('status', PaymentStatus::PAID)
             ->sum(DB::raw('amount + discount_amount'));
 
-        $remainingAmount = $booking->total_price - $totalPaid;
+        $totalPaidCents = (int) round((float) $totalPaid * 100);
+        $bookingTotalCents=(int)round($booking->total_price*100);
 
-        if ($remainingAmount <= 0) {
+        $remainingAmountCents = $bookingTotalCents - $totalPaidCents;
+
+        if ($remainingAmountCents <= 0) {
             throw ValidationException::withMessages([
                 'message' => __('messages.booking_already_paid'),
             ]);
         }
 
-        if ($requestedAmount > $remainingAmount) {
+        if ($requestedAmountCents > $remainingAmountCents) {
             throw ValidationException::withMessages([
                 'message' => __('messages.amount_exceeds_the_remaining_balance'),
             ]);
@@ -71,50 +74,58 @@ class CheckoutService
             ]);
         }
 
-        return $remainingAmount;
+        return $remainingAmountCents;
     }
 
 
     public function calculateAmounts(
-        float $requestedAmount,
+        int $requestedAmountCents,
         int $redeemPoints,
-        float $remainingAmount
+        int $remainingAmountCents
     ): array {
 
-        $discountAmount = min(
-            intdiv($redeemPoints, config('rewards.redeem_rate'))
-                * config('rewards.redeem_value'),
-            $requestedAmount
+        $redeemRate = max(1, (int) config('rewards.redeem_rate'));
+        $redeemValueCents = (int) round(
+            (float) config('rewards.redeem_value') * 100
         );
 
-        $amountToCharge = max(
+        $discountCents = min(
+            intdiv($redeemPoints, $redeemRate)
+                * $redeemValueCents,
+            $requestedAmountCents
+        );
+
+        $amountToChargeCents = max(
             0,
-            $requestedAmount - $discountAmount
+            $requestedAmountCents - $discountCents
         );
 
-        $remainingAfterPayment = $remainingAmount - $requestedAmount;
+        $remainingAfterPaymentCents = max(
+            0,
+            $remainingAmountCents - $requestedAmountCents
+        );
 
         return [
-            'discountAmount' => $discountAmount,
-            'amountToCharge' => $amountToCharge,
-            'remainingAfterPayment' => $remainingAfterPayment,
+            'discountCents' => $discountCents,
+            'amountToChargeCents' => $amountToChargeCents,
+            'remainingAfterPaymentCents' => $remainingAfterPaymentCents,
         ];
     }
 
     public function createPayment(
         Booking $booking,
-        float $amountToCharge,
-        float $remainingAfterPayment,
+        int $amountToChargeCents,
+        int $remainingAfterPaymentCents,
         int $redeemPoints,
-        float $discountAmount,
+        int $discountCents,
         string $idempotencyKey
     ): array{
         return DB::transaction(function () use (
             $booking,
-            $amountToCharge,
-            $remainingAfterPayment,
+            $amountToChargeCents,
+            $remainingAfterPaymentCents,
             $redeemPoints,
-            $discountAmount,
+            $discountCents,
             $idempotencyKey
         ) {
             //lock booking
@@ -143,13 +154,14 @@ class CheckoutService
                 // Create a new payment
                 $payment = Payment::create([
                     'booking_id' => $booking->id,
-                    'amount' => $amountToCharge,
-                    'remaining' => $remainingAfterPayment,
+                    'amount' => number_format($amountToChargeCents / 100, 2, '.', ''),
+                    'remaining' => number_format($remainingAfterPaymentCents / 100, 2, '.', ''),
+                    'discount_amount' => number_format($discountCents / 100, 2, '.', ''),
                     'redeemed_points' => $redeemPoints,
-                    'discount_amount' => $discountAmount,
                     'status' => PaymentStatus::PENDING,
                     'payment_method' => PaymentMethod::CARD,
                     'idempotency_key' => $idempotencyKey,
+                    'currency' => strtolower(config('app.currency', 'USD')),
                 ]);
 
             } catch (\Illuminate\Database\QueryException $e) {
@@ -171,7 +183,7 @@ class CheckoutService
             }
 
             // Fully paid using reward points
-            if ($amountToCharge <= 0) {
+            if ($amountToChargeCents <= 0) {
 
                 $payment->update([
                     'payment_method' => PaymentMethod::WALLET,
@@ -281,7 +293,7 @@ class CheckoutService
 
         $baseCurrency = strtoupper(config('app.currency', 'USD'));
 
-        return app(CurrencyService::class)->convert(
+        return app(CurrencyService::class)->convertToBaseUsingDisplayRate(
             $amount,
             $currency,
             $baseCurrency
