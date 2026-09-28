@@ -40,7 +40,7 @@ class ReviewObserver
     {
         $this->recalculate($review);
         //send review created notification to admins
-        $admins=User::where('role',['admin','super_admin'])->get();
+        $admins=User::whereIn('role',['admin','super_admin'])->get();
 
         Notification::send(
             $admins,
@@ -80,7 +80,7 @@ class ReviewObserver
             ($oldStatus === ReviewStatus::Approved->value || $oldStatus === ReviewStatus::Rejected->value ) &&
             $newStatus === ReviewStatus::Pending
         ) {
-            $admins=User::where('role',['admin','super_admin'])->get();
+            $admins=User::whereIn('role',['admin','super_admin'])->get();
             Notification::send(
                 $admins,
                 new ReviewUpdatedAdminNotification($review)
