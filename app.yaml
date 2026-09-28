@@ -4,7 +4,7 @@ owner: sara55m
 package: sha256:37f711ec1a27a70242784e86a9df0e67ea660ef99bd157c73daff24872af898c
 
 jobs:
-  - name: migrate-database
+  - name: migrate-and-seed
     trigger: pre-deployment
     action:
       execute:
@@ -12,6 +12,18 @@ jobs:
         cli_args:
           - /app/artisan
           - migrate
+          - --force
+        timeout: 5m
+
+  - name: seed-offers
+    trigger: post-deployment
+    action:
+      execute:
+        command: php
+        cli_args:
+          - /app/artisan
+          - db:seed
+          - --class=OfferSeeder
           - --force
         timeout: 5m
 
