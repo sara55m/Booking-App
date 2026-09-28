@@ -14,6 +14,7 @@ class OfferObserver
         Cache::tags(['home'])->forget('home:featured-properties');
         Cache::tags(['home'])->forget('home:top-rated-properties');
         Cache::tags(['home'])->forget('home:deals-and-offers');
+        Cache::tags(['home'])->forget('home:general-offers');
     }
     /**
      * Handle the Offer "created" event.
