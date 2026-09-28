@@ -15,18 +15,6 @@ jobs:
           - --force
         timeout: 5m
 
-  - name: seed-offers
-    trigger: post-deployment
-    action:
-      execute:
-        command: php
-        cli_args:
-          - /app/artisan
-          - db:seed
-          - --class=OfferSeeder
-          - --force
-        timeout: 5m
-
 volumes:
   - name: booking-logs
     mount: /app/storage/logs
