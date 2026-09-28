@@ -46,6 +46,7 @@ return [
     'balance_due_date' => 'Balance Due Date',
     'balance_due_date_help' => 'The remaining balance must be paid by this date.',
     'status' => 'Status',
+    'cancellation_reason'=>'Cancellation Reason',
     'booking' => 'Booking',
     'bookings' => 'Bookings',
     'dates_status' => 'Dates & Status',

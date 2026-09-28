@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Enums;
+use Filament\Support\Contracts\HasColor;
 
-enum BookingStatus: string
+enum BookingStatus: string implements HasColor
 {
     case PENDING = 'pending';
     case CONFIRMED = 'confirmed';
@@ -16,7 +17,7 @@ enum BookingStatus: string
         return array_column(self::cases(), 'value');
     }
 
-    public function color(): string
+    public function getColor(): string|array|null
     {
         return match ($this) {
             self::PENDING => 'warning',

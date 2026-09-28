@@ -46,6 +46,7 @@ return [
     'balance_due_date' => 'تاريخ استحقاق الرصيد المتبقي',
     'balance_due_date_help' => 'يجب سداد الرصيد المتبقي قبل هذا التاريخ.',
     'status' => 'الحالة',
+    'cancellation_reason'=>'سبب الإلغاء',
     'booking' => 'الحجز',
     'bookings' => 'الحجوزات',
     'dates_status' => 'التواريخ والحالة',

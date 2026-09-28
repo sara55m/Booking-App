@@ -34,10 +34,10 @@ class PaymentsTable
                 TextColumn::make('status')
                     ->label(__('messages.payment_status'))
                     ->badge()
-                    ->color(fn (PaymentStatus $state) => $state->color())
                     ->searchable(),
                 TextColumn::make('payment_method')
                     ->label(__('messages.payment_method'))
+                    ->badge()
                     ->searchable(),
                 TextColumn::make('paid_at')
                     ->label(__('messages.paid_at'))

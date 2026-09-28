@@ -7,6 +7,8 @@ use Filament\Schemas\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Booking;
+use App\Enums\BookingStatus;
 
 class BookingInfolist
 {
@@ -26,6 +28,11 @@ class BookingInfolist
 
                                 TextEntry::make('status')
                                     ->label(__('messages.status'))
+                                    ->badge(),
+
+                                TextEntry::make('cancellation_reason')
+                                    ->label(__('messages.cancellation_reason'))
+                                    ->visible(fn(Booking $record)=>$record->status==BookingStatus::CANCELLED)
                                     ->badge(),
 
                                 TextEntry::make('payment_status')

@@ -43,7 +43,6 @@ class BookingsTable
                 TextColumn::make('status')
                     ->label(__('messages.status'))
                     ->badge()
-                    ->color(fn (BookingStatus $state) => $state->color())
                     ->searchable(),
                 TextColumn::make('created_at')
                     ->label(__('messages.created_at'))

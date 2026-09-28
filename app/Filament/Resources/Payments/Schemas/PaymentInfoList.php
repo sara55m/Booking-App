@@ -30,7 +30,8 @@ class PaymentInfolist
                             ->badge(),
 
                         TextEntry::make('payment_method')
-                        ->label(__("messages.payment_method")),
+                            ->label(__("messages.payment_method"))
+                            ->badge(),
 
                         TextEntry::make('status')
                             ->label(__("messages.status"))
