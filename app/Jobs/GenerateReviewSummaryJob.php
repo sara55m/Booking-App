@@ -3,16 +3,17 @@
 namespace App\Jobs;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Foundation\Queue\Queueable;
 use App\Models\Property;
 use Throwable;
 use App\Services\ReviewSummaryService;
 use Illuminate\Support\Facades\Log;
 
-class GenerateReviewSummaryJob implements ShouldQueue, ShouldBeUnique
+class GenerateReviewSummaryJob implements ShouldQueue
 {
     use Queueable;
+
+    public int $uniqueFor = 300; // Lock expires after 5 minutes
 
     /**
      * Create a new job instance.
@@ -20,11 +21,6 @@ class GenerateReviewSummaryJob implements ShouldQueue, ShouldBeUnique
     public function __construct(public int $propertyId)
     {
         //
-    }
-    //generate a unique key for jobs fired for a specific property
-    public function uniqueId(): string
-    {
-        return 'property-review-summary-' . $this->propertyId;
     }
 
     /**
