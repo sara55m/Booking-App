@@ -28,46 +28,55 @@ class StatsOverview extends StatsOverviewWidget
 
         $confirmedBookings = Booking::where('status',BookingStatus::CONFIRMED)->count() ?? 0;
 
+        $currency=config('app.currency');
+
         return [
             //Total Users
             Stat::make('Total Users', $totalUsers)
                 ->label(__('messages.all_registered_users'))
+                ->description(__('messages.all_registered_users_description'))
                 ->color('success')
                 ->icon('heroicon-o-users'),
 
             //Total Revenue
-            Stat::make('Total Revenue',$totalRevenue.' EGP')
+            Stat::make('Total Revenue',$totalRevenue.' '.$currency)
                 ->label(__('messages.total_revenue'))
-                ->color('primary')
+                ->description(__('messages.total_revenue_description'))
+                ->color('success')
                 ->icon('heroicon-o-currency-dollar'),
 
             //Total Revenue this year
-            Stat::make('Revenue This Year',$totalRevenueThisYear.' EGP')
+            Stat::make('Revenue This Year',$totalRevenueThisYear.' '.$currency)
                 ->label(__('messages.revenue_this_year'))
+                ->description(__('messages.revenue_this_year_description'))
                 ->color('primary')
                 ->icon('heroicon-o-currency-dollar'),
 
             //Total Revenue this month
-            Stat::make('Revenue This Month',$totalRevenueThisMonth.' EGP')
+            Stat::make('Revenue This Month',$totalRevenueThisMonth.' '.$currency)
                 ->label(__('messages.revenue_this_month'))
-                ->color('primary')
+                ->description(__('messages.revenue_this_month_description'))
+                ->color('info')
                 ->icon('heroicon-o-currency-dollar'),
 
             //Total Bookings
             Stat::make('Total Bookings', $totalBookings)
                 ->label(__('messages.total_bookings'))
-                ->color('success')
+                ->description(__('messages.total_bookings_description'))
+                ->color('info')
                 ->icon('heroicon-o-calendar'),
 
             //Total Pending Bookings
             Stat::make('Pending Bookings', $pendingBookings)
                 ->label(__('messages.pending_bookings'))
+                ->description(__('messages.pending_bookings_description'))
                 ->color('warning')
                 ->icon('heroicon-o-clock'),
 
             //Total Confirmed Bookings
             Stat::make('Confirmed Bookings', $confirmedBookings)
                 ->label(__('messages.confirmed_bookings'))
+                ->description(__('messages.confirmed_bookings_description'))
                 ->color('success')
                 ->icon('heroicon-o-check'),
         ];

@@ -21,18 +21,21 @@ class ReviewsStats extends StatsOverviewWidget
             //Total Approved Reviews
             Stat::make('Total Approved Reviews', $totalApprovedReviews)
                 ->label(__('messages.total_approved_reviews'))
+                ->description(__('messages.total_approved_reviews_description'))
                 ->color('success')
                 ->icon('heroicon-o-chat-bubble-oval-left'),
 
             //Total Pending Reviews
             Stat::make('Total Pending Reviews', $totalPendingReviews)
-            ->label(__('messages.total_pending_reviews'))
-            ->color('warning')
-            ->icon('heroicon-o-chat-bubble-oval-left'),
+                ->label(__('messages.total_pending_reviews'))
+                ->description(__('messages.total_pending_reviews_description'))
+                ->color('warning')
+                ->icon('heroicon-o-chat-bubble-oval-left'),
 
             //Low Rating Reviews
             Stat::make('Low Rating', $lowRatingReviews)
                 ->label(__('messages.low_rating_reviews'))
+                ->description(__('messages.low_rating_reviews_description'))
                 ->color('danger')
                 ->icon('heroicon-o-face-frown'),
         ];
