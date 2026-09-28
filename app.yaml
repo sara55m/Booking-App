@@ -25,6 +25,16 @@ jobs:
           - optimize:clear
         timeout: 5m
 
+  - name: laravel-scheduler
+    trigger: "* * * * *"
+    action:
+      execute:
+        command: php
+        cli_args:
+          - /app/artisan
+          - schedule:run
+        timeout: 5m
+
 volumes:
   - name: booking-logs
     mount: /app/storage/logs
