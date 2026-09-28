@@ -53,13 +53,13 @@ class Offer extends Model
         return $this->hasMany(Booking::class);
     }
 
-    public function getFormattedDiscountAttribute(): string
+    /*public function getFormattedDiscountAttribute(): string
     {
         return match ($this->discount_type) {
             'percentage' => "{$this->discount_value}%",
             'fixed' => 'EGP ' . number_format($this->discount_value, 2),
         };
-    }
+    }*/
 
     //return only global offers
     public function scopeGlobal(Builder $query): Builder

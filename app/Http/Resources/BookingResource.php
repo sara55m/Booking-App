@@ -20,6 +20,14 @@ class BookingResource extends JsonResource
             auth()->user()?->currency ?? config('app.currency', 'USD')
         );
 
+        $discountValue = null;
+
+        if ($this->offer) {
+            $discountValue = $this->offer->discount_type === 'percentage'
+                ? $this->offer->discount_value
+                : app(CurrencyService::class)->convert($this->offer->discount_value, config('app.currency'), $currency);
+        }
+
         return [
             'id' => $this->id,
             'reference'=>$this->reference,
@@ -39,8 +47,11 @@ class BookingResource extends JsonResource
             'offer'=>$this->offer ? [
                 'id'=>$this->offer?->id,
                 'title'=>$this->offer->title,
-                'discount_value'=>$this->offer->discount_value,
                 'discount_type'=>$this->offer->discount_type,
+                'discount_value'=>$discountValue,
+                'formatted_discount_value'=> $this->offer->discount_type == 'percentage'
+                    ? number_format((float) $discountValue, 2) . ' %'
+                    :  number_format((float) $discountValue, 2) . ' ' . $currency,
                 'code'=>$this->offer->code ?? null
             ] : null,
             'original_price'=>app(CurrencyService::class)->convert($this->original_price,config('app.currency', 'USD'),$currency),
