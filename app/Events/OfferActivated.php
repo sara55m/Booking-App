@@ -47,7 +47,7 @@ class OfferActivated implements ShouldBroadcast, ShouldDispatchAfterCommit
             'offer' => [
                 'id' => $this->offer->id,
                 'title' => $this->offer->title,
-                'status' => $this->offer->status->value,
+                'status' => $this->offer->computed_status->value,
             ],
 
         ];
