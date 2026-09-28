@@ -25,6 +25,18 @@ jobs:
           - optimize:clear
         timeout: 5m
 
+  - name: process-laravel-queue
+    trigger: "* * * * *"
+    action:
+      execute:
+        command: php
+        cli_args:
+          - /app/artisan
+          - queue:work
+          - --stop-when-empty
+          - --tries=3
+        timeout: 5m
+
   - name: laravel-scheduler
     trigger: "* * * * *"
     action:
