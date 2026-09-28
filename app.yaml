@@ -4,7 +4,7 @@ owner: sara55m
 package: sha256:37f711ec1a27a70242784e86a9df0e67ea660ef99bd157c73daff24872af898c
 
 jobs:
-  - name: migrate-and-seed
+  - name: migrate-database
     trigger: pre-deployment
     action:
       execute:
@@ -14,15 +14,16 @@ jobs:
           - migrate
           - --force
         timeout: 5m
-      - name: clear-laravel-cache
-      trigger: post-deployment
-      action:
-        execute:
-          command: php
-          cli_args:
-            - /app/artisan
-            - optimize:clear
-          timeout: 5m
+
+  - name: clear-laravel-cache
+    trigger: post-deployment
+    action:
+      execute:
+        command: php
+        cli_args:
+          - /app/artisan
+          - optimize:clear
+        timeout: 5m
 
 volumes:
   - name: booking-logs
