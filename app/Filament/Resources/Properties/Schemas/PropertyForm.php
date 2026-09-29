@@ -50,6 +50,14 @@ class PropertyForm
                                 ->numeric()
                                 ->minValue(1)
                                 ->maxValue(5),
+
+                                TextInput::make('average_rating')
+                                    ->label(__('messages.average_rating'))
+                                    ->numeric()
+                                    ->readOnly()
+                                    ->dehydrated(false)
+                                    ->suffix('/ 5'),
+
                                 TextInput::make('minimum_partial_payment_percentage')
                                     ->label(__('messages.minimum_partial_payment_percentage'))
                                     ->numeric()
