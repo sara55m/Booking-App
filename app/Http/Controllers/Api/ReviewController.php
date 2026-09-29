@@ -223,7 +223,7 @@ class ReviewController extends Controller
             $review->delete();
 
             // Notify admins
-            $admins = User::where('role', 'admin')->get();
+            $admins = User::whereIn('role', ['admin','super_admin'])->get();
 
             Notification::send(
                 $admins,
@@ -234,7 +234,7 @@ class ReviewController extends Controller
                 )
             );
         });
-        
+
         return response()->json(
             [
                 'status_code' => 200,

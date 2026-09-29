@@ -121,12 +121,7 @@ class ReviewObserver
         //if the deleted review was an approved review -->regenerate the ai summary
         if ($review->status === ReviewStatus::Approved) {
             //regenerate ai summary
-            $shouldRegenerate = $this->reviewSummaryService
-            ->shouldRegenerateForReview($review);
-
-            if ($shouldRegenerate) {
-                GenerateReviewSummaryJob::dispatch($review->property_id);
-            }
+            GenerateReviewSummaryJob::dispatch($review->property_id);
         }
     }
 
