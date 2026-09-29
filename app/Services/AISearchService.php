@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Models\Amenity;
 use App\Models\PropertyType;
-use Illuminate\Support\Facades\Http;
+use App\Models\Country;
 use RuntimeException;
 use App\Models\City;
 use App\Services\GroqService;
@@ -19,6 +19,14 @@ class AISearchService
 
     public function extractFilters(string $query): array
     {
+        $countries = Country::orderBy('name')
+        ->get(['name', 'iso_code'])
+        ->map(fn ($country) => [
+            'name' => $country->name,
+            'iso_code' => $country->iso_code,
+        ])
+        ->values();
+
         $cities = City::orderBy('name')
             ->get(['name', 'slug'])
             ->map(fn ($city) => [
@@ -49,6 +57,10 @@ class AISearchService
             Do NOT include explanations.
             Do NOT wrap the JSON inside ```.
 
+            Available countries:
+
+            {$countries->toJson(JSON_PRETTY_PRINT)}
+
             Available cities:
             {$cities->toJson(JSON_PRETTY_PRINT)}
 
@@ -60,6 +72,7 @@ class AISearchService
 
             Rules:
 
+            - Return the country ISO code.
             - Return city SLUGS.
             - Return property type SLUGS.
             - Amenities must match exactly one of the available amenities.
