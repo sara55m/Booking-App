@@ -22,6 +22,17 @@ class SearchRequest extends FormRequest
      */
     public function rules(): array
     {
+        $maxPriceRules=
+        [
+            'nullable',
+            'numeric',
+            'min:0'
+        ];
+
+        if($this->filled('min_price')){
+            $maxPriceRules[] = 'gte:min_price';
+        }
+
         return [
             'search' => ['nullable', 'string', 'max:255'],
             'city' => ['nullable', 'string'],
@@ -33,11 +44,7 @@ class SearchRequest extends FormRequest
 
             'min_price' => ['nullable', 'numeric', 'min:0'],
 
-            'max_price' => [
-                'nullable',
-                'numeric',
-                'gte:min_price',
-            ],
+            'max_price' => $maxPriceRules,
             'sort' => [
             'nullable',
             'in:newest,price_asc,price_desc,hotel_rating,guest_rating,nearest',

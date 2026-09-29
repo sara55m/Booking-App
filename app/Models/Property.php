@@ -211,7 +211,7 @@ class Property extends Model
     {
         return $query->when($price !== null, function ($query) use ($price, $currency) {
 
-            $price = app(CurrencyService::class)->convert(
+            $price = app(CurrencyService::class)->convertToBaseUsingDisplayRate(
                 $price,
                 $currency ?? config('app.currency', 'USD'),
                 config('app.currency', 'USD')
@@ -227,7 +227,7 @@ class Property extends Model
     {
         return $query->when($price !== null, function ($query) use ($price, $currency) {
 
-            $price = app(CurrencyService::class)->convert(
+            $price = app(CurrencyService::class)->convertToBaseUsingDisplayRate(
                 $price,
                 $currency ?? config('app.currency', 'USD'),
                 config('app.currency', 'USD')
@@ -351,7 +351,7 @@ class Property extends Model
     }
 
     //all filters scope
-    public function scopeFilter($query, array $filters)
+    public function scopeFilter($query, array $filters,$currency)
     {
         return $query
             ->search($filters['search'] ?? null)
@@ -360,8 +360,8 @@ class Property extends Model
             ->type($filters['type'] ?? null)
             ->guestRating($filters['guest_rating'] ?? null)
             ->hotelRating($filters['hotel_rating'] ?? null)
-            ->minPrice($filters['min_price'] ?? null, $filters['currency'] ?? null)
-            ->maxPrice($filters['max_price'] ?? null, $filters['currency'] ?? null)
+            ->minPrice($filters['min_price'] ?? null, $currency)
+            ->maxPrice($filters['max_price'] ?? null, $currency)
             ->amenities($filters['amenities'] ?? null)
             ->available(
                 $filters['check_in'] ?? null,

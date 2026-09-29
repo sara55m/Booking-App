@@ -34,12 +34,12 @@ class AITravelAssistantService
         return 1;
     }
 
-    private function searchProperties(array $filters,int $nightsCount): Collection
+    private function searchProperties(array $filters,int $nightsCount,string $currency): Collection
     {
         return Property::query()
         ->where('is_active', true)
         ->withMin('roomTypes', 'base_price')
-        ->filter($filters)
+        ->filter($filters,$currency)
         ->withActiveOffer($nightsCount)
         ->with([
             'coverImage',
@@ -171,6 +171,9 @@ class AITravelAssistantService
 
     public function reply(string $message): array
     {
+        //get user preferred currency
+        $currency = auth()->user()?->currency ?? config('app.currency', 'USD');
+
         // Extract filters using AI
         $filters = $this->aiSearchService->extractFilters($message);
 
@@ -180,7 +183,7 @@ class AITravelAssistantService
         $nightsCount = $this->getNightsCount($filters);
 
         //search properties
-        $properties=$this->searchProperties($filters,$nightsCount);
+        $properties=$this->searchProperties($filters,$nightsCount,$currency);
 
         if ($properties->isEmpty()) {
             return [

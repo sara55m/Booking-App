@@ -14,7 +14,6 @@ use App\Http\Requests\Rooms\CheckAvailabilityRequest;
 use App\Http\Requests\Properties\SearchRequest;
 use App\Http\Requests\Properties\AISearchRequest;
 use App\Services\AISearchService;
-use App\Services\ReviewSummaryService;
 
 class PropertyController extends Controller
 {
@@ -35,10 +34,13 @@ class PropertyController extends Controller
                 ->diffInDays(Carbon::parse($filters['check_out']));
         }
 
+        //get user preferred currency
+        $currency = auth()->user()?->currency ?? config('app.currency', 'USD');
+
         $properties = Property::query()
                 ->where('is_active', true)
                 ->withMin('roomTypes', 'base_price')
-                ->filter($filters)
+                ->filter($filters,$currency)
                 ->withActiveOffer($nightsCount)
                 ->with(['coverImage','city.country'])
                 ->paginate(10);
