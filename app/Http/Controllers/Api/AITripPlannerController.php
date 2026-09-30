@@ -60,7 +60,6 @@ class AITripPlannerController extends Controller
                 'properties' => PropertyResource::collection(
                     $result['properties']
                 )->resolve(),
-                'nights_count' => $result['nights_count'],
             ]) . "\n";
 
             if (ob_get_level() > 0) {
