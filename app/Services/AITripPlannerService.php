@@ -16,6 +16,8 @@ class AITripPlannerService
         protected GroqService $groq,
 
         protected OfferService $offerService,
+
+        protected CurrencyService $currencyService,
     ) {}
 
     public function extractTripDetails(string $message): array
@@ -164,11 +166,29 @@ class AITripPlannerService
     private function searchProperties(array $trip,int $nightsCount): Collection
     {
 
-        return Property::query()
+        $query = Property::query()
             ->where('is_active', true)
             ->withActiveOffer($nightsCount)
             ->city($trip['city'])
-            ->country($trip['country'])
+            ->country($trip['country']);
+
+        if (isset($trip['budget'])) {
+            $baseCurrency = strtoupper(config('app.currency', 'USD'));
+            $budgetCurrency=auth()->user()?->currency ?? $baseCurrency;
+
+            $budgetInBaseCurrency = $this->currencyService
+            ->convertToBaseUsingDisplayRate(
+                (float) $trip['budget'],
+                $budgetCurrency,
+                $baseCurrency,
+            );
+
+            $query->whereHas('roomTypes', function ($roomQuery) use ($budgetInBaseCurrency) {
+                $roomQuery->where('base_price', '<=', $budgetInBaseCurrency);
+            });
+        }
+
+        return $query
             ->withMin('roomTypes', 'base_price')
             ->with([
                 'coverImage',
@@ -192,9 +212,9 @@ class AITripPlannerService
                 'name' => $property->name,
                 'city' => $property->city->name,
                 'type'=>$property->propertyType->name,
-                'original_price' => $pricing['originalPrice'],
-                'final_price' => $pricing['finalPrice'],
-                'currency' => 'EGP',
+                'original_price' => $pricing['original_price'],
+                'final_price' => $pricing['final_price'],
+                'currency' => $pricing['currency'] ?? config('app.currency', 'USD'),
                 'hotel_rating' => $property->rating,
                 'guest_rating' => round($property->average_rating, 1),
                 'description' => $property->description,
