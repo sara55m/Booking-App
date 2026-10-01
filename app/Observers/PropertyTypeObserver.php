@@ -11,7 +11,7 @@ class PropertyTypeObserver
     private function clearCache(PropertyType $propertyType): void
     {
         // Clear the cache for property types and home page
-        Cache::tags(['home'])->forget('home:property-types');
+        Cache::forget('cache_versions:home:property-types');
         Cache::forget('property-type:' . $propertyType->id);
     }
     /**

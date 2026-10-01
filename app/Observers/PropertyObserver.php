@@ -11,9 +11,9 @@ class PropertyObserver
     private function clearCache(Property $property): void
     {
         Cache::forget("property:{$property->id}");
-        Cache::tags(['properties'])->flush();
-        Cache::tags(['cities', 'properties'])->flush();
-        Cache::tags("home")->flush();
+        Cache::forget('cache_versions:properties');
+        Cache::forget('cache_versions:cities');
+        Cache::forget('cache_versions:home');
     }
     /**
      * Handle the Property "created" event.

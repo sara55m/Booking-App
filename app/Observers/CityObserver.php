@@ -9,11 +9,11 @@ class CityObserver
 {
 
     private function clearCache(City $city){
-        Cache::tags(['home'])->forget('home:popular-cities');
+        Cache::forget('cache_versions:home:popular-cities');
 
-        Cache::tags(['travel-categories'])->flush();
+        Cache::forget("cache_versions:travel_categories");
 
-        Cache::tags(['cities'])->flush();
+        Cache::forget("cache_versions:cities");
     }
     /**
      * Handle the City "created" event.

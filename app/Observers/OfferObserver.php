@@ -10,11 +10,11 @@ class OfferObserver
 
     private function clearCache(): void
     {
-        Cache::tags(['properties'])->flush();
-        Cache::tags(['home'])->forget('home:featured-properties');
-        Cache::tags(['home'])->forget('home:top-rated-properties');
-        Cache::tags(['home'])->forget('home:deals-and-offers');
-        Cache::tags(['home'])->forget('home:general-offers');
+        Cache::forget('cache_versions:properties');
+        Cache::forget('cache_versions:home:featured-properties');
+        Cache::forget('cache_versions:home:top-rated-properties');
+        Cache::forget('cache_versions:home:deals-and-offers');
+        Cache::forget('cache_versions:home:general-offers');
     }
     /**
      * Handle the Offer "created" event.

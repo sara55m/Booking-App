@@ -3,17 +3,36 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Http\Resources\TravelCategoryResource;
 use App\Models\TravelCategory;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\CityResource;
+use Illuminate\Support\Str;
 
 class TravelCategoryController extends Controller
 {
+    private function cacheKey(string $endpoint): string
+    {
+        $globalVersion = Cache::rememberForever(
+            'cache_versions:travel-categories',
+            fn () => (string) Str::uuid(),
+        );
+
+        $endpointVersion = Cache::rememberForever(
+            "cache_versions:travel-categories:{$endpoint}",
+            fn () => (string) Str::uuid(),
+        );
+
+        return "travel-categories:{$globalVersion}:{$endpoint}:{$endpointVersion}";
+    }
+
     public function index(){
-        $travelCategories=Cache::tags(['travelCategories'])->remember(
-            'travel-categories:index',
+
+        // index()
+        $cacheKey = $this->cacheKey('index');
+
+        $travelCategories=Cache::remember(
+            $cacheKey,
             now()->addHours(6),
             fn()=>TravelCategory::query()
             ->where('is_active', true)
@@ -30,9 +49,17 @@ class TravelCategoryController extends Controller
 
     public function cities(TravelCategory $travelCategory)
     {
-        $cacheKey ="travel-categories:{$travelCategory->id}:cities";
+        $propertyVersion = Cache::rememberForever(
+            'cache_versions:properties',
+            fn () => (string) Str::uuid(),
+        );
 
-        $cities = Cache::tags(['travelCategories'])->remember(
+        $page = request()->query('page', 1);
+
+        $cacheKey = $this->cacheKey("cities:{$travelCategory->id}")
+            . ":properties:{$propertyVersion}:page:{$page}";
+
+        $cities = Cache::remember(
             $cacheKey,
             now()->addHours(6),
             function () use ($travelCategory) {

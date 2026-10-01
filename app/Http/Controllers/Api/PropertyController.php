@@ -14,6 +14,7 @@ use App\Http\Requests\Rooms\CheckAvailabilityRequest;
 use App\Http\Requests\Properties\SearchRequest;
 use App\Http\Requests\Properties\AISearchRequest;
 use App\Services\AISearchService;
+use Illuminate\Support\Str;
 
 class PropertyController extends Controller
 {
@@ -92,10 +93,15 @@ class PropertyController extends Controller
 
             'currency' => strtoupper($currency),
         ];
-        $key = 'properties:' . md5(json_encode($cacheData));
 
-        $properties=Cache::tags(['properties'])
-        ->remember($key, now()->addMinutes(15), function () use ($validated,$nightsCount,$currency) {
+        $version = Cache::rememberForever(
+            'cache_versions:properties',
+            fn () => (string) Str::uuid(),
+        );
+
+        $key = 'properties:' .$version. md5(json_encode($cacheData));
+
+        $properties=Cache::remember($key, now()->addMinutes(15), function () use ($validated,$nightsCount,$currency) {
             return Property::query()
                 ->where('is_active', true)
                 ->withMin('roomTypes', 'base_price')

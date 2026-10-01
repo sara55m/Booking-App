@@ -29,9 +29,9 @@ class ReviewObserver
 
         //clear cache for property details
         Cache::forget("property:{$review->property_id}");
-        Cache::tags(['properties'])->flush();
-        Cache::tags(['home'])->forget('home:featured-properties');
-        Cache::tags(['home'])->forget('home:top-rated-properties');
+        Cache::forget('cache_versions:properties');
+        Cache::forget('cache_versions:home:featured-properties');
+        Cache::forget('cache_versions:home:top-rated-properties');
     }
     /**
      * Handle the Review "created" event.

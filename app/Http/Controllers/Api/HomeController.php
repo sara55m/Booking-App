@@ -12,12 +12,31 @@ use App\Http\Resources\PropertyResource;
 use App\Models\PropertyType;
 use App\Http\Resources\PropertyTypeResource;
 use App\Http\Resources\OfferResource;
+use Illuminate\Support\Str;
 
 class HomeController extends Controller
 {
+
+    private function homeCacheKey(string $endpoint): string
+    {
+        $homeVersion = Cache::rememberForever(
+            'cache_versions:home',
+            fn () => (string) Str::uuid(),
+        );
+
+        $endpointVersion = Cache::rememberForever(
+            "cache_versions:home:{$endpoint}",
+            fn () => (string) Str::uuid(),
+        );
+
+        return "home:{$homeVersion}:{$endpoint}:{$endpointVersion}";
+    }
+
     public function popularCities(){
 
-        $cities=Cache::tags(['home'])->remember('home:popular-cities',now()->addHours(6),function(){
+        $key = $this->homeCacheKey('popular-cities');
+
+        $cities=Cache::remember($key,now()->addHours(6),function(){
             return City::query()
             ->where('is_active', true)
             ->where('is_featured', true)
@@ -40,7 +59,9 @@ class HomeController extends Controller
 
     public function propertyTypes(){
 
-        $propertyTypes=Cache::tags(['home'])->remember('home:property-types',now()->addHours(6),function(){
+        $key = $this->homeCacheKey('property-types');
+
+        $propertyTypes=Cache::remember($key,now()->addHours(6),function(){
             return PropertyType::query()
             ->where('is_active', true)
             ->withCount([
@@ -61,7 +82,9 @@ class HomeController extends Controller
 
     public function featuredProperties(){
 
-        $properties=Cache::tags(['home'])->remember('home:featured-properties',now()->addHours(6),function(){
+        $key = $this->homeCacheKey('featured-properties');
+
+        $properties=Cache::remember($key,now()->addHours(6),function(){
             return Property::query()
             ->where('is_active', true)
             ->where('is_featured', true)
@@ -80,7 +103,10 @@ class HomeController extends Controller
     }
 
     public function topRatedProperties(){
-        $properties=Cache::tags(['home'])->remember('home:top-rated-properties',now()->addHours(6),function(){
+
+        $key = $this->homeCacheKey('top-rated-properties');
+
+        $properties=Cache::remember($key,now()->addHours(6),function(){
             return Property::query()
             ->where('is_active', true)
             ->withActiveOffer()
@@ -102,8 +128,10 @@ class HomeController extends Controller
 
     public function generalOffers()
     {
-        $offers = Cache::tags(['home'])->remember(
-            'home:general-offers',
+        $key = $this->homeCacheKey('general-offers');
+
+        $offers = Cache::remember(
+            $key,
             now()->addHours(6),
             function () {
                 return Offer::query()
@@ -124,7 +152,9 @@ class HomeController extends Controller
 
     public function dealsAndOffers(){
 
-        $properties=Cache::tags(['home'])->remember('home:deals-and-offers',now()->addHours(6),function(){
+        $key = $this->homeCacheKey('deals-and-offers');
+
+        $properties=Cache::remember($key,now()->addHours(6),function(){
             return Property::query()
             ->where('is_active', true)
             ->withMin('roomTypes', 'base_price')

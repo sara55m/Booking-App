@@ -3,19 +3,30 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\City;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\CityDetailsResource;
 use App\Http\Resources\PropertyResource;
 use App\Http\Requests\Properties\SearchRequest;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class CityController extends Controller
 {
     public function show(City $city){
+        $citiesVersion = Cache::rememberForever(
+            'cache_versions:cities',
+            fn () => (string) Str::uuid(),
+        );
 
-        $city=Cache::tags(['cities'])->remember('cities:{$city->id}:details',now()->addHours(6),function () use ($city) {
+        $cityVersion = Cache::rememberForever(
+            "cache_versions:cities:{$city->id}",
+            fn () => (string) Str::uuid(),
+        );
+
+        $key = "cities:{$citiesVersion}:{$city->id}:details:{$cityVersion}";
+
+        $city=Cache::remember($key,now()->addHours(6),function () use ($city) {
 
             return City::query()
                 ->whereKey($city->id)
@@ -73,10 +84,29 @@ class CityController extends Controller
             'page' => $validated['page'] ?? 1,
         ];
 
-        $key = 'cities:properties:' . md5(json_encode($cacheData));
+        $citiesVersion = Cache::rememberForever(
+            'cache_versions:cities',
+            fn () => (string) Str::uuid(),
+        );
 
-        $properties = Cache::tags(['cities', 'properties'])
-            ->remember($key, now()->addMinutes(15), function () use ($validated, $city,$nightsCount) {
+        $cityVersion = Cache::rememberForever(
+            "cache_versions:cities:properties:{$city->id}",
+            fn () => (string) Str::uuid(),
+        );
+
+        $propertiesVersion = Cache::rememberForever(
+            'cache_versions:properties',
+            fn () => (string) Str::uuid(),
+        );
+
+        $key = 'cities:properties:'
+            . $citiesVersion . ':'
+            . $city->id . ':'
+            . $cityVersion . ':'
+            . $propertiesVersion . ':'
+            . md5(json_encode($cacheData));
+
+        $properties = Cache::remember($key, now()->addMinutes(15), function () use ($validated, $city,$nightsCount) {
 
                 return $city->properties()
                     ->where('is_active', true)

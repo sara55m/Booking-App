@@ -10,9 +10,9 @@ class TravelCategoryObserver
 
     private function clearCache(TravelCategory $travelCategory){
 
-        Cache::tags(['travel-categories'])->flush();
+        Cache::forget("cache_versions:travel_categories");
 
-        Cache::tags(['cities'])->flush();
+        Cache::forget("cache_versions:cities");
 
     }
     /**
