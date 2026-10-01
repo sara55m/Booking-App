@@ -144,7 +144,7 @@ class RewardService
     }
 
 
-    public function calculate(User $user,float $amount,int $redeemPoints) : array{
+    public function calculate(User $user,float $amount,string $currency,int $redeemPoints) : array{
 
         // User can't redeem more than they own
         if ($redeemPoints > $user->reward_points) {
@@ -160,24 +160,47 @@ class RewardService
                 config('rewards.redeem_rate')
             ) * config('rewards.redeem_rate');
 
+        $baseCurrency = strtoupper(config('app.currency', 'USD'));
+        $currencyService = app(CurrencyService::class);
+        $currency = strtoupper($currency);
+        $originalAmount = round($amount, 2);
+
+        $amountInBaseCurrency = $currencyService->convertToBaseUsingDisplayRate(
+            (float) $amount,
+            $currency,
+            $baseCurrency,
+        );
+
         //ensure the discount amount is not greater than the amount to pay
-        $discountAmount=min(
-            $amount,
+        $discountInBaseCurrency=min(
+            $amountInBaseCurrency,
             intdiv($availableRedeemPoints,config('rewards.redeem_rate'))* config('rewards.redeem_value'));
 
+        $discountInUserCurrency = $discountInBaseCurrency >= $amountInBaseCurrency
+        ? $originalAmount
+        : min(
+            $originalAmount,
+            $currencyService->convert($discountInBaseCurrency, $baseCurrency, $currency),
+        );
+
         //amount to charge > 0
-        $amountToCharge = round(max(0, $amount - $discountAmount), 2);
+        $chargeInBaseCurrency = round(max(0, $amountInBaseCurrency - $discountInBaseCurrency), 2);
+
+        $chargeInUserCurrency = round(
+            max(0, $originalAmount - $discountInUserCurrency),
+            2,
+        );
 
         //earned points
-        $earnedPoints=intdiv((int)$amountToCharge,config('rewards.earn_rate'));
+        $earnedPoints=intdiv((int)$chargeInBaseCurrency,config('rewards.earn_rate'));
 
         return [
-            'original_amount'=>$amount,
+            'original_amount'=>$originalAmount,
             "requested_points"=>$redeemPoints,
             'applied_points'=>$availableRedeemPoints,
             "unused_points"=>$redeemPoints-$availableRedeemPoints,
-            'discount_amount'=>$discountAmount,
-            'amount_to_charge'=>$amountToCharge,
+            'discount_amount'=>$discountInUserCurrency,
+            'amount_to_charge'=>$chargeInUserCurrency,
             'earned_points'=>$earnedPoints
         ];
     }

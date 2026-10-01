@@ -46,20 +46,31 @@ class RewardPointsController extends Controller
     }
 
     public function calculate(Request $request,RewardService $rewardService){
-        $request->validate([
+        $validated=$request->validate([
             'amount'=>['required','numeric','min:1'],
-            'points'=>['nullable','integer','min:0']
+            'points'=>['nullable','integer','min:0'],
+            'currency' => ['nullable', 'string', 'size:3'],
         ]);
 
-        $result=$rewardService->calculate(
+        $inputCurrency = strtoupper(
+            $validated['currency']
+                ?? $request->user()->currency
+                ?? config('app.currency', 'USD')
+        );
+
+        //convert amount to app base currency
+        $result = $rewardService->calculate(
             $request->user(),
-            $request->amount,
-            $request->input('points',0));
+            $validated['amount'],
+            $inputCurrency,
+            $validated['points'] ?? 0,
+        );
 
         return response()->json([
             'status_code' => 200,
             'message' => __('messages.reward_discount_calculated_successfully'),
             'data' => $result,
+            'currency' => $inputCurrency,
         ]);
 
     }
