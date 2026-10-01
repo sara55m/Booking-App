@@ -89,6 +89,7 @@ class HomeController extends Controller
             ->where('is_active', true)
             ->where('is_featured', true)
             ->withActiveOffer()
+            ->withMin('roomTypes', 'base_price')
             ->with('coverImage','city')
             ->latest()
             ->limit(8)

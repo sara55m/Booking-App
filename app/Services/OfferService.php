@@ -134,8 +134,8 @@ class OfferService
             ->first();
 
             return [
-                'original_price' => app(CurrencyService::class)->convert($pricePerNight, config('app.currency', 'USD'), $currency),
-                'final_price' => app(CurrencyService::class)->convert($pricePerNight, config('app.currency', 'USD'), $currency),
+                'original_price' => app(CurrencyService::class)->convert((float)$pricePerNight, config('app.currency', 'USD'), $currency),
+                'final_price' => app(CurrencyService::class)->convert((float)$pricePerNight, config('app.currency', 'USD'), $currency),
                 'discount' => 0,
                 'currency' => strtoupper($currency),
                 'offer' => $offer,
