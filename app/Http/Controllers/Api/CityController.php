@@ -56,7 +56,10 @@ class CityController extends Controller
     {
         $validated = $request->validated();
 
-        $nightsCount = 1;
+        //get user preferred currency
+        $currency = auth()->user()?->currency ?? config('app.currency', 'USD');
+
+        $nightsCount = null;
 
         if (!empty($validated['check_in']) && !empty($validated['check_out'])) {
             $nightsCount = Carbon::parse($validated['check_in'])
@@ -82,6 +85,7 @@ class CityController extends Controller
             'longitude' => $validated['longitude'] ?? null,
             'radius' => $validated['radius'] ?? null,
             'page' => $validated['page'] ?? 1,
+            'currency' => strtoupper($currency),
         ];
 
         $citiesVersion = Cache::rememberForever(
@@ -106,12 +110,12 @@ class CityController extends Controller
             . $propertiesVersion . ':'
             . md5(json_encode($cacheData));
 
-        $properties = Cache::remember($key, now()->addMinutes(15), function () use ($validated, $city,$nightsCount) {
+        $properties = Cache::remember($key, now()->addMinutes(15), function () use ($validated, $city,$nightsCount,$currency) {
 
                 return $city->properties()
                     ->where('is_active', true)
                     ->withMin('roomTypes', 'base_price')
-                    ->filter($validated)
+                    ->filter($validated,$currency)
                     ->withActiveOffer($nightsCount)
                     ->with('coverImage')
                     ->paginate(10);
