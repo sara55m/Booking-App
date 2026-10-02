@@ -661,5 +661,5 @@ return [
 
     'user_preferences_updated_successfully'=>'User preferences updated successfully',
 
-    'payment_method_already_default' => 'طريقة الدفع هذه هي بالفعل طريقة الدفع الافتراضية.',
+    'payment_method_already_default' => 'This payment method is already your default.',
 ];
