@@ -286,6 +286,15 @@ class ProfileController extends Controller
                 'message' => __('messages.unauthorized_action'),
             ], 403);
         }
+
+        if($paymentMethod->is_default){
+            return response()->json([
+                'status_code'=>200,
+                'message'=>__('messages.payment_method_already_default'),
+                'data' => new PaymentMethodResource($paymentMethod),
+            ]);
+        }
+        
         Stripe::setApiKey(config('services.stripe.secret'));
 
         try {

@@ -660,4 +660,6 @@ return [
     'review_deleted_admin_notification'=>'Review Deleted for booking :booking at property :property by user :user',
 
     'user_preferences_updated_successfully'=>'User preferences updated successfully',
+
+    'payment_method_already_default' => 'طريقة الدفع هذه هي بالفعل طريقة الدفع الافتراضية.',
 ];

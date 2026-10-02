@@ -678,4 +678,6 @@ return [
 
     'user_preferences_updated_successfully'=>'تم تحديث تفضيلات المستخدم بنجاح',
 
+    'payment_method_already_default' => 'This payment method is already your default.',
+
 ];
