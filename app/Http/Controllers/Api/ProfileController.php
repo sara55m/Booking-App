@@ -294,7 +294,7 @@ class ProfileController extends Controller
                 'data' => new PaymentMethodResource($paymentMethod),
             ]);
         }
-        
+
         Stripe::setApiKey(config('services.stripe.secret'));
 
         try {
@@ -369,7 +369,15 @@ class ProfileController extends Controller
                     $paymentMethod->stripe_payment_method_id
                 );
 
-                $stripePaymentMethod->detach();
+                if ($stripePaymentMethod->customer) {
+                    if ($stripePaymentMethod->customer !== $user->stripe_customer_id) {
+                        throw new \RuntimeException(
+                            'Payment method is attached to a different Stripe customer.'
+                        );
+                    }
+
+                    $stripePaymentMethod->detach();
+                }
 
                 $paymentMethod->delete();
 
