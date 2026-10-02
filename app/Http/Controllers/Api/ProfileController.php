@@ -404,18 +404,6 @@ class ProfileController extends Controller
                                 ]
                             );
                         }
-
-                    } elseif ($user->stripe_customer_id) {
-
-                        // User has no remaining payment methods
-                        \Stripe\Customer::update(
-                            $user->stripe_customer_id,
-                            [
-                                'invoice_settings' => [
-                                    'default_payment_method' => null,
-                                ],
-                            ]
-                        );
                     }
                 }
             });
