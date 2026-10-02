@@ -291,7 +291,9 @@ class ProfileController extends Controller
         try {
             DB::transaction(function () use ($user, $paymentMethod) {
 
-                $user->paymentMethods()->update([
+                $user->paymentMethods()
+                ->where('id','!=',$paymentMethod->id)
+                ->update([
                     'is_default' => false,
                 ]);
 
