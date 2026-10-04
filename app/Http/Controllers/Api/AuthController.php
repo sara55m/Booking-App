@@ -81,7 +81,7 @@ class AuthController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' =>-_("messages.verified_successfully"),
+            'message' =>__("messages.verified_successfully"),
             'data'=>[
                 'user'=>[
                     'id'=>$user->id,
