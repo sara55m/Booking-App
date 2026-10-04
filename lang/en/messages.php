@@ -662,4 +662,20 @@ return [
     'user_preferences_updated_successfully'=>'User preferences updated successfully',
 
     'payment_method_already_default' => 'This payment method is already your default.',
+
+    'otp_and_verification_email_sent' => 'OTP and verification email sent.',
+    'user_not_found' => 'User not found.',
+    'invalid_otp' => 'Invalid OTP.',
+    'otp_expired' => 'OTP expired.',
+    'verified_successfully' => 'Verified successfully.',
+    'invalid_credentials' => 'Invalid credentials.',
+    'verify_email_first' => 'Please verify your email first.',
+    'logged_in_successfully' => 'Logged in successfully.',
+    'already_verified' => 'Your email is already verified.',
+    'wait_before_requesting_otp' => 'Please wait before requesting another OTP.',
+    'otp_resent' => 'OTP resent.',
+    'verification_email_sent'=>'Verification Email Sent',
+    'otp_sent_to_email' => 'OTP sent to your email.',
+    'password_reset_successfully' => 'Password reset successfully.',
+    'logged_out' => 'Logged out successfully.',
 ];

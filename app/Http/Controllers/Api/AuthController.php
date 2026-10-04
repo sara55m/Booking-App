@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Services\MailService;
+use Illuminate\Validation\Rule;
 
 class AuthController extends Controller
 {
@@ -15,7 +16,7 @@ class AuthController extends Controller
     {
         $data=$request->validate([
             'name'=>'required|string',
-            'email'=>'required|email|unique:users,email',
+            'email'=>['required','email',Rule::unique('users', 'email')->whereNull('deleted_at')],
             'password'=>'required|string|min:6',
             'phone'=>'nullable|string',
             'locale'=>'nullable|string|in:en,ar'
@@ -42,7 +43,7 @@ class AuthController extends Controller
 
         return response()->json([
             'user'=>$user,
-            'message'=>'otp and verification email sent'
+            'message'=>__("messages.otp_verification_email_sent")
         ]);
 
     }
@@ -57,15 +58,15 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if (!$user) {
-            return response()->json(['message' => 'User not found'], 404);
+            return response()->json(['message' => __("messages.user_not_found")], 404);
         }
 
         if ($user->otp !== $request->otp) {
-            return response()->json(['message' => 'Invalid OTP'], 400);
+            return response()->json(['message' => __("messages.invalid_otp")], 400);
         }
 
         if (now()->gt($user->otp_expires_at)) {
-            return response()->json(['message' => 'OTP expired'], 400);
+            return response()->json(['message' => __("messages.otp_expired")], 400);
         }
 
         // mark verified
@@ -80,7 +81,7 @@ class AuthController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Verified successfully',
+            'message' =>-_("messages.verified_successfully"),
             'data'=>[
                 'user'=>[
                     'id'=>$user->id,
@@ -99,14 +100,14 @@ class AuthController extends Controller
         ]);
 
         if(!Auth::attempt($credentials)){
-            return response()->json(['message'=>'Invalid credentials'],401);
+            return response()->json(['message'=>__("messages.invalid_credentials")],401);
         }
 
         $user=Auth::user();
 
         if (!$user->hasVerifiedEmail()) {
             return response()->json([
-                'message' => 'Please verify your email first'
+                'message' => __("messages.verify_email_first")
             ], 403);
         }
 
@@ -118,7 +119,7 @@ class AuthController extends Controller
 
         return response()->json([
             'status'=>'success',
-            'message'=>'Logged in successfully',
+            'message'=>__("messages.logged_in_successfully"),
             'data'=>[
                 'user'=>[
                     'id'=>$user->id,
@@ -137,12 +138,12 @@ class AuthController extends Controller
         $user = $request->user();
 
         if ($user->hasVerifiedEmail()) {
-            return response()->json(['message' => 'Already verified']);
+            return response()->json(['message' => __("messages.already_verified")]);
         }
 
         $user->sendEmailVerificationNotification();
 
-        return response()->json(['message' => 'Verification email sent']);
+        return response()->json(['message' => __("messages.verification_email_sent)]);
     }*/
 
     public function resendOtp(Request $request)
@@ -154,13 +155,13 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if ($user->hasVerifiedEmail()) {
-            return response()->json(['message' => 'Already verified']);
+            return response()->json(['message' => __("messages.already_verified")]);
         }
 
         // prevent spamming otp requests
         if ($user->otp_expires_at && now()->lt($user->otp_expires_at->subMinutes(9))) {
             return response()->json([
-                'message' => 'Please wait before requesting another OTP'
+                'message' => __("messages.wait_before_requesting_otp")
             ], 429);
         }
 
@@ -175,7 +176,7 @@ class AuthController extends Controller
         //send otp via mail
         MailService::sendOtpEmail($user, $otp);
 
-        return response()->json(['message' => 'OTP resent']);
+        return response()->json(['message' => __("messages.otp_resent")]);
     }
 
     public function forgotPassword(Request $request)
@@ -197,7 +198,7 @@ class AuthController extends Controller
         //send otp via mail
         MailService::sendOtpEmail($user, $otp);
 
-        return response()->json(['message' => 'OTP sent to your email']);
+        return response()->json(['message' => __("messages.otp_sent_to_email")]);
     }
 
     public function resetPassword(Request $request)
@@ -211,11 +212,11 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if ($user->otp !== $request->otp) {
-            return response()->json(['message' => 'Invalid OTP'], 400);
+            return response()->json(['message' => __("messages.invalid_otp")], 400);
         }
 
         if (now()->gt($user->otp_expires_at)) {
-            return response()->json(['message' => 'OTP expired'], 400);
+            return response()->json(['message' => __("messages.otp_expired")], 400);
         }
 
         //update password
@@ -228,13 +229,13 @@ class AuthController extends Controller
         //delete old tokens
         $user->tokens()->delete();
 
-        return response()->json(['message' => 'Password reset successfully']);
+        return response()->json(['message' => __("messages.password_reset_successfully")]);
     }
 
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
 
-        return response()->json(['message'=>'Logged out']);
+        return response()->json(['message'=>__("messages.logged_out")]);
     }
 }

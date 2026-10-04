@@ -680,4 +680,20 @@ return [
 
     'payment_method_already_default' => 'طريقة الدفع هذه هي بالفعل طريقة الدفع الافتراضية.',
 
+    'otp_and_verification_email_sent' => 'تم إرسال رمز التحقق ورسالة التحقق عبر البريد الإلكتروني.',
+    'user_not_found' => 'المستخدم غير موجود.',
+    'invalid_otp' => 'رمز التحقق غير صالح.',
+    'otp_expired' => 'انتهت صلاحية رمز التحقق.',
+    'verified_successfully' => 'تم التحقق بنجاح.',
+    'invalid_credentials' => 'بيانات تسجيل الدخول غير صحيحة.',
+    'verify_email_first' => 'يرجى التحقق من بريدك الإلكتروني أولاً.',
+    'logged_in_successfully' => 'تم تسجيل الدخول بنجاح.',
+    'already_verified' => 'تم التحقق من بريدك الإلكتروني مسبقاً.',
+    'wait_before_requesting_otp' => 'يرجى الانتظار قبل طلب رمز تحقق آخر.',
+    'otp_resent' => 'تمت إعادة إرسال رمز التحقق.',
+    'otp_sent_to_email' => 'تم إرسال رمز التحقق إلى بريدك الإلكتروني.',
+    'verification_email_sent'=>'تم ارسال البريد الالكترونى التأكيدي',
+    'password_reset_successfully' => 'تم إعادة تعيين كلمة المرور بنجاح.',
+    'logged_out' => 'تم تسجيل الخروج بنجاح.',
+
 ];
