@@ -51,3 +51,6 @@ jobs:
 volumes:
   - name: booking-logs
     mount: /app/storage/logs
+  - name: booking-public
+    mount: /app/storage/app/public
+
