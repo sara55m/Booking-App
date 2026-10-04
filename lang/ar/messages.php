@@ -696,4 +696,6 @@ return [
     'password_reset_successfully' => 'تم إعادة تعيين كلمة المرور بنجاح.',
     'logged_out' => 'تم تسجيل الخروج بنجاح.',
 
+    'full_payment_required_for_overdue_booking' => 'يجب سداد المبلغ بالكامل لأن موعد سداد الرصيد قد فات.',
+
 ];

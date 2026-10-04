@@ -678,4 +678,6 @@ return [
     'otp_sent_to_email' => 'OTP sent to your email.',
     'password_reset_successfully' => 'Password reset successfully.',
     'logged_out' => 'Logged out successfully.',
+
+    'full_payment_required_for_overdue_booking' => 'Full payment is required because the balance due date has passed.',
 ];

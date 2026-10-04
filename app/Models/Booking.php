@@ -100,7 +100,7 @@ class Booking extends Model
     {
         return $this->hasOutstandingBalance()
             && $this->balance_due_date !== null
-            && $this->balance_due_date->isPast();
+            && $this->balance_due_date->lt(today());
     }
 
     public function review()

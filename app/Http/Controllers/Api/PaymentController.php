@@ -87,6 +87,12 @@ class PaymentController extends Controller
             $remainingAmountCents
         );
 
+        if ($booking->isBalanceOverdue() && $remainingAfterPaymentCents > 0) {
+            return response()->json([
+                'message' => __('messages.full_payment_required_for_overdue_booking'),
+            ], 422);
+        }
+
         // Creates customer only if needed.
         // Any Stripe exception is logged inside the service.
         try {

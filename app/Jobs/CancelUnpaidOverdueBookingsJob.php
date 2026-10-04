@@ -18,15 +18,15 @@ class CancelUnpaidOverdueBookingsJob implements ShouldQueue
 {
     use Queueable;
 
-    protected int $gracePeriodDays = 3;
-
     public function handle(): void
     {
-        Booking::whereDate('balance_due_date', '<=', now())
+        $today = today()->toDateString();
+
+        Booking::whereDate('balance_due_date', '<', $today)
             ->where('status', BookingStatus::CONFIRMED)
             ->with(['user', 'payments'])
             ->chunkById(100, function ($bookings) {
-                $admins = User::where('role', 'admin')->get();
+                $admins = User::whereIn('role',['admin','super_admin'])->get();
 
                 //if the booking is already fully paid, skip it
                 foreach ($bookings as $booking) {
