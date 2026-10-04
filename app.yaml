@@ -35,7 +35,7 @@ jobs:
           - queue:work
           - --stop-when-empty
           - --tries=3
-          - --sleep=1
+          - --max-time=50
         timeout: 5m
 
   - name: laravel-scheduler
