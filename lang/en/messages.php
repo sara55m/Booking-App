@@ -663,7 +663,7 @@ return [
 
     'payment_method_already_default' => 'This payment method is already your default.',
 
-    'otp_and_verification_email_sent' => 'OTP and verification email sent.',
+    'otp_verification_email_sent' => 'OTP verification email sent.',
     'user_not_found' => 'User not found.',
     'invalid_otp' => 'Invalid OTP.',
     'otp_expired' => 'OTP expired.',

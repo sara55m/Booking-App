@@ -680,7 +680,7 @@ return [
 
     'payment_method_already_default' => 'طريقة الدفع هذه هي بالفعل طريقة الدفع الافتراضية.',
 
-    'otp_and_verification_email_sent' => 'تم إرسال رمز التحقق ورسالة التحقق عبر البريد الإلكتروني.',
+    'otp_verification_email_sent' => 'تم إرسال رمز التحقق عبر البريد الإلكتروني.',
     'user_not_found' => 'المستخدم غير موجود.',
     'invalid_otp' => 'رمز التحقق غير صالح.',
     'otp_expired' => 'انتهت صلاحية رمز التحقق.',
