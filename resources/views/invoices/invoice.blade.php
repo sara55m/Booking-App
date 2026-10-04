@@ -157,6 +157,15 @@
             <td>{{ ucfirst($booking->status->value) }}</td>
         </tr>
 
+        @if ($booking->status === \App\Enums\BookingStatus::CANCELLED && $booking->cancellation_reason)
+            <tr>
+                <th>Cancellation Reason</th>
+                <td>{{ $booking->cancellation_reason
+                    ? \Illuminate\Support\Str::headline($booking->cancellation_reason->value)
+                    : '—' }}</td>
+            </tr>
+        @endif
+
     </table>
 
     <h2>Pricing Summary</h2>
