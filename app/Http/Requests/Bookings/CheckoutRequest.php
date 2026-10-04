@@ -23,33 +23,13 @@ class CheckoutRequest extends FormRequest
      */
     public function rules(): array
     {
-        //access booking via route model binding
-        $booking = $this->route('booking');
-
-        $isFirstPayment = ! $booking->payments()
-            ->where('status', PaymentStatus::PAID)
-            ->exists();
-
         return [
             'amount' => array_filter([
             'required',
             'numeric',
-            $isFirstPayment
-                ? 'min:' . $booking->getMinimumPaymentAmount()
-                : null,
         ]),
-        
+
             'redeem_points' => ['nullable', 'integer', 'min:0', 'multiple_of:100'],
-        ];
-    }
-
-
-    public function messages(): array
-    {
-        return [
-            'amount.min' => __('messages.minimum_payment_error', [
-                'amount' => $this->route('booking')->getMinimumPaymentAmount(),
-            ]),
         ];
     }
 }

@@ -14,7 +14,7 @@ use App\Events\BookingPaymentFailed;
 use Illuminate\Http\JsonResponse;
 use App\Enums\PaymentStatus;
 use App\Http\Requests\Bookings\CheckoutRequest;
-
+use App\Services\CurrencyService;
 
 class PaymentController extends Controller
 {
@@ -34,6 +34,28 @@ class PaymentController extends Controller
         }
 
         $user = $booking->user;
+
+        $isFirstPayment = ! $booking->payments()
+            ->where('status', PaymentStatus::PAID)
+            ->exists();
+
+        $paymentCurrency = strtoupper($user->currency);
+        $baseCurrency = strtoupper(config('app.currency', 'USD'));
+
+        $minimumPaymentAmount = app(CurrencyService::class)->convert(
+            $booking->getMinimumPaymentAmount(), // base currency
+            $baseCurrency,
+            $paymentCurrency,
+        );
+
+        if ($isFirstPayment && (float) $validated['amount'] < $minimumPaymentAmount) {
+            return response()->json([
+                'message' => __('messages.minimum_payment_error', [
+                    'amount' => number_format($minimumPaymentAmount, 2),
+                    'currency' => $paymentCurrency,
+                ]),
+            ], 422);
+        }
 
         //convert currency from the user preferred currency to the base app currency
         $requestedAmount = $checkoutService->convertToBaseCurrency(

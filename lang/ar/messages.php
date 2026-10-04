@@ -469,7 +469,7 @@ return [
     'reward_points_history_retrieved_successfully'=>'تم استرجاع سجل نقاط المكافأة بنجاح',
     'reward_discount_calculated_successfully'=>'تم حساب خصم نقاط المكافأة بنجاح',
     //checkout messages
-    'minimum_payment_error' => 'يجب ألا يقل مبلغ الدفع عن :amount.',
+    'minimum_payment_error' => 'يجب ألا يقل مبلغ الدفع عن :amount :currency',
     'payment_already_completed'=>'تم إتمام عملية الدفع مسبقاً',
     'payment_completed_using_reward_points'=>'تم إتمام عملية الدفع باستخدام نقاط المكافأة',
     'idempotency_key_required'=>'مفتاح Idempotency مطلوب',
