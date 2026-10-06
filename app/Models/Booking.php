@@ -35,6 +35,8 @@ class Booking extends Model
         'balance_due_date',
         'cancellation_reason',
         'arrival_reminder_sent_at',
+        'balance_due_reminder_sent_at',
+        'balance_due_reminder_queued_at'
     ];
 
     protected $casts = [
@@ -51,6 +53,8 @@ class Booking extends Model
         'balance_due_date' => 'date',
         'cancellation_reason' =>BookingCancellationReason::class,
         'arrival_reminder_sent_at'=>'datetime',
+        'balance_due_reminder_queued_at' => 'datetime',
+        'balance_due_reminder_sent_at' => 'datetime',
     ];
 
     public function user()

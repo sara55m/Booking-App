@@ -44,15 +44,22 @@ class CheckBookingBalanceDueJob implements ShouldQueue
 
         Booking::where('balance_due_date', $reminderThreshold)
             ->where('status', BookingStatus::CONFIRMED)
+            ->whereNull('balance_due_reminder_queued_at')
+            ->whereNull('balance_due_reminder_sent_at')
             ->with(['user', 'payments'])
             ->chunkById(100, function ($bookings) {
                 foreach ($bookings as $booking) {
-                    //get bookings with remaining balance
-                    if ($booking->hasOutstandingBalance()) {
-                        $booking->user->notify(
-                            new BookingBalanceDueReminderNotification($booking)
-                        );
+                    if (! $booking->hasOutstandingBalance()) {
+                        continue;
                     }
+
+                    $booking->user->notify(
+                        new BookingBalanceDueReminderNotification($booking)
+                    );
+
+                    $booking->update([
+                        'balance_due_reminder_queued_at' => now(),
+                    ]);
                 }
             });
     }

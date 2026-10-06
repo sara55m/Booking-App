@@ -21,7 +21,7 @@ Schedule::job(new ProcessExpiredBookingsJob)
 
 //schedule bookings balance due check job to run daily
 Schedule::job(new CheckBookingBalanceDueJob)
-    ->dailyAt('08:00')
+    ->hourly()
     ->withoutOverlapping();
 
 //schedule bookings cancellation job to run every minute

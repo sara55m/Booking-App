@@ -24,6 +24,11 @@ class BookingBalanceDueReminderNotification extends Notification implements Shou
         ]);
     }
 
+    public function getBooking(): Booking
+    {
+        return $this->booking;
+    }
+
     /**
      * Get the notification's delivery channels.
      *
