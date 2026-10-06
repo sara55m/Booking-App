@@ -698,4 +698,11 @@ return [
 
     'full_payment_required_for_overdue_booking' => 'يجب سداد المبلغ بالكامل لأن موعد سداد الرصيد قد فات.',
 
+    'booking_balance_overdue_subject' => 'انتهى موعد سداد رصيد حجزك',
+    'booking_balance_overdue_greeting' => 'مرحبًا :name،',
+    'booking_balance_overdue_body' => 'انتهى موعد سداد المبلغ المتبقي للحجز :reference.',
+    'booking_balance_overdue_deadline' =>
+    'يرجى سداد المبلغ المتبقي وقدره :remaining خلال 24 ساعة، وإلا فسيتم إلغاء حجزك.',
+    'booking_balance_overdue_closing' => 'شكرًا لاختياركم لنا.',
+
 ];

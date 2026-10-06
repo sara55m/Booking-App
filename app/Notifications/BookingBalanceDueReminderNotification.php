@@ -52,7 +52,7 @@ class BookingBalanceDueReminderNotification extends Notification implements Shou
             ?? config('app.currency', 'USD')
         );
 
-        $baseCurrency = config('app.currency', 'USD');
+        $baseCurrency = strtoupper(config('app.currency', 'USD'));
 
         $currencyService = app(CurrencyService::class);
 

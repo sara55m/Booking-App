@@ -20,9 +20,10 @@ class CancelUnpaidOverdueBookingsJob implements ShouldQueue
 
     public function handle(): void
     {
-        $today = today()->toDateString();
+        //give a 24 hour grace period
+        $cancelBefore = today()->subDay()->toDateString();
 
-        Booking::whereDate('balance_due_date', '<', $today)
+        Booking::whereDate('balance_due_date', '<', $cancelBefore)
             ->where('status', BookingStatus::CONFIRMED)
             ->with(['user', 'payments'])
             ->chunkById(100, function ($bookings) {

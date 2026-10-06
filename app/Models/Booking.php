@@ -95,12 +95,12 @@ class Booking extends Model
         return $this->remaining_balance > 0;
     }
 
-    //check if the balance due date has passed and the booking still has an outstanding balance
+    //check if the balance due date is today/has passed and the booking still has an outstanding balance
     public function isBalanceOverdue(): bool
     {
         return $this->hasOutstandingBalance()
             && $this->balance_due_date !== null
-            && $this->balance_due_date->lt(today());
+            && $this->balance_due_date->lte(today());
     }
 
     public function review()

@@ -10,6 +10,7 @@ use App\Enums\BookingStatus;
 use App\Notifications\BookingBalanceDueReminderNotification;
 use App\Notifications\BookingBalanceOverdueAdminNotification;
 use Illuminate\Support\Facades\Notification;
+use App\Notifications\BookingBalanceOverdueNotification;
 
 class CheckBookingBalanceDueJob implements ShouldQueue
 {
@@ -27,6 +28,10 @@ class CheckBookingBalanceDueJob implements ShouldQueue
 
                 foreach ($bookings as $booking) {
                     if ($booking->hasOutstandingBalance()) {
+                        //send mail to user to complete payment within the grace period(24 hours)
+                        $booking->user->notify(
+                            new BookingBalanceOverdueNotification($booking)
+                        );
                         Notification::send(
                             $admins,
                             new BookingBalanceOverdueAdminNotification($booking)

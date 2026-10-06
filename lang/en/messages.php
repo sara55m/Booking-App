@@ -680,4 +680,10 @@ return [
     'logged_out' => 'Logged out successfully.',
 
     'full_payment_required_for_overdue_booking' => 'Full payment is required because the balance due date has passed.',
+
+    'booking_balance_overdue_subject' => 'Payment deadline passed for your booking',
+    'booking_balance_overdue_greeting' => 'Hello :name,',
+    'booking_balance_overdue_body' => 'The balance payment deadline for booking :reference has passed.',
+    'booking_balance_overdue_deadline' =>'Please pay the remaining balance of :remaining within 24 hours. Otherwise, your booking will be cancelled.',
+    'booking_balance_overdue_closing' => 'Thank you for choosing us.',
 ];

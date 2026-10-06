@@ -87,6 +87,7 @@ class PaymentController extends Controller
             $remainingAmountCents
         );
 
+        //if booking due date is today or has passed ,then require full payment at checkout
         if ($booking->isBalanceOverdue() && $remainingAfterPaymentCents > 0) {
             return response()->json([
                 'message' => __('messages.full_payment_required_for_overdue_booking'),
