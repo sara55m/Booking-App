@@ -32,7 +32,7 @@ class SendArrivalRemindersJob implements ShouldQueue
 
                     DB::transaction(function () use ($booking) {
                         $booking->update([
-                            'arrival_reminder_sent_at' => now(),
+                            'arrival_reminder_queued_at' => now(),
                         ]);
 
                         DB::afterCommit(function () use ($booking) {

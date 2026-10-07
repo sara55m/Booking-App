@@ -19,7 +19,7 @@ Schedule::job(new ProcessExpiredBookingsJob)
     ->everyMinute()
     ->withoutOverlapping();
 
-//schedule bookings balance due check job to run daily
+//schedule bookings balance due check job to run hourly
 Schedule::job(new CheckBookingBalanceDueJob)
     ->hourly()
     ->withoutOverlapping();
@@ -39,7 +39,7 @@ Schedule::job(new ProcessOfferNotificationsJob)
     ->everyFiveMinutes()
     ->withoutOverlapping();
 
-//schedule arrival reminder notification job to run daily
+//schedule arrival reminder notification job to run hourly
 Schedule::job(new SendArrivalRemindersJob())
-    ->dailyAt('08:00')
+    ->hourly()
     ->withoutOverlapping();

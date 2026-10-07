@@ -35,6 +35,7 @@ class Booking extends Model
         'balance_due_date',
         'cancellation_reason',
         'arrival_reminder_sent_at',
+        'arrival_reminder_queued_at',
         'balance_due_reminder_sent_at',
         'balance_due_reminder_queued_at'
     ];
@@ -53,6 +54,7 @@ class Booking extends Model
         'balance_due_date' => 'date',
         'cancellation_reason' =>BookingCancellationReason::class,
         'arrival_reminder_sent_at'=>'datetime',
+        'arrival_reminder_queued_at'=>'datetime',
         'balance_due_reminder_queued_at' => 'datetime',
         'balance_due_reminder_sent_at' => 'datetime',
     ];
@@ -211,7 +213,8 @@ class Booking extends Model
         return $query
             ->where('status', BookingStatus::CONFIRMED)
             ->whereDate('check_in', now()->addDay()->toDateString())
-            ->whereNull('arrival_reminder_sent_at');
+            ->whereNull('arrival_reminder_sent_at')
+            ->whereNull('arrival_reminder_queued_at');
     }
 
     //transition between statuses

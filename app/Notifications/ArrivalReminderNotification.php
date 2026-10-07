@@ -19,7 +19,15 @@ class ArrivalReminderNotification extends Notification implements ShouldQueue
      */
     public function __construct(protected Booking $booking)
     {
-        //
+        $booking->loadMissing([
+            'property.policy',
+            'room'
+        ]);
+    }
+
+    public function getBooking(): Booking
+    {
+        return $this->booking;
     }
 
     /**
