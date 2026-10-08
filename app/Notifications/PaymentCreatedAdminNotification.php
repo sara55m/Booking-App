@@ -36,7 +36,7 @@ class PaymentCreatedAdminNotification extends Notification implements ShouldQueu
      */
     public function toDatabase(object $notifiable): array
     {
-        $currency = strtoupper($this->booking->currency);
+        $baseCurrency=strtoupper(config('app.currency'));
 
         $paymentType = $this->booking->total_price === $this->payment->amount
         ? __('messages.full_payment')
@@ -47,8 +47,8 @@ class PaymentCreatedAdminNotification extends Notification implements ShouldQueu
             ->body(__('messages.booking_payment_succeeded_admin_notification', [
                 'reference' => $this->booking->reference,
                 'customer' => $this->booking->user->name,
-                'payment_amount' => $currency . ' ' . number_format($this->payment->amount, 2),
-                'remaining_amount' => $currency . ' ' . number_format($this->payment->remaining, 2),
+                'payment_amount' => $baseCurrency . ' ' . number_format($this->payment->amount, 2),
+                'remaining_amount' => $baseCurrency . ' ' . number_format($this->payment->remaining, 2),
                 'payment_type' => $paymentType,
             ]))
             ->icon('heroicon-o-credit-card')

@@ -38,13 +38,15 @@ class BookingPaymentFailedAdminNotification extends Notification implements Shou
 
     public function toDatabase(object $notifiable): array
     {
+        $baseCurrency=strtoupper(config('app.currency'));
+
         return FilamentNotification::make()
             ->title(__('messages.booking_payment_failed'))
             ->body(__('messages.booking_payment_failed_admin_notification', [
                 'reference' => $this->booking->reference,
                 'customer' => $this->booking->user->name,
                 'property' => $this->booking->property->name,
-                'payment_amount' => number_format($this->payment->amount, 2) . ' EGP',
+                'payment_amount' => number_format($this->payment->amount, 2) . ' '.$baseCurrency,
             ]))
             ->icon('heroicon-o-x-circle')
             ->iconColor('danger')

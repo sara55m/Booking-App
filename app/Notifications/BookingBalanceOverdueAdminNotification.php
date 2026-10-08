@@ -36,13 +36,14 @@ class BookingBalanceOverdueAdminNotification extends Notification implements Sho
 
     public function toDatabase(object $notifiable): array
     {
+        $baseCurrency=strtoupper(config('app.currency'));
         return FilamentNotification::make()
             ->title(__('messages.balance_overdue_admin_title'))
             ->body(__('messages.balance_overdue_admin_body', [
                 'reference' => $this->booking->reference,
                 'customer' => $this->booking->user->name,
                 'property' => $this->booking->property->name,
-                'amount' => number_format($this->booking->remaining_balance, 2),
+                'amount' => number_format($this->booking->remaining_balance, 2).' '.$baseCurrency,
             ]))
             ->icon('heroicon-o-exclamation-triangle')
             ->iconColor('danger')
@@ -56,5 +57,5 @@ class BookingBalanceOverdueAdminNotification extends Notification implements Sho
             ])
             ->getDatabaseMessage();
     }
-    
+
 }
