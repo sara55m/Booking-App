@@ -88,11 +88,6 @@ class PaymentSucceededNotification extends Notification implements ShouldQueue
                 'amount' => number_format($paymentAmount, 2),
             ]))
 
-            ->line(__('messages.payment_received.remaining_amount', [
-                'currency' => $currency,
-                'amount' => number_format($remainingAmount, 2),
-            ]))
-
             ->line(__('messages.payment_received.payment_type', [
                 'type' => $status,
             ]))

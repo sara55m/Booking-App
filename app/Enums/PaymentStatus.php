@@ -23,6 +23,7 @@ enum PaymentStatus : string implements HasColor
             self::PAID => 'success',
             self::FAILED => 'danger',
             self::REFUNDED => 'primary',
+            self::FORFEITED=>'gray',
         };
     }
 }

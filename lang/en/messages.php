@@ -363,6 +363,13 @@ return [
     'account'=>'Account',
     'preferences'=>'Preferences',
 
+    'amount_charged' => 'Amount charged',
+    'charge_currency' => 'Charge currency',
+    'requested_payment_portion' => 'Requested booking portion',
+    'customer_currency' => 'Customer currency',
+    'amount_charged_help' => 'Amount charged by Stripe in the app’s base currency.',
+    'requested_payment_portion_help' => 'Amount the customer entered to apply toward the booking, before reward points are deducted.',
+
 
     //api messages
     //properties

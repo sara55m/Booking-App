@@ -22,11 +22,21 @@ class PaymentInfolist
                             ->label(__("messages.booking")),
 
                         TextEntry::make('amount')
-                            ->label(__("messages.amount"))
-                            ->money(fn ($record) => strtoupper($record->currency ?? 'USD')),
+                            ->label(__('messages.amount_charged'))
+                            ->money(fn ($record) => strtoupper($record->currency ?? config('app.currency', 'USD')))
+                            ->helperText(__('messages.amount_charged_help')),
 
                         TextEntry::make('currency')
-                        ->label(__("messages.currency"))
+                            ->label(__('messages.charge_currency'))
+                            ->badge(),
+
+                        TextEntry::make('requested_amount')
+                            ->label(__('messages.requested_payment_portion'))
+                            ->money(fn ($record) => strtoupper($record->requested_currency ?? 'USD'))
+                            ->helperText(__('messages.requested_payment_portion_help')),
+
+                        TextEntry::make('requested_currency')
+                            ->label(__('messages.customer_currency'))
                             ->badge(),
 
                         TextEntry::make('payment_method')

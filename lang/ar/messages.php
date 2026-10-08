@@ -377,6 +377,13 @@ return [
     'account'=>'الحساب',
     'preferences'=>'التفضيلات',
 
+    'amount_charged' => 'المبلغ المخصوم',
+    'charge_currency' => 'عملة الخصم',
+    'requested_payment_portion' => 'المبلغ المطلوب دفعه للحجز',
+    'customer_currency' => 'عملة العميل',
+    'amount_charged_help' => 'المبلغ الذي خصمه Stripe بعملة التطبيق الأساسية.',
+    'requested_payment_portion_help' => 'المبلغ الذي أدخله العميل لتطبيقه على الحجز قبل خصم نقاط المكافآت.',
+
     //api messages
     //properties
     'properties_retrieved_successfully' => 'تم استرجاع العقارات بنجاح',
