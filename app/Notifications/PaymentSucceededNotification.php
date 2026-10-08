@@ -63,17 +63,7 @@ class PaymentSucceededNotification extends Notification implements ShouldQueue
             $currency
         );
 
-        $paymentAmount = $currencyService->convert(
-            $this->payment->amount,
-            config('app.currency', 'USD'),
-            $currency
-        );
-
-        $remainingAmount = $currencyService->convert(
-            $this->payment->remaining,
-            config('app.currency', 'USD'),
-            $currency
-        );
+        $paymentAmount = $this->payment->requested_amount;
 
         return (new MailMessage)
             ->subject(__('messages.payment_received.subject'))
