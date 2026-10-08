@@ -114,6 +114,8 @@ class CheckoutService
 
     public function createPayment(
         Booking $booking,
+        int $requestedDisplayAmountCents,
+        string $requestedCurrency,
         int $amountToChargeCents,
         int $remainingAfterPaymentCents,
         int $redeemPoints,
@@ -122,6 +124,8 @@ class CheckoutService
     ): array{
         return DB::transaction(function () use (
             $booking,
+            $requestedDisplayAmountCents,
+            $requestedCurrency,
             $amountToChargeCents,
             $remainingAfterPaymentCents,
             $redeemPoints,
@@ -154,6 +158,13 @@ class CheckoutService
                 // Create a new payment
                 $payment = Payment::create([
                     'booking_id' => $booking->id,
+                    'requested_amount'=>number_format(
+                        $requestedDisplayAmountCents / 100,
+                        2,
+                        '.',
+                        ''
+                    ),
+                    'requested_currency'=>$requestedCurrency,
                     'amount' => number_format($amountToChargeCents / 100, 2, '.', ''),
                     'remaining' => number_format($remainingAfterPaymentCents / 100, 2, '.', ''),
                     'discount_amount' => number_format($discountCents / 100, 2, '.', ''),

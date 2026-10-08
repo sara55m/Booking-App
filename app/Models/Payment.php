@@ -26,6 +26,8 @@ class Payment extends Model
         'redeemed_points',
         'discount_amount',
         'idempotency_key',
+        'requested_amount',
+        'requested_currency',
     ];
 
     protected $casts = [
@@ -36,6 +38,7 @@ class Payment extends Model
         'refunded_at'=>'datetime',
         'status' => PaymentStatus::class,
         'payment_method' => PaymentMethod::class,
+        'requested_amount'=>'decimal:2',
     ];
 
     public function booking()

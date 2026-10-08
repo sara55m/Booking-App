@@ -215,7 +215,7 @@
 
             <tr>
                 <th>Amount Charged</th>
-                <td>{{ number_format($paymentAmount,2) }} {{ $currency }}</td>
+                <td>{{ number_format($paymentAmount,2) }} {{ $paymentAmountCurrency }}</td>
             </tr>
 
             <tr>

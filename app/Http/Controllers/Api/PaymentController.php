@@ -57,6 +57,14 @@ class PaymentController extends Controller
             ], 422);
         }
 
+        $requestedDisplayAmountCents = (int) round(
+            (float) $validated['amount'] * 100
+        );
+
+        $requestedCurrency = strtoupper(
+            $user->currency ?? config('app.currency', 'USD')
+        );
+
         //convert currency from the user preferred currency to the base app currency
         $requestedAmount = $checkoutService->convertToBaseCurrency(
             (float) $validated['amount'],
@@ -115,11 +123,13 @@ class PaymentController extends Controller
 
             $result = $checkoutService->createPayment(
                 $booking,
+                $requestedDisplayAmountCents,
+                $requestedCurrency,
                 $amountToChargeCents,
                 $remainingAfterPaymentCents,
                 $redeemPoints,
                 $discountCents,
-                $idempotencyKey
+                $idempotencyKey,
             );
 
             $payment = $result['payment'];
