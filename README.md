@@ -40,6 +40,7 @@ The project also includes a Filament-based administration dashboard for managing
 - Invoice generation for payments and cancellations
 - Invoices attached to email notifications
 - Secure payment webhook handling
+- Currency Conversions using groq ai 
 
 ### Offers & Rewards
 
