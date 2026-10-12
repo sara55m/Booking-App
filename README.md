@@ -354,11 +354,21 @@ The API provides endpoints for:
 - User profile and account management
 - AI-powered features
 
-### Postman Collection
+## API Documentation (Postman)
 
-[View the API Collection on Postman]
+The full API collection is included in this repository:
 
-(https://www.postman.com/red-shuttle-2874393/workspace/booking-app/collection/50798855-372dd1c8-4657-4a99-bc56-d08966045ef6?action=share&source=copy-link&creator=50798855)
+📁 [`docs\Booking.postman_collection.json`](docs\Booking.postman_collection.json)
+
+### How to use it
+1. Open Postman and click **Import**.
+2. Select the file `docs/booking-api.postman_collection.json`.
+3. Set the `base_url` collection variable:
+   - Live demo: `https://booking-app-sara55m.wasmer.app`
+   - Local: `http://localhost:8000`
+4. Run the **Login** request. It saves the token automatically, so all other requests are authenticated.
+
+The collection covers authentication, properties, availability, bookings, payments, offers, reviews, and the AI endpoints, with example responses in English and Arabic.
 
 ---
 
