@@ -19,13 +19,14 @@ class CheckBookingBalanceDueJob implements ShouldQueue
     public function handle(): void
     {
         $today = today();
+
+        $admins = User::whereIn('role', ['admin', 'super_admin'])->get();
         //send notification to admins for bookings with balance due in the past
         Booking::whereDate('balance_due_date', '<', $today->toDateString())
             ->where('status', BookingStatus::CONFIRMED)
-            ->with('payments')
-            ->chunkById(100, function ($bookings) {
-                $admins = User::whereIn('role', ['admin','super_admin'])->get();
-
+            ->whereNull('balance_overdue_notified_at')
+            ->with(['payments', 'user', 'property'])
+            ->chunkById(100, function ($bookings) use ($admins){
                 foreach ($bookings as $booking) {
                     if ($booking->hasOutstandingBalance()) {
                         //send mail to user to complete payment within the grace period(24 hours)
@@ -36,6 +37,8 @@ class CheckBookingBalanceDueJob implements ShouldQueue
                             $admins,
                             new BookingBalanceOverdueAdminNotification($booking)
                         );
+                        //update balance due notified at column
+                        $booking->forceFill(['balance_overdue_notified_at' => now()])->save();
                     }
                 }
             });

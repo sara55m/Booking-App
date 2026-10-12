@@ -37,7 +37,8 @@ class Booking extends Model
         'arrival_reminder_sent_at',
         'arrival_reminder_queued_at',
         'balance_due_reminder_sent_at',
-        'balance_due_reminder_queued_at'
+        'balance_due_reminder_queued_at',
+        'balance_overdue_notified_at',
     ];
 
     protected $casts = [
@@ -57,6 +58,7 @@ class Booking extends Model
         'arrival_reminder_queued_at'=>'datetime',
         'balance_due_reminder_queued_at' => 'datetime',
         'balance_due_reminder_sent_at' => 'datetime',
+        'balance_overdue_notified_at'=> 'datetime',
     ];
 
     public function user()
