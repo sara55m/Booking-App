@@ -371,6 +371,19 @@ The full API collection is included in this repository:
 
 The collection covers authentication, properties, availability, bookings, payments, offers, reviews, and the AI endpoints, with example responses in English and Arabic.
 
+## Live Demo
+
+- **Admin dashboard:** https://booking-app-sara55m.wasmer.app/admin
+
+### Demo accounts
+
+Super Admin Credentials:
+email: admin@example.com 
+password: 123456
+
+### Testing payments
+Payments run in Stripe **test mode**. Use the test card `4242 4242 4242 4242` with any future expiry date and any CVC. No real money is charged.
+
 ---
 
 ## Testing
@@ -394,7 +407,7 @@ Use `.env.example` to document the required environment variables without exposi
 
 ## Project Status
 
-🚧 This project is currently under development.
+🚧 This project is currently live with future features in consideration.
 
 ---
 
