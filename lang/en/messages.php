@@ -369,6 +369,8 @@ return [
     'customer_currency' => 'Customer currency',
     'amount_charged_help' => 'Amount charged by Stripe in the app’s base currency.',
     'requested_payment_portion_help' => 'Amount the customer entered to apply toward the booking, before reward points are deducted.',
+    'balance_due_reminder_sent_at' => 'Balance Due Reminder Sent At',
+    'balance_overdue_notified_at'  => 'Balance Overdue Notified At',
 
 
     //api messages

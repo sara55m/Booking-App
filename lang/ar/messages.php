@@ -383,6 +383,8 @@ return [
     'customer_currency' => 'عملة العميل',
     'amount_charged_help' => 'المبلغ الذي خصمه Stripe بعملة التطبيق الأساسية.',
     'requested_payment_portion_help' => 'المبلغ الذي أدخله العميل لتطبيقه على الحجز قبل خصم نقاط المكافآت.',
+    'balance_due_reminder_sent_at' => 'تاريخ إرسال تذكير الرصيد المستحق',
+    'balance_overdue_notified_at'  => 'تاريخ إشعار تأخر سداد الرصيد',
 
     //api messages
     //properties
