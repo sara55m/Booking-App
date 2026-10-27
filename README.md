@@ -40,7 +40,7 @@ The project also includes a Filament-based administration dashboard for managing
 - Invoice generation for payments and cancellations
 - Invoices attached to email notifications
 - Secure payment webhook handling
-- Currency Conversions using groq ai 
+- Multi-currency support: prices shown in the user's preferred currency, with real-time exchange rates from an exchange-rate API and payment amounts converted back to the default currency for Stripe
 
 ### Offers & Rewards
 
